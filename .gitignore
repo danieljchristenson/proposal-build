@@ -25,3 +25,6 @@ dist/
 
 # Local test outputs
 tests/_output/
+
+# Visual brainstorming companion
+.superpowers/
