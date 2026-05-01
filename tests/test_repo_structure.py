@@ -21,6 +21,8 @@ def test_top_level_layout():
     assert _exists("docs", "superpowers", "plans")
     assert _exists("pyproject.toml")
     assert _exists(".gitignore")
+    assert _exists("README.md")
+    assert _exists("CLAUDE.md")
 
 
 def test_projects_layout():
