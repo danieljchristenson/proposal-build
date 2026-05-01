@@ -25,10 +25,23 @@ RFP + Brief + Worksheet + renderings into polished customer proposals.
 
 ## Toolchain
 
-- Python 3.11+, pyproject.toml, pytest.
-- Local dev: `python3.11 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"`.
+- Python 3.11+ (this machine runs 3.14 from python.org), pyproject.toml, pytest.
+- Local dev: `python3.14 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"`.
 - WeasyPrint is the PDF rendering engine (chosen over python-pptx; spec §3).
 - Fonts (Roboto + Poppins) are embedded in `skill_assets/fonts/` (Plan 2). Never load from system.
+
+### Local macOS dev requirements (Plan 2 setup)
+
+WeasyPrint depends on Pango/Cairo system libraries from Homebrew, not pip:
+
+1. Homebrew installed at `/opt/homebrew/` (Apple Silicon path).
+2. `brew install pango` — pulls in cairo, glib, harfbuzz, fribidi, etc.
+3. `~/.zshenv` exports `DYLD_FALLBACK_LIBRARY_PATH="/opt/homebrew/lib:$DYLD_FALLBACK_LIBRARY_PATH"`
+   so cffi's `dlopen` finds the libs at import time. Without this every
+   WeasyPrint command fails with `cannot load library 'libgobject-2.0-0'`.
+
+This setup is for *local development only* — the deployed skill bundle runs
+in Claude's sandbox where these libs are already available.
 
 ## Working with plans
 
