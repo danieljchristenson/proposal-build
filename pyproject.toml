@@ -1,0 +1,48 @@
+[project]
+name = "stnicks-proposal-builder"
+version = "0.0.1"
+description = "St. Nick's proposal builder — Claude Desktop skill that generates customer proposals from Brief + Worksheet + renderings."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Daniel Christenson", email = "daniel@st-nicks.com" },
+]
+license = { text = "Proprietary" }
+
+# Runtime dependencies — what the skill code imports.
+dependencies = [
+    "weasyprint>=62.0",          # HTML/CSS → PDF rendering pipeline (spec §3)
+    "openpyxl>=3.1",             # Scope Worksheet .xlsx parsing (spec §4.2)
+    "pillow>=10.0",              # Image handling (cover, renderings)
+    "pyyaml>=6.0",               # elements.yaml, dependency_map.yaml, Brief frontmatter
+    "python-frontmatter>=1.1",   # Brief.md YAML frontmatter parsing
+    "jinja2>=3.1",               # Layout templating
+    "pymupdf>=1.24",             # PDF text extraction during Phase 0 RFP intake
+    "python-pptx>=1.0",          # PPTX text extraction during Phase 0
+    "anthropic>=0.40",           # Vision calls in Phase 0 / Phase 1
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# We do not currently distribute as a wheel — this section keeps
+# `pip install -e .` happy by declaring the package layout explicitly.
+packages = []
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra -q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
