@@ -88,6 +88,12 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "MetroLink overhead catenary",
         "Enhanced",
     ]),
+    ("creative_vision", "creative_vision_ctx", [
+        "Holiday Express transforms",
+        "Welcome",
+        "Journey",
+        "Arrival",
+    ]),
 ]
 
 

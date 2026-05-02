@@ -111,3 +111,22 @@ understanding_ctx = {
     "tier_recommended": "Enhanced",
     "tier_rationale": "Balances civic visual impact with disciplined investment.",
 }
+
+
+# ===== Slide 4 — Creative Vision =====
+creative_vision_ctx = {
+    **PROJECT,
+    "hero_image": _path(BASE_SCOPE, "Evening Lighting - Tree Lights Street.png"),
+    "creative_direction": (
+        "Holiday Express transforms the MetroLink station into the heart of "
+        "Riverside's holiday season — a warm, civic-scaled invitation visible "
+        "from blocks away. Wreaths and garlands frame each entrance like a "
+        "ceremonial gateway; evening lighting turns the platform itself into "
+        "the destination after sundown."
+    ),
+    "phases": [
+        {"label": "Welcome", "body": "Wreaths and garlands at every station entrance — the holiday begins at the curb."},
+        {"label": "Journey", "body": "Pole banners and evening lighting carry the design language down the platform."},
+        {"label": "Arrival", "body": "Walk-through ornament and lit displays at the plaza — a destination, not a transfer."},
+    ],
+}

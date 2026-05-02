@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ project_name }} — Creative Vision{% endblock %}
+{% block extra_head %}
+<style>
+  @page { margin: 0; }
+  body { width: 13.333in; height: 7.5in; }
+  .cv-page {
+    display: grid;
+    grid-template-columns: 7in 6.333in;
+    height: 7.5in;
+  }
+  .cv-hero {
+    background-image: url("{{ hero_image }}");
+    background-size: cover;
+    background-position: center;
+  }
+  .cv-text {
+    padding: var(--space-7) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  .cv-text .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .cv-text h1 {
+    font-size: var(--text-2xl);
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .cv-direction {
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+    line-height: 1.55;
+  }
+  .cv-phases {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+  .cv-phase {
+    display: grid;
+    grid-template-columns: 1.4in 1fr;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-light);
+  }
+  .cv-phase:last-child { border-bottom: 0; padding-bottom: 0; }
+  .cv-phase-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-red);
+  }
+  .cv-phase-body {
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="cv-page">
+  <div class="cv-hero"></div>
+  <div class="cv-text">
+    <div>
+      <div class="label">Creative Vision</div>
+      <h1>"{{ design_phrase }}"</h1>
+    </div>
+    <div class="cv-direction">{{ creative_direction }}</div>
+    <div class="cv-phases">
+      {% for phase in phases %}
+      <div class="cv-phase">
+        <div class="cv-phase-label">{{ phase.label }}</div>
+        <div class="cv-phase-body">{{ phase.body }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
