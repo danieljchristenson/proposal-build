@@ -130,3 +130,18 @@ creative_vision_ctx = {
         {"label": "Arrival", "body": "Walk-through ornament and lit displays at the plaza — a destination, not a transfer."},
     ],
 }
+
+
+# ===== Slide 5a — Showcase Hero (1–3 items) =====
+showcase_hero_ctx = {
+    **PROJECT,
+    "section_title": "Station Entrances",
+    "section_subtitle": "First impressions at the curb",
+    "hero_image": _path(BASE_SCOPE, "Wreaths - Station Entrance 01.png"),
+    "hero_caption": "Custom-finished wreath, primary station entrance",
+    "items": [
+        {"name": "Custom Wreaths", "qty": 4, "note": "Each station entrance"},
+        {"name": "Garland Swags", "qty": 6, "note": "Spans entrance overhang"},
+        {"name": "Pole Wraps", "qty": 8, "note": "Approach from plaza"},
+    ],
+}

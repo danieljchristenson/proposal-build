@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ section_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  .sh-page {
+    display: grid;
+    grid-template-columns: 8in 5in;
+    height: 6.7in;
+    gap: var(--space-6);
+  }
+  .sh-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .sh-hero-image {
+    flex: 1;
+    background-image: url("{{ hero_image }}");
+    background-size: cover;
+    background-position: center;
+    border-radius: 4pt;
+  }
+  .sh-hero-caption { color: var(--color-gray); font-size: var(--text-xs); }
+  .sh-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-4);
+  }
+  .sh-side .label { color: var(--color-red); }
+  .sh-side h1 {
+    font-size: var(--text-2xl);
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .sh-side .sh-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-gray);
+    font-weight: 300;
+    margin-bottom: var(--space-4);
+  }
+  .sh-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    border-top: 2px solid var(--color-red);
+    padding-top: var(--space-4);
+  }
+  .sh-item {
+    display: grid;
+    grid-template-columns: 0.5in 1fr;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+  .sh-item-qty {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    color: var(--color-red);
+    text-align: right;
+  }
+  .sh-item-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+  }
+  .sh-item-note {
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sh-page">
+  <div class="sh-hero">
+    <div class="sh-hero-image"></div>
+    <div class="sh-hero-caption">{{ hero_caption }}</div>
+  </div>
+
+  <div class="sh-side">
+    <div>
+      <div class="label">Showcase</div>
+      <h1>{{ section_title }}</h1>
+      <div class="sh-subtitle">{{ section_subtitle }}</div>
+    </div>
+
+    <div class="sh-items">
+      {% for item in items %}
+      <div class="sh-item">
+        <div class="sh-item-qty">{{ item.qty }}</div>
+        <div>
+          <div class="sh-item-name">{{ item.name }}</div>
+          <div class="sh-item-note">{{ item.note }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

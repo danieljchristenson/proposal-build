@@ -100,6 +100,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Journey",
         "Arrival",
     ]),
+    ("showcase_hero", "showcase_hero_ctx", [
+        "Station Entrances",
+        "Custom Wreaths",
+        "Pole Wraps",
+    ]),
 ]
 
 
