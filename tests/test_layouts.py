@@ -146,6 +146,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "$284,500",
         "$384,500",
     ]),
+    ("investment_single", "investment_single_ctx", [
+        "$284,500",
+        "Materials",
+        "Install + strike",
+    ]),
 ]
 
 

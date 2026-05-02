@@ -348,3 +348,26 @@ investment_tiered_ctx = {
         },
     ],
 }
+
+
+# ===== Slide N+4b — Investment (single tier) =====
+investment_single_ctx = {
+    **PROJECT,
+    "price": "$284,500",
+    "tier_name": "Enhanced",
+    "highlights": [
+        "Custom wreaths — every station entrance",
+        "Garland program — plaza + street fence",
+        "Pole banner program — 8 poles, 2 artwork variants",
+        "Full evening lighting program — 4 zones",
+        "Walk-through ornament — plaza centerpiece",
+        "Install + strike per MetroLink ops windows",
+        "Storage between deinstall and 2027 program",
+    ],
+    "totals_breakdown": [
+        ("Materials", "$148,200"),
+        ("Fabrication", "$52,800"),
+        ("Install + strike", "$58,500"),
+        ("PM + QC", "$25,000"),
+    ],
+}

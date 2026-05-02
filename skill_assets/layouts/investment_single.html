@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Investment{% endblock %}
+{% block extra_head %}
+<style>
+  .is-page { display: grid; grid-template-columns: 6in 1fr; gap: var(--space-6); height: 6.7in; }
+  .is-left { display: flex; flex-direction: column; gap: var(--space-4); }
+  .is-left .label { color: var(--color-red); }
+  .is-left h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .is-tier-block {
+    border-top: 3px solid var(--color-red);
+    padding-top: var(--space-4);
+  }
+  .is-tier-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--color-red);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-2);
+  }
+  .is-price {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 48pt;
+    color: var(--color-charcoal);
+    line-height: 1;
+    margin-bottom: var(--space-3);
+  }
+  .is-highlights ul { margin: 0; padding-left: var(--space-4); font-size: var(--text-sm); }
+  .is-highlights li { margin-bottom: var(--space-1); }
+  .is-right { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-3); }
+  .is-breakdown table { width: 100%; }
+  .is-breakdown th, .is-breakdown td { padding: var(--space-2) 0; }
+  .is-breakdown td:last-child { text-align: right; font-family: var(--font-heading); font-weight: 700; }
+  .is-breakdown caption {
+    text-align: left;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gray);
+    margin-bottom: var(--space-2);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="is-page">
+  <div class="is-left">
+    <div>
+      <div class="label">Investment</div>
+      <h1>One program. One number.</h1>
+    </div>
+
+    <div class="is-tier-block">
+      <div class="is-tier-name">{{ tier_name }} Program</div>
+      <div class="is-price">{{ price }}</div>
+      <div class="is-highlights">
+        <ul>{% for h in highlights %}<li>{{ h }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="is-right">
+    <div class="is-breakdown">
+      <table>
+        <caption>Cost Breakdown</caption>
+        <tbody>
+          {% for label, amount in totals_breakdown %}
+          <tr><td>{{ label }}</td><td>{{ amount }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
