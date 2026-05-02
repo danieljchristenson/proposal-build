@@ -232,3 +232,30 @@ showcase_fullbleed_ctx = {
         "moment that gets shared, that brings visitors back."
     ),
 }
+
+
+# ===== Slide N+1 — Scope of Work =====
+scope_ctx = {
+    **PROJECT,
+    "inclusions": [
+        "Custom-fabricated wreaths (4× station entrances)",
+        "Decorated and undecorated garland swags (plaza + street fence)",
+        "Pole banner program (8 poles, 2 artwork variants)",
+        "Evening lighting program (platform, awning, street tree, curb edge)",
+        "Walk-through ornament arch (plaza centerpiece)",
+        "Install + strike per MetroLink operational windows",
+        "On-site QC walkthrough with RCTC capital projects",
+        "Storage between deinstall and 2027 program",
+    ],
+    "add_ons": [
+        "Spiral LED tree at station forecourt",
+        "Lighted bell display, plaza-side",
+        "Lighted snowflakes on platform railing",
+        "Lighted gift-box towers, plaza pair",
+    ],
+    "exclusions": [
+        "MetroLink overhead catenary work (any modifications)",
+        "Permanent electrical infrastructure",
+        "After-hours security",
+    ],
+}

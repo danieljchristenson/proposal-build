@@ -124,6 +124,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "The Walk-Through Moment",
         "12-foot lighted gift-box arch",
     ]),
+    ("scope", "scope_ctx", [
+        "Scope of Work",
+        "Custom-fabricated wreaths",
+        "MetroLink overhead catenary",
+    ]),
 ]
 
 
