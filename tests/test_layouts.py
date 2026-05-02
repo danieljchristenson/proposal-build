@@ -76,6 +76,13 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Riverside County Transportation Commission",
         "Holiday Express",
     ]),
+    ("exec_summary", "exec_summary_ctx", [
+        "Civic Pride",
+        "Operational Discipline",
+        "Repeatable Investment",
+        "Enhanced",
+        "$284,500",
+    ]),
 ]
 
 

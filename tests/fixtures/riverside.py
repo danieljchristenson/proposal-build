@@ -63,3 +63,28 @@ cover_ctx = {
     "cover_image": _path(BASE_SCOPE, "Wreaths - Station Entrance 01.png"),
     "presentation_date": "May 2026",
 }
+
+
+# ===== Slide 2 — Executive Summary =====
+exec_summary_ctx = {
+    **PROJECT,
+    "tier_recommended": "Enhanced",
+    "deck_length": 16,
+    "investment_total": "$284,500",
+    "go_live_date": "November 20, 2026",
+    "season_end_date": "January 5, 2027",
+    "pillars": [
+        {
+            "title": "Civic Pride",
+            "body": "A holiday program that elevates Riverside as a destination — drawing visitors to a transit hub typically used in transit only.",
+        },
+        {
+            "title": "Operational Discipline",
+            "body": "Materials engineered for transit weather and high foot traffic; install and removal coordinated with MetroLink service hours.",
+        },
+        {
+            "title": "Repeatable Investment",
+            "body": "Decor designed for multi-season reuse; the 2026 program builds the base for 2027 and 2028 expansions.",
+        },
+    ],
+}

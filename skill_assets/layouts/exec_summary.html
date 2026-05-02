@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ project_name }} — Executive Summary{% endblock %}
+{% block extra_head %}
+<style>
+  .es-page {
+    display: flex;
+    flex-direction: column;
+    height: 6.7in;
+    gap: var(--space-6);
+  }
+  .es-header h1 {
+    font-size: var(--text-2xl);
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .es-header .es-eyebrow {
+    color: var(--color-red);
+  }
+  .es-glance {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    border-top: 2px solid var(--color-red);
+    border-bottom: 1px solid var(--color-light);
+    padding: var(--space-4) 0;
+  }
+  .es-glance-cell .label {
+    margin-bottom: var(--space-1);
+  }
+  .es-glance-cell .value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    color: var(--color-charcoal);
+  }
+  .es-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    flex: 1;
+  }
+  .es-pillar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .es-pillar-num {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-3xl);
+    color: var(--color-red);
+    line-height: 1;
+  }
+  .es-pillar h3 {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+  .es-pillar p {
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="es-page">
+  <div class="es-header">
+    <div class="label es-eyebrow">Executive Summary</div>
+    <h1>{{ project_short }} — {{ project_year }} Holiday Program</h1>
+  </div>
+
+  <div class="es-glance">
+    <div class="es-glance-cell">
+      <div class="label">Recommended Tier</div>
+      <div class="value">{{ tier_recommended }}</div>
+    </div>
+    <div class="es-glance-cell">
+      <div class="label">Investment</div>
+      <div class="value">{{ investment_total }}</div>
+    </div>
+    <div class="es-glance-cell">
+      <div class="label">Go Live</div>
+      <div class="value">{{ go_live_date }}</div>
+    </div>
+    <div class="es-glance-cell">
+      <div class="label">Season End</div>
+      <div class="value">{{ season_end_date }}</div>
+    </div>
+  </div>
+
+  <div class="es-pillars">
+    {% for pillar in pillars %}
+    <div class="es-pillar">
+      <div class="es-pillar-num">{{ "%02d"|format(loop.index) }}</div>
+      <h3>{{ pillar.title }}</h3>
+      <p>{{ pillar.body }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
