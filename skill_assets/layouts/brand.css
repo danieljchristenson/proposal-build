@@ -1,0 +1,166 @@
+/* St. Nick's Proposal Builder — locked brand tokens
+ *
+ * This file is the single source of truth for brand colors, fonts,
+ * type scale, spacing scale, and page geometry. Layouts may add
+ * layout-specific styles inline but must NEVER write hex colors,
+ * raw font names, or raw pixel sizes — always use the tokens here.
+ *
+ * See docs/superpowers/specs/2026-05-01-plan-2-brand-layout-design.md
+ * for design rationale.
+ */
+
+/* ===== Embedded fonts ===== */
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* ===== Design tokens ===== */
+:root {
+  /* Colors — locked by parent spec §3 */
+  --color-red: #B31315;       /* Headlines, accents, CTAs ONLY — never block fill */
+  --color-charcoal: #1C1C1C;  /* Body on light backgrounds */
+  --color-gray: #555555;      /* Captions, secondary text */
+  --color-navy: #12355B;      /* Secondary accent */
+  --color-light: #ECEFF1;     /* Body on dark backgrounds; light fills */
+
+  /* Font families */
+  --font-heading: "Roboto", sans-serif;
+  --font-body: "Poppins", sans-serif;
+
+  /* Typographic scale — geometric ~1.25 minor third, base = 12pt body */
+  --text-xs:   9pt;
+  --text-sm:   11pt;
+  --text-base: 12pt;
+  --text-lg:   15pt;
+  --text-xl:   19pt;
+  --text-2xl:  24pt;
+  --text-3xl:  30pt;
+
+  /* Spacing scale — 4pt grid */
+  --space-1: 4pt;
+  --space-2: 8pt;
+  --space-3: 12pt;
+  --space-4: 16pt;
+  --space-5: 20pt;
+  --space-6: 24pt;
+  --space-7: 28pt;
+  --space-8: 32pt;
+}
+
+/* ===== Page geometry ===== */
+@page {
+  size: 13.333in 7.5in;          /* 16:9 widescreen, landscape */
+  margin: var(--space-6);        /* Default margin; layouts may override */
+}
+
+/* ===== Global element rules ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-base);
+  color: var(--color-charcoal);
+  line-height: 1.45;
+  background: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-charcoal);
+  margin: 0 0 var(--space-3) 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--text-3xl); color: var(--color-red); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-base); }
+h6 { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.08em; }
+
+p {
+  margin: 0 0 var(--space-3) 0;
+}
+
+ul, ol {
+  margin: 0 0 var(--space-3) 0;
+  padding-left: var(--space-5);
+}
+
+li {
+  margin: 0 0 var(--space-1) 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--text-sm);
+}
+
+th, td {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-light);
+}
+
+th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-charcoal);
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+}
+
+/* Utility: caption text */
+.caption {
+  font-size: var(--text-xs);
+  color: var(--color-gray);
+  font-weight: 300;
+}
+
+/* Utility: small uppercase label */
+.label {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gray);
+}
