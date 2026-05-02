@@ -1017,14 +1017,14 @@ Expected: 1 FAILED — `TemplateNotFound: cover.html`.
   }
   .cover-hero {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     background-image: url("{{ cover_image }}");
     background-size: cover;
     background-position: center;
   }
   .cover-scrim {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     background: linear-gradient(
       90deg,
       rgba(0,0,0,0.65) 0%,
@@ -2172,7 +2172,7 @@ Run: `pytest tests/test_layouts.py::test_layout_renders -v -k showcase_fullbleed
   }
   .sf-image {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     background-image: url("{{ hero_image }}");
     background-size: cover;
     background-position: center;
