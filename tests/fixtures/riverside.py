@@ -422,3 +422,19 @@ terms_ctx = {
     ),
     "validity_days": 60,
 }
+
+
+# ===== Slide N+7 — Sign Block =====
+sign_block_ctx = {
+    **PROJECT,
+    "client_signer_name": "Jacklyn Moreno",
+    "client_signer_title": "Capital Projects Manager",
+    "client_signer_org": "Riverside County Transportation Commission",
+    "stnicks_signer_name": "Daniel Christenson",
+    "stnicks_signer_title": "Director of Sales",
+    "stnicks_signer_org": "St. Nick's Holiday Decor",
+    "instructions": (
+        "Sign and return to your St. Nick's representative. We'll countersign "
+        "and return a fully executed copy along with your project kickoff packet."
+    ),
+}

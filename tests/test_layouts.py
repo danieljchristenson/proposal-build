@@ -161,6 +161,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Signing deadline",
         "On fabrication start",
     ]),
+    ("sign_block", "sign_block_ctx", [
+        "Jacklyn Moreno",
+        "Daniel Christenson",
+        "Sign and return",
+    ]),
 ]
 
 

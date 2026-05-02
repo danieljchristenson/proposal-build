@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Acceptance{% endblock %}
+{% block extra_head %}
+<style>
+  .sb-page { display: flex; flex-direction: column; gap: var(--space-6); height: 6.7in; }
+  .sb-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .sb-header .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .sb-instructions { font-size: var(--text-sm); color: var(--color-gray); max-width: 9in; }
+  .sb-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+    margin-top: var(--space-4);
+  }
+  .sb-party h3 {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin: 0 0 var(--space-4) 0;
+  }
+  .sb-line {
+    border-bottom: 1px solid var(--color-charcoal);
+    height: 0.45in;
+    margin-bottom: var(--space-1);
+  }
+  .sb-row { display: grid; grid-template-columns: 1fr 1.5in; gap: var(--space-4); margin-bottom: var(--space-4); }
+  .sb-caption { font-size: var(--text-xs); color: var(--color-gray); text-transform: uppercase; letter-spacing: 0.06em; }
+  .sb-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+    margin-top: var(--space-3);
+  }
+  .sb-title-line { font-size: var(--text-sm); color: var(--color-gray); }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sb-page">
+  <div class="sb-header">
+    <div class="label">Acceptance</div>
+    <h1>Authorization to proceed</h1>
+  </div>
+
+  <div class="sb-instructions">{{ instructions }}</div>
+
+  <div class="sb-grid">
+    <div class="sb-party">
+      <h3>Client</h3>
+      <div class="sb-row">
+        <div>
+          <div class="sb-line"></div>
+          <div class="sb-caption">Signature</div>
+        </div>
+        <div>
+          <div class="sb-line"></div>
+          <div class="sb-caption">Date</div>
+        </div>
+      </div>
+      <div class="sb-name">{{ client_signer_name }}</div>
+      <div class="sb-title-line">{{ client_signer_title }}, {{ client_signer_org }}</div>
+    </div>
+
+    <div class="sb-party">
+      <h3>St. Nick's</h3>
+      <div class="sb-row">
+        <div>
+          <div class="sb-line"></div>
+          <div class="sb-caption">Signature</div>
+        </div>
+        <div>
+          <div class="sb-line"></div>
+          <div class="sb-caption">Date</div>
+        </div>
+      </div>
+      <div class="sb-name">{{ stnicks_signer_name }}</div>
+      <div class="sb-title-line">{{ stnicks_signer_title }}, {{ stnicks_signer_org }}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
