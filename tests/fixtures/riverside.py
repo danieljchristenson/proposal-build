@@ -165,3 +165,28 @@ showcase_2up_ctx = {
         },
     ],
 }
+
+
+# ===== Slide 5c — Showcase 3-up (6–10 items) =====
+showcase_3up_ctx = {
+    **PROJECT,
+    "section_title": "Pole Decor",
+    "section_subtitle": "Length-of-corridor design language",
+    "tiles": [
+        {
+            "image": _path(BASE_SCOPE, "Pole Banner - Happy Holidays.png"),
+            "name": "Happy Holidays Pole Banner",
+            "note": "Both faces, weather-treated",
+        },
+        {
+            "image": _path(BASE_SCOPE, "Pole Banner Artwork - Holiday Express 01.jpg"),
+            "name": "Holiday Express Banner — A",
+            "note": "Custom artwork; train-themed",
+        },
+        {
+            "image": _path(BASE_SCOPE, "Pole Banner Artwork - Holiday Express 02.jpg"),
+            "name": "Holiday Express Banner — B",
+            "note": "Custom artwork; track-themed",
+        },
+    ],
+}

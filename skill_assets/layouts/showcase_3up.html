@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ section_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  .sg-page {
+    display: flex;
+    flex-direction: column;
+    height: 6.7in;
+    gap: var(--space-4);
+  }
+  .sg-header { display: flex; align-items: baseline; justify-content: space-between; }
+  .sg-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .sg-subtitle { color: var(--color-gray); font-size: var(--text-sm); font-weight: 300; }
+  .sg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    flex: 1;
+  }
+  .sg-tile { display: flex; flex-direction: column; gap: var(--space-2); }
+  .sg-image { flex: 1; background-size: cover; background-position: center; border-radius: 4pt; }
+  .sg-tile-name { font-family: var(--font-heading); font-weight: 700; font-size: var(--text-sm); color: var(--color-charcoal); }
+  .sg-tile-note { font-size: var(--text-xs); color: var(--color-gray); }
+  .sg-eyebrow { color: var(--color-red); }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sg-page">
+  <div class="sg-header">
+    <div>
+      <div class="label sg-eyebrow">Showcase</div>
+      <h1>{{ section_title }}</h1>
+    </div>
+    <div class="sg-subtitle">{{ section_subtitle }}</div>
+  </div>
+
+  <div class="sg-grid">
+    {% for tile in tiles %}
+    <div class="sg-tile">
+      <div class="sg-image" style="background-image: url('{{ tile.image }}');"></div>
+      <div class="sg-tile-name">{{ tile.name }}</div>
+      <div class="sg-tile-note">{{ tile.note }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
