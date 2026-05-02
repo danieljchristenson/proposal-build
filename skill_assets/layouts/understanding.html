@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ project_name }} — Our Understanding{% endblock %}
+{% block extra_head %}
+<style>
+  .un-page { display: flex; flex-direction: column; gap: var(--space-5); height: 6.7in; }
+  .un-header h1 { font-size: var(--text-2xl); margin: 0 0 var(--space-1) 0; color: var(--color-charcoal); }
+  .un-header .label { color: var(--color-red); }
+  .un-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--space-4);
+    flex: 1;
+  }
+  .un-box {
+    border-top: 3px solid var(--color-navy);
+    padding: var(--space-3) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .un-box.tier { border-top-color: var(--color-red); }
+  .un-box h3 {
+    font-size: var(--text-base);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0;
+    color: var(--color-charcoal);
+  }
+  .un-box ul {
+    margin: 0;
+    padding-left: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+  }
+  .un-box li { margin-bottom: var(--space-1); }
+  .un-tier-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--color-red);
+    margin: var(--space-1) 0 var(--space-2) 0;
+  }
+  .un-tier-rationale {
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="un-page">
+  <div class="un-header">
+    <div class="label">Our Understanding</div>
+    <h1>What success looks like for {{ client_short }}</h1>
+  </div>
+
+  <div class="un-grid">
+    <div class="un-box">
+      <h3>Customer Goals</h3>
+      <ul>{% for g in customer_goals %}<li>{{ g }}</li>{% endfor %}</ul>
+    </div>
+
+    <div class="un-box">
+      <h3>Success Criteria</h3>
+      <ul>{% for s in success_criteria %}<li>{{ s }}</li>{% endfor %}</ul>
+    </div>
+
+    {% if constraints %}
+    <div class="un-box">
+      <h3>Constraints</h3>
+      <ul>{% for c in constraints %}<li>{{ c }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+
+    <div class="un-box tier">
+      <h3>Recommended Tier</h3>
+      <div class="un-tier-name">{{ tier_recommended }}</div>
+      <div class="un-tier-rationale">{{ tier_rationale }}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

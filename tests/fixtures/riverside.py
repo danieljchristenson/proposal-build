@@ -88,3 +88,26 @@ exec_summary_ctx = {
         },
     ],
 }
+
+
+# ===== Slide 3 — Our Understanding =====
+understanding_ctx = {
+    **PROJECT,
+    "customer_goals": [
+        "Establish RCTC's MetroLink station as a regional holiday destination",
+        "Drive non-transit foot traffic to the downtown station and adjoining plaza",
+        "Position Riverside County as a leader in civic seasonal programming",
+    ],
+    "success_criteria": [
+        "Measurable increase in evening visitors during the program window",
+        "Local press and social media coverage of the activation",
+        "Zero MetroLink operational disruptions during install/strike",
+    ],
+    "constraints": [
+        "All decor must clear MetroLink overhead catenary safety envelope",
+        "Install and removal must occur outside revenue service hours",
+        "Materials must withstand winter Santa Ana wind events",
+    ],
+    "tier_recommended": "Enhanced",
+    "tier_rationale": "Balances civic visual impact with disciplined investment.",
+}

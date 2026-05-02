@@ -83,6 +83,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Enhanced",
         "$284,500",
     ]),
+    ("understanding", "understanding_ctx", [
+        "regional holiday destination",
+        "MetroLink overhead catenary",
+        "Enhanced",
+    ]),
 ]
 
 
