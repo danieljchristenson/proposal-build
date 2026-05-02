@@ -56,7 +56,12 @@ def _assert_dimensions(doc: fitz.Document) -> None:
 
 
 def _assert_text_present(doc: fitz.Document, expected: list[str]) -> None:
-    text = "\n".join(page.get_text() for page in doc)
+    # Normalise line-breaks introduced by PyMuPDF's text extraction (it inserts
+    # \n wherever the renderer wrapped a line, so multi-word fragments that span
+    # a wrap point would never match a verbatim substring check).  Collapsing to
+    # a single space mirrors what a reader sees and keeps assertions readable.
+    raw = " ".join(page.get_text() for page in doc)
+    text = " ".join(raw.split())
     for fragment in expected:
         assert fragment in text, (
             f"Expected fragment {fragment!r} not found in extracted PDF text."
@@ -66,7 +71,11 @@ def _assert_text_present(doc: fitz.Document, expected: list[str]) -> None:
 # (layout_name, fixture_attribute_name, list_of_text_fragments_that_must_appear)
 # Each Plan 2 layout task appends one entry here.
 LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
-    # appended per task
+    ("cover", "cover_ctx", [
+        "Downtown Riverside MetroLink",
+        "Riverside County Transportation Commission",
+        "Holiday Express",
+    ]),
 ]
 
 

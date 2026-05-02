@@ -41,6 +41,7 @@ packages = []
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["tests"]
+pythonpath = ["tests"]
 addopts = "-ra -q"
 
 [tool.ruff]

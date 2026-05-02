@@ -55,3 +55,11 @@ PROJECT = {
 
 # Each layout's fixture is appended below by its task.
 # (Layouts are added in the order of the slide catalog.)
+
+
+# ===== Slide 1 — Cover =====
+cover_ctx = {
+    **PROJECT,
+    "cover_image": _path(BASE_SCOPE, "Wreaths - Station Entrance 01.png"),
+    "presentation_date": "May 2026",
+}

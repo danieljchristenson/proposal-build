@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ project_name }} — Cover{% endblock %}
+{% block extra_head %}
+<style>
+  @page { margin: 0; }
+  body { width: 13.333in; height: 7.5in; }
+  .cover {
+    position: relative;
+    width: 13.333in;
+    height: 7.5in;
+    overflow: hidden;
+  }
+  .cover-hero {
+    position: absolute;
+    inset: 0;
+    background-image: url("{{ cover_image }}");
+    background-size: cover;
+    background-position: center;
+  }
+  .cover-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(0,0,0,0.65) 0%,
+      rgba(0,0,0,0.35) 45%,
+      rgba(0,0,0,0.0) 75%
+    );
+  }
+  .cover-text {
+    position: absolute;
+    left: var(--space-8);
+    bottom: var(--space-8);
+    right: 50%;
+    color: var(--color-light);
+  }
+  .cover-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--color-light);
+    margin-bottom: var(--space-3);
+    opacity: 0.85;
+  }
+  .cover-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 44pt;
+    line-height: 1.05;
+    color: var(--color-light);
+    margin: 0 0 var(--space-4) 0;
+    letter-spacing: -0.02em;
+  }
+  .cover-design-phrase {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--color-red);
+    margin: 0 0 var(--space-5) 0;
+  }
+  .cover-meta {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-sm);
+    color: var(--color-light);
+    line-height: 1.6;
+  }
+  .cover-meta strong {
+    font-weight: 500;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="cover">
+  <div class="cover-hero"></div>
+  <div class="cover-scrim"></div>
+  <div class="cover-text">
+    <div class="cover-eyebrow">Holiday Program Proposal · {{ project_year }}</div>
+    <h1 class="cover-title">{{ project_name }}</h1>
+    <div class="cover-design-phrase">"{{ design_phrase }}"</div>
+    <div class="cover-meta">
+      Prepared for <strong>{{ client_company }}</strong><br>
+      {{ decision_maker }}, {{ decision_maker_title }}<br>
+      <br>
+      Presented by <strong>{{ presenter_name }}</strong>, St. Nick's<br>
+      {{ presentation_date }}
+    </div>
+  </div>
+</div>
+{% endblock %}
