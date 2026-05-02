@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}About St. Nick's{% endblock %}
+{% block extra_head %}
+<style>
+  .ab-page { display: flex; flex-direction: column; gap: var(--space-5); height: 6.7in; }
+  .ab-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .ab-header .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .ab-blurb { font-size: var(--text-base); color: var(--color-charcoal); max-width: 11in; }
+  .ab-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    border-top: 2px solid var(--color-red);
+    border-bottom: 1px solid var(--color-light);
+    padding: var(--space-4) 0;
+  }
+  .ab-stat-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-3xl);
+    color: var(--color-red);
+    line-height: 1;
+  }
+  .ab-stat-label {
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: var(--space-1);
+  }
+  .ab-team h3 {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .ab-team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    font-size: var(--text-sm);
+  }
+  .ab-member-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-charcoal);
+  }
+  .ab-member-title { color: var(--color-gray); }
+  .ab-member-email { color: var(--color-charcoal); font-size: var(--text-xs); }
+</style>
+{% endblock %}
+{% block content %}
+<div class="ab-page">
+  <div class="ab-header">
+    <div class="label">About St. Nick's</div>
+    <h1>Who we are</h1>
+  </div>
+
+  <div class="ab-blurb">{{ company_blurb }}</div>
+
+  <div class="ab-stats">
+    {% for stat in stats %}
+    <div>
+      <div class="ab-stat-value">{{ stat.value }}</div>
+      <div class="ab-stat-label">{{ stat.label }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="ab-team">
+    <h3>Your Team</h3>
+    <div class="ab-team-grid">
+      {% for m in team %}
+      <div>
+        <div class="ab-member-name">{{ m.name }}</div>
+        <div class="ab-member-title">{{ m.title }}</div>
+        <div class="ab-member-email">{{ m.email }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

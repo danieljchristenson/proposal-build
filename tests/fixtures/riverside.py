@@ -438,3 +438,27 @@ sign_block_ctx = {
         "and return a fully executed copy along with your project kickoff packet."
     ),
 }
+
+
+# ===== Slide N+8 — About St. Nick's =====
+about_ctx = {
+    **PROJECT,
+    "company_blurb": (
+        "St. Nick's is a holiday decor design and fabrication studio "
+        "serving civic, retail, and hospitality clients across North America "
+        "since 2008. We design programs that scale across years, fabricate "
+        "in-house, and run our own install crews."
+    ),
+    "stats": [
+        {"value": "17", "label": "Years in business"},
+        {"value": "120+", "label": "Annual programs"},
+        {"value": "32 states", "label": "Active geography"},
+        {"value": "100%", "label": "In-house fabrication"},
+    ],
+    "team": [
+        {"name": "Daniel Christenson", "title": "Director of Sales", "email": "daniel@st-nicks.com"},
+        {"name": "Jonathan Yang", "title": "Account Executive", "email": "jonathan@st-nicks.com"},
+        {"name": "Stephanie Escobar", "title": "Past Work Curator", "email": "stephanie@st-nicks.com"},
+        {"name": "Abigail Lacson", "title": "Brand & Design", "email": "abigail@st-nicks.com"},
+    ],
+}

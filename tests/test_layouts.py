@@ -166,6 +166,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Daniel Christenson",
         "Sign and return",
     ]),
+    ("about", "about_ctx", [
+        "St. Nick's",
+        "120+",
+        "Daniel Christenson",
+    ]),
 ]
 
 
