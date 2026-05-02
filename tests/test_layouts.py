@@ -115,6 +115,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Happy Holidays Pole Banner",
         "Holiday Express Banner",
     ]),
+    ("showcase_4up", "showcase_4up_ctx", [
+        "Evening Program",
+        "Street Tree Lights",
+        "Curb Edge Lighting",
+    ]),
 ]
 
 

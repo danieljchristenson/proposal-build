@@ -190,3 +190,33 @@ showcase_3up_ctx = {
         },
     ],
 }
+
+
+# ===== Slide 5d — Showcase 4-up (overflow) =====
+showcase_4up_ctx = {
+    **PROJECT,
+    "section_title": "Evening Program",
+    "section_subtitle": "After-dark activations",
+    "tiles": [
+        {
+            "image": _path(BASE_SCOPE, "Evening Lighting - Tree Lights Street.png"),
+            "name": "Street Tree Lights",
+            "note": "Warm white",
+        },
+        {
+            "image": _path(BASE_SCOPE, "Evening Lighting - Station Awning 01.png"),
+            "name": "Station Awning Lights",
+            "note": "Architectural perimeter",
+        },
+        {
+            "image": _path(BASE_SCOPE, "Evening Lighting - Platform Railing.png"),
+            "name": "Platform Railing",
+            "note": "Approach lighting",
+        },
+        {
+            "image": _path(BASE_SCOPE, "Evening Lighting - Curb Edge.png"),
+            "name": "Curb Edge Lighting",
+            "note": "Vehicle-side warmth",
+        },
+    ],
+}
