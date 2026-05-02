@@ -105,6 +105,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Custom Wreaths",
         "Pole Wraps",
     ]),
+    ("showcase_2up", "showcase_2up_ctx", [
+        "Platform & Plaza",
+        "Decorated Plaza Fence Garland",
+        "Platform Railing Lighting",
+    ]),
 ]
 
 

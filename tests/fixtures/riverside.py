@@ -145,3 +145,23 @@ showcase_hero_ctx = {
         {"name": "Pole Wraps", "qty": 8, "note": "Approach from plaza"},
     ],
 }
+
+
+# ===== Slide 5b — Showcase 2-up (3–6 items) =====
+showcase_2up_ctx = {
+    **PROJECT,
+    "section_title": "Platform & Plaza",
+    "section_subtitle": "Where transit meets celebration",
+    "tiles": [
+        {
+            "image": _path(BASE_SCOPE, "Garlands - Decorated Swag - Plaza Fence.png"),
+            "name": "Decorated Plaza Fence Garland",
+            "note": "Continuous run, plaza-side fence",
+        },
+        {
+            "image": _path(BASE_SCOPE, "Evening Lighting - Platform Railing.png"),
+            "name": "Platform Railing Lighting",
+            "note": "Warm-white LED, dusk-to-2am program",
+        },
+    ],
+}
