@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Investment{% endblock %}
+{% block extra_head %}
+<style>
+  body { overflow: hidden; }
+  .it-page { display: flex; flex-direction: column; gap: var(--space-5); height: 6.7in; overflow: hidden; }
+  .it-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .it-header .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .it-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    flex: 1;
+  }
+  .it-tier {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5) var(--space-4);
+    border: 1px solid var(--color-light);
+    border-radius: 4pt;
+    background: white;
+    overflow: hidden;
+  }
+  .it-tier > * { margin-bottom: var(--space-3); }
+  .it-tier > *:last-child { margin-bottom: 0; }
+  .it-tier.recommended {
+    border: 2px solid var(--color-red);
+    background: #FFF8F8;
+  }
+  .it-tier .it-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+  .it-tier.recommended .it-name { color: var(--color-red); }
+  .it-tier .it-tagline {
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+    font-weight: 300;
+    min-height: 2.4em;
+  }
+  .it-tier .it-price {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-3xl);
+    color: var(--color-charcoal);
+    margin: var(--space-2) 0;
+  }
+  .it-tier.recommended .it-price { color: var(--color-red); }
+  .it-tier ul {
+    margin: 0;
+    padding-left: var(--space-4);
+    font-size: var(--text-sm);
+  }
+  .it-tier li { margin-bottom: var(--space-1); }
+  .it-recommend-flag {
+    align-self: flex-start;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-light);
+    background: var(--color-red);
+    padding: 4pt 10pt;
+    border-radius: 2pt;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="it-page">
+  <div class="it-header">
+    <div class="label">Investment</div>
+    <h1>Three program tiers — pick the one that fits the moment</h1>
+  </div>
+
+  <div class="it-grid">
+    {% for tier in tiers %}
+    <div class="it-tier {% if tier.get('is_recommended') %}recommended{% endif %}">
+      {% if tier.get('is_recommended') %}<span class="it-recommend-flag">Recommended</span>{% endif %}
+      <div class="it-name">{{ tier.name }}</div>
+      <div class="it-tagline">{{ tier.tagline }}</div>
+      <div class="it-price">{{ tier.price }}</div>
+      <ul>{% for h in tier.highlights %}<li>{{ h }}</li>{% endfor %}</ul>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

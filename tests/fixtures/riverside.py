@@ -305,3 +305,46 @@ case_study_ctx = {
         "in The Oregonian, KGW, and Travel + Leisure."
     ),
 }
+
+
+# ===== Slide N+4a — Investment (3-tier) =====
+investment_tiered_ctx = {
+    **PROJECT,
+    "tiers": [
+        {
+            "name": "Essential",
+            "tagline": "The disciplined civic baseline",
+            "price": "$184,500",
+            "highlights": [
+                "Custom wreaths at every entrance",
+                "Garland program — plaza fence",
+                "Pole banner program — 8 poles",
+                "Standard install + strike",
+            ],
+        },
+        {
+            "name": "Enhanced",
+            "tagline": "Recommended — civic moment, full evening program",
+            "price": "$284,500",
+            "is_recommended": True,
+            "highlights": [
+                "Everything in Essential",
+                "Full evening lighting program",
+                "Walk-through ornament — plaza centerpiece",
+                "Coordinated install per MetroLink ops windows",
+            ],
+        },
+        {
+            "name": "Signature",
+            "tagline": "A regional destination",
+            "price": "$384,500",
+            "highlights": [
+                "Everything in Enhanced",
+                "Spiral LED tree — station forecourt",
+                "Lighted bell + gift-box towers",
+                "Programmatic snowflake railing",
+                "On-site staffing during install + strike",
+            ],
+        },
+    ],
+}

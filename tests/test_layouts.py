@@ -138,6 +138,14 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Oregon Zoo",
         "47% increase in evening attendance",
     ]),
+    ("investment_tiered", "investment_tiered_ctx", [
+        "Essential",
+        "Enhanced",
+        "Signature",
+        "$184,500",
+        "$284,500",
+        "$384,500",
+    ]),
 ]
 
 
