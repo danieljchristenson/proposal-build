@@ -60,10 +60,16 @@ def _assert_text_present(doc: fitz.Document, expected: list[str]) -> None:
     # \n wherever the renderer wrapped a line, so multi-word fragments that span
     # a wrap point would never match a verbatim substring check).  Collapsing to
     # a single space mirrors what a reader sees and keeps assertions readable.
+    #
+    # Case-folding: WeasyPrint applies CSS `text-transform: uppercase` by
+    # rewriting the rendered glyphs to uppercase characters, so PyMuPDF's
+    # text extraction returns e.g. "WELCOME" even when the source content
+    # is "Welcome". The fragments are content assertions, not styling
+    # assertions — case is the layout's job, presence is the test's job.
     raw = " ".join(page.get_text() for page in doc)
-    text = " ".join(raw.split())
+    text = " ".join(raw.split()).casefold()
     for fragment in expected:
-        assert fragment in text, (
+        assert fragment.casefold() in text, (
             f"Expected fragment {fragment!r} not found in extracted PDF text."
         )
 
