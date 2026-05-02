@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Sample of Our Work{% endblock %}
+{% block extra_head %}
+<style>
+  .sw-page { display: flex; flex-direction: column; gap: var(--space-4); height: 6.7in; }
+  .sw-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .sw-header .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .sw-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: var(--space-3);
+    flex: 1;
+  }
+  .sw-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4pt;
+    background-size: cover;
+    background-position: center;
+  }
+  .sw-tile-overlay {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: var(--space-3);
+    background: linear-gradient(0deg, rgba(0,0,0,0.7), rgba(0,0,0,0));
+    color: var(--color-light);
+  }
+  .sw-tile-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-light);
+  }
+  .sw-tile-meta {
+    font-size: var(--text-xs);
+    color: var(--color-light);
+    opacity: 0.85;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sw-page">
+  <div class="sw-header">
+    <div class="label">Sample of Our Work</div>
+    <h1>Recent installations</h1>
+  </div>
+
+  <div class="sw-grid">
+    {% for tile in tiles %}
+    <div class="sw-tile" style="background-image: url('{{ tile.image }}');">
+      <div class="sw-tile-overlay">
+        <div class="sw-tile-name">{{ tile.name }}</div>
+        <div class="sw-tile-meta">{{ tile.location }} · {{ tile.year }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

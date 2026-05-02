@@ -129,6 +129,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Custom-fabricated wreaths",
         "MetroLink overhead catenary",
     ]),
+    ("sample_of_work", "sample_of_work_ctx", [
+        "Sample of Our Work",
+        "Pier 39",
+        "Oregon Zoo",
+    ]),
 ]
 
 

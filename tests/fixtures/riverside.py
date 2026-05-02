@@ -259,3 +259,26 @@ scope_ctx = {
         "After-hours security",
     ],
 }
+
+
+# ===== Slide N+2 — Sample of Our Work =====
+sample_of_work_ctx = {
+    **PROJECT,
+    "tiles": [
+        # 6 tiles. Riverside doesn't have a populated past_work_library yet
+        # (Plan 9), so these reference plausible fixture entries by name and
+        # use available rendering files as stand-in imagery.
+        {"image": _path(ENHANCEMENTS, "Lighted Bell Display - Scene.png"),
+         "name": "The Music Center", "location": "Los Angeles", "year": 2024},
+        {"image": _path(ENHANCEMENTS, "Spiral Tree - LED Red Green.png"),
+         "name": "Pier 39", "location": "San Francisco", "year": 2023},
+        {"image": _path(ENHANCEMENTS, "Walk-Through Display - Lighted Gift Box.png"),
+         "name": "Oregon Zoo", "location": "Portland", "year": 2024},
+        {"image": _path(BASE_SCOPE, "Wreath - Brick Column Night.jpg"),
+         "name": "JFK Terminal 1", "location": "New York", "year": 2023},
+        {"image": _path(BASE_SCOPE, "Large Tree - Traditional Ornaments.png"),
+         "name": "Sphere — Holiday Tree", "location": "Las Vegas", "year": 2024},
+        {"image": _path(BASE_SCOPE, "Walk-Through Ornament - Warm White.png"),
+         "name": "LED Angels Program", "location": "Long Beach", "year": 2024},
+    ],
+}
