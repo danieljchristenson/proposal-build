@@ -120,6 +120,10 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Street Tree Lights",
         "Curb Edge Lighting",
     ]),
+    ("showcase_fullbleed", "showcase_fullbleed_ctx", [
+        "The Walk-Through Moment",
+        "12-foot lighted gift-box arch",
+    ]),
 ]
 
 

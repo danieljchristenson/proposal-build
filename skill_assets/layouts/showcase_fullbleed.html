@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}{{ section_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  @page { margin: 0; }
+  body { width: 13.333in; height: 7.5in; }
+  .sf-page {
+    position: relative;
+    width: 13.333in;
+    height: 7.5in;
+    overflow: hidden;
+  }
+  .sf-image {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-image: url("{{ hero_image }}");
+    background-size: cover;
+    background-position: center;
+  }
+  .sf-text {
+    position: absolute;
+    left: var(--space-8);
+    bottom: var(--space-8);
+    right: var(--space-8);
+    color: var(--color-light);
+    text-shadow: 0 2pt 12pt rgba(0,0,0,0.6);
+  }
+  .sf-text .label { color: var(--color-light); opacity: 0.85; margin-bottom: var(--space-2); }
+  .sf-text h1 {
+    font-size: var(--text-3xl);
+    color: var(--color-light);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .sf-text p {
+    font-size: var(--text-base);
+    color: var(--color-light);
+    max-width: 7in;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sf-page">
+  <div class="sf-image"></div>
+  <div class="sf-text">
+    <div class="label">Showcase</div>
+    <h1>{{ section_title }}</h1>
+    <p>{{ caption }}</p>
+  </div>
+</div>
+{% endblock %}

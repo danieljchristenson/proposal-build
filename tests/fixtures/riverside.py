@@ -220,3 +220,15 @@ showcase_4up_ctx = {
         },
     ],
 }
+
+
+# ===== Slide 5e — Showcase full-bleed (single hero) =====
+showcase_fullbleed_ctx = {
+    **PROJECT,
+    "section_title": "The Walk-Through Moment",
+    "hero_image": _path(ENHANCEMENTS, "Walk-Through Display - Lighted Gift Box.png"),
+    "caption": (
+        "A 12-foot lighted gift-box arch on the plaza — the photo "
+        "moment that gets shared, that brings visitors back."
+    ),
+}
