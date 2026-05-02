@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Case Study — {{ case_study_name }}{% endblock %}
+{% block extra_head %}
+<style>
+  .cs-page {
+    display: grid;
+    grid-template-columns: 5in 1fr;
+    gap: var(--space-6);
+    height: 6.7in;
+  }
+  .cs-image {
+    background-image: url("{{ case_study_image }}");
+    background-size: cover;
+    background-position: center;
+    border-radius: 4pt;
+  }
+  .cs-text { display: flex; flex-direction: column; gap: var(--space-4); }
+  .cs-text .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .cs-text h1 {
+    font-size: var(--text-2xl);
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .cs-act {
+    border-left: 3px solid var(--color-red);
+    padding-left: var(--space-4);
+  }
+  .cs-act h3 {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .cs-act p {
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="cs-page">
+  <div class="cs-image"></div>
+  <div class="cs-text">
+    <div>
+      <div class="label">Case Study</div>
+      <h1>{{ case_study_name }}</h1>
+    </div>
+    <div class="cs-act">
+      <h3>Challenge</h3>
+      <p>{{ challenge }}</p>
+    </div>
+    <div class="cs-act">
+      <h3>Approach</h3>
+      <p>{{ approach }}</p>
+    </div>
+    <div class="cs-act">
+      <h3>Outcome</h3>
+      <p>{{ outcome }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

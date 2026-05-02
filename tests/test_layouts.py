@@ -134,6 +134,10 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Pier 39",
         "Oregon Zoo",
     ]),
+    ("case_study", "case_study_ctx", [
+        "Oregon Zoo",
+        "47% increase in evening attendance",
+    ]),
 ]
 
 

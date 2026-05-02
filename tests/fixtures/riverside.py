@@ -282,3 +282,26 @@ sample_of_work_ctx = {
          "name": "LED Angels Program", "location": "Long Beach", "year": 2024},
     ],
 }
+
+
+# ===== Slide N+3 — Case Study =====
+case_study_ctx = {
+    **PROJECT,
+    "case_study_name": "Oregon Zoo — ZooLights",
+    "case_study_image": _path(ENHANCEMENTS, "Lighted Gift Box Tower 01.png"),
+    "challenge": (
+        "Drive evening attendance during the slowest revenue months while "
+        "maintaining the zoo's family-friendly identity and operating "
+        "within a tight nonprofit budget."
+    ),
+    "approach": (
+        "A modular lighting program designed to grow over three seasons. "
+        "Year-one investment in a hero walkway and signature animal lights; "
+        "years two and three add adjacent zones using compatible hardware."
+    ),
+    "outcome": (
+        "47% increase in evening attendance during the program window. "
+        "Year-three program ran with no new capital outlay. Press coverage "
+        "in The Oregonian, KGW, and Travel + Leisure."
+    ),
+}
