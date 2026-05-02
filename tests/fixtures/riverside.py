@@ -371,3 +371,25 @@ investment_single_ctx = {
         ("PM + QC", "$25,000"),
     ],
 }
+
+
+# ===== Slide N+5 — Add-Ons =====
+add_ons_ctx = {
+    **PROJECT,
+    "items": [
+        {"id": "E1", "name": "Spiral LED Tree", "location": "Station forecourt",
+         "qty": 1, "unit": "ea", "price_each": "$8,500", "total": "$8,500"},
+        {"id": "E2", "name": "Lighted Bell Display", "location": "Plaza-side",
+         "qty": 4, "unit": "ea", "price_each": "$1,250", "total": "$5,000"},
+        {"id": "E3", "name": "Lighted Snowflakes — Railing",
+         "location": "Platform north railing", "qty": 12, "unit": "ea",
+         "price_each": "$185", "total": "$2,220"},
+        {"id": "E4", "name": "Lighted Gift-Box Tower",
+         "location": "Plaza, both sides", "qty": 2, "unit": "ea",
+         "price_each": "$3,400", "total": "$6,800"},
+        {"id": "E5", "name": "Walk-Through Display Refresh",
+         "location": "Existing arch", "qty": 1, "unit": "LS",
+         "price_each": "$3,200", "total": "$3,200"},
+    ],
+    "subtotal": "$25,720",
+}

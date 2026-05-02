@@ -151,6 +151,11 @@ LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
         "Materials",
         "Install + strike",
     ]),
+    ("add_ons", "add_ons_ctx", [
+        "Add-Ons",
+        "Spiral LED Tree",
+        "$25,720",
+    ]),
 ]
 
 

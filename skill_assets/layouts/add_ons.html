@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Optional Add-Ons{% endblock %}
+{% block extra_head %}
+<style>
+  .ao-page { display: flex; flex-direction: column; gap: var(--space-4); height: 6.7in; }
+  .ao-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .ao-header .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .ao-table { font-size: var(--text-sm); }
+  .ao-table th, .ao-table td { padding: var(--space-2) var(--space-3); }
+  .ao-table td:nth-child(1) { width: 0.5in; color: var(--color-gray); font-family: var(--font-heading); }
+  .ao-table td:nth-child(4),
+  .ao-table td:nth-child(5),
+  .ao-table td:nth-child(6) { text-align: right; }
+  .ao-table tfoot td {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    border-top: 2px solid var(--color-red);
+    border-bottom: 0;
+    padding-top: var(--space-3);
+  }
+  .ao-name { font-weight: 500; }
+  .ao-loc { color: var(--color-gray); font-size: var(--text-xs); }
+</style>
+{% endblock %}
+{% block content %}
+<div class="ao-page">
+  <div class="ao-header">
+    <div class="label">Optional Add-Ons</div>
+    <h1>Beyond the recommended program</h1>
+  </div>
+
+  <table class="ao-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Item</th>
+        <th>Location</th>
+        <th>Qty</th>
+        <th>Each</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>
+          <div class="ao-name">{{ item.name }}</div>
+        </td>
+        <td>
+          <div class="ao-loc">{{ item.location }}</div>
+        </td>
+        <td>{{ item.qty }} {{ item.unit }}</td>
+        <td>{{ item.price_each }}</td>
+        <td>{{ item.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" style="text-align: right;">Add-On Subtotal</td>
+        <td style="text-align: right;">{{ subtotal }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+{% endblock %}
