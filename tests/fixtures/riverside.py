@@ -393,3 +393,32 @@ add_ons_ctx = {
     ],
     "subtotal": "$25,720",
 }
+
+
+# ===== Slide N+6 — Terms & Next Steps =====
+terms_ctx = {
+    **PROJECT,
+    "key_dates": [
+        ("Signing deadline", "October 30, 2026"),
+        ("Fabrication lock", "August 22, 2026"),
+        ("Install begins", "November 10, 2026"),
+        ("Go live", "November 20, 2026"),
+        ("Season end", "January 5, 2027"),
+        ("Strike complete", "January 15, 2027"),
+    ],
+    "payment_schedule": [
+        ("On signing", "30%"),
+        ("On fabrication start", "40%"),
+        ("On go-live", "30%"),
+    ],
+    "insurance_summary": (
+        "St. Nick's carries $5M general liability and $2M auto. "
+        "Certificates issued to RCTC at signing."
+    ),
+    "change_orders_summary": (
+        "Scope or timeline changes after fabrication lock follow our "
+        "standard change-order workflow — written approval required, "
+        "priced at materials + 35%."
+    ),
+    "validity_days": 60,
+}

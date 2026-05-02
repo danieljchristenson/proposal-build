@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-01 -->{% endblock %}
+{% block title %}Terms & Next Steps{% endblock %}
+{% block extra_head %}
+<style>
+  .tm-page { display: flex; flex-direction: column; gap: var(--space-4); height: 6.7in; }
+  .tm-header h1 { font-size: var(--text-2xl); margin: 0; color: var(--color-charcoal); }
+  .tm-header .label { color: var(--color-red); margin-bottom: var(--space-1); }
+  .tm-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--space-5);
+    flex: 1;
+  }
+  .tm-block h3 {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .tm-list { font-size: var(--text-sm); }
+  .tm-list .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--color-light);
+  }
+  .tm-list .row:last-child { border-bottom: 0; }
+  .tm-list .row .v {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+  .tm-prose { font-size: var(--text-sm); color: var(--color-charcoal); }
+  .tm-validity {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-red);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="tm-page">
+  <div class="tm-header">
+    <div class="label">Terms & Next Steps</div>
+    <h1>How we get from here to the curb</h1>
+  </div>
+
+  <div class="tm-grid">
+    <div class="tm-block">
+      <h3>Key Dates</h3>
+      <div class="tm-list">
+        {% for label, value in key_dates %}
+        <div class="row"><div>{{ label }}</div><div class="v">{{ value }}</div></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tm-block">
+      <h3>Payment Schedule</h3>
+      <div class="tm-list">
+        {% for label, value in payment_schedule %}
+        <div class="row"><div>{{ label }}</div><div class="v">{{ value }}</div></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tm-block">
+      <h3>Insurance</h3>
+      <p class="tm-prose">{{ insurance_summary }}</p>
+    </div>
+
+    <div class="tm-block">
+      <h3>Change Orders</h3>
+      <p class="tm-prose">{{ change_orders_summary }}</p>
+      <p class="tm-prose"><span class="tm-validity">Proposal valid for {{ validity_days }} days.</span></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
