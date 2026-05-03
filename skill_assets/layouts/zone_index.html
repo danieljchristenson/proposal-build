@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone Index — overview of all zones on a light page, footer present.
+     Top: page title + standfirst.
+     Body: vertical list of all zones — each row is a 3-cell compact grid:
+       • ZONE 0N (red eyebrow, fixed-width ~0.7in)
+       • Zone name (Poppins Black 16-18pt charcoal)
+       • Zone subtitle (gray italic)
+     Designed for 5–8 rows on a single 13.333 × 7.5in slide.
+
+     Layout strategy: outer flex column; title-area auto height; zone list
+     grows into the remaining space (flex: 1 1 0). */
+
+  .zi-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .zi-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-4);
+  }
+
+  .zi-title-area .page-title {
+    font-size: 36pt;    /* smaller so list gets more room */
+  }
+
+  /* ── Zone list — distribute rows evenly in available height ── */
+  .zi-zone-list {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-top: 1pt solid #E0E0E0;
+    border-bottom: 1pt solid #E0E0E0;
+  }
+
+  /* One row per zone — 3 columns via CSS grid.
+     No padding here; space-between provides the row gaps. */
+  .zi-zone-row {
+    display: grid;
+    grid-template-columns: 0.7in 3.2in 1fr;  /* eyebrow col | name col | subtitle fills rest */
+    align-items: center;
+    padding: var(--space-1) 0;
+  }
+
+  /* Cell 1: ZONE 0N eyebrow */
+  .zi-zone-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    white-space: nowrap;
+  }
+
+  /* Cell 2: Zone name */
+  .zi-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 17pt;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    padding-right: var(--space-5);
+  }
+
+  /* Cell 3: Zone subtitle */
+  .zi-zone-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-sm);
+    line-height: 1.35;
+    color: var(--color-gray);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="zi-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="zi-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Zone list — one compact row per zone -->
+  <div class="zi-zone-list">
+    {% for zone in zones %}
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE {{ zone.num }}</div>
+      <div class="zi-zone-name">{{ zone.name }}</div>
+      <div class="zi-zone-subtitle">{{ zone.subtitle }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

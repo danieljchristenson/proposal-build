@@ -95,6 +95,8 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Program Zones", "ZONE 02", "La Sierra", "ZONE 03", "Pedley"]),
     ("zone_3up_riverside", "zone_3up", "riverside", "zone_3up_ctx",
         ["Program Zones", "ZONE 04", "Hunter Park", "ZONE 05", "Moreno Valley", "ZONE 06", "Perris"]),
+    ("zone_index_riverside", "zone_index", "riverside", "zone_index_ctx",
+        ["The Program at a Glance", "Six stations", "Downtown Riverside", "La Sierra", "Pedley", "Hunter Park", "Moreno Valley", "Perris"]),
 ]
 
 
