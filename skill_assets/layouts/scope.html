@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Scope — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-08.png
+
+     Top: page title (Poppins Black 50pt) + standfirst.
+     Body: 2-column card grid using .card.has-header pattern from brand.css.
+       Left  — .card.has-header.green: header "YOUR PROGRAM INCLUDES", body bullet list.
+       Right — .card.has-header.red:   header "OPTIONAL ADD-ONS", body price rows.
+
+     Layout strategy: outer flex column; title-area auto; body card grid flex: 1 1 0. */
+
+  .sc-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .sc-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  /* ── Body: 2-column card grid ── */
+  .sc-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  /* Cards fill their column height */
+  .sc-body .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .sc-body .card-body {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* ── Includes bullet list (left card) ── */
+  .sc-includes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sc-includes-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  /* Red bullet via ::before */
+  .sc-includes-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* ── Add-ons rows (right card) ── */
+  .sc-addon-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  /* Red bullet on add-on rows */
+  .sc-addon-row::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .sc-addon-desc {
+    flex: 1 1 auto;
+    padding-right: var(--space-3);
+  }
+
+  .sc-addon-price {
+    flex: 0 0 auto;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-red);
+    white-space: nowrap;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sc-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="sc-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 2-column card grid -->
+  <div class="sc-body">
+
+    <!-- Left: green-header card — YOUR PROGRAM INCLUDES -->
+    <div class="card has-header green">
+      <div class="card-header">YOUR PROGRAM INCLUDES</div>
+      <div class="card-body">
+        <ul class="sc-includes-list">
+          {% for item in includes %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right: red-header card — OPTIONAL ADD-ONS -->
+    <div class="card has-header red">
+      <div class="card-header">OPTIONAL ADD-ONS</div>
+      <div class="card-body">
+        {% for desc, price in add_ons %}
+        <div class="sc-addon-row">
+          <span class="sc-addon-desc">{{ desc }}</span>
+          <span class="sc-addon-price">{{ price }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
