@@ -7,7 +7,23 @@
   <link rel="stylesheet" href="brand.css">
   {% block extra_head %}{% endblock %}
 </head>
-<body>
-  {% block content %}{% endblock %}
+<body class="{% block body_class %}page-light{% endblock %}">
+
+  <header class="page-header">
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+  </header>
+
+  <div class="page-content">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% block footer %}
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; {{ project_year }} HOLIDAY PROPOSAL &nbsp;·&nbsp; {{ client_short }}</div>
+    <div class="footer-page-num">{{ page_num }} / {{ page_total }}</div>
+  </footer>
+  {% endblock %}
+
 </body>
 </html>
