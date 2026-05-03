@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone 2-up — two zones side by side on a light page, footer present.
+     Page title at top (smaller than 50pt to leave body room), standfirst
+     beneath, then a 2-column grid with one zone per column.
+
+     Each zone column: red ZONE eyebrow + zone name (Poppins Black ~24pt) +
+     italic subtitle + bulleted included_elements list.
+
+     No hero images — fitting two zone images on one page reads cluttered.
+
+     Layout strategy: outer flex column; title-area is auto height; body
+     grid grows to fill the rest (flex: 1 1 0). */
+
+  .z2-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .z2-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .z2-title-area .page-title {
+    font-size: 36pt;
+  }
+
+  /* ── Body: 2-column grid ── */
+  .z2-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  /* ── Per-zone column ── */
+  .z2-zone {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .z2-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-2xl);   /* 24pt */
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    margin: var(--space-2) 0 var(--space-2) 0;
+  }
+
+  .z2-zone-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-sm);   /* 11pt */
+    line-height: 1.35;
+    color: var(--color-gray);
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  /* Divider line between subtitle and bullet list */
+  .z2-zone-rule {
+    border: none;
+    border-top: 1pt solid #D8D8D8;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  .z2-elements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .z2-elements-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-base);  /* 12pt */
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  .z2-elements-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 14pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="z2-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="z2-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 2-column zone grid -->
+  <div class="z2-body">
+    {% for zone in zones %}
+    <div class="z2-zone">
+      <div class="eyebrow">ZONE {{ zone.num }}</div>
+      <div class="z2-zone-name">{{ zone.name }}</div>
+      <div class="z2-zone-subtitle">{{ zone.subtitle }}</div>
+      <hr class="z2-zone-rule">
+      <ul class="z2-elements-list">
+        {% for element in zone.included_elements %}
+        <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
