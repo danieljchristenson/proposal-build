@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /*
+   * Layout: page-content is position:absolute top/bottom 32pt → 476pt tall.
+   * We use a two-column outer flex: left column (title+body) and right
+   * column (AT A GLANCE panel), then a full-width pillar row at the bottom.
+   * Using explicit heights derived from page geometry for WeasyPrint compat.
+   */
+  .es-outer {
+    display: flex;
+    flex-direction: column;
+    height: 476pt;
+    overflow: hidden;
+  }
+
+  .es-top {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-7);
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .es-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .es-title-area {
+    flex: 0 0 auto;
+  }
+
+  .es-body-area {
+    flex: 1 1 auto;
+    padding-top: var(--space-4);
+    overflow: hidden;
+  }
+
+  .es-body-area p {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+  }
+
+  .es-glance {
+    flex: 0 0 4.5in;
+    width: 4.5in;
+    background: var(--color-panel);
+    border-radius: 4pt;
+    padding: var(--space-5) var(--space-5);
+  }
+  .es-glance-header {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-red);
+    margin-bottom: var(--space-3);
+    letter-spacing: 0.06em;
+  }
+  .es-glance-row {
+    margin-bottom: var(--space-3);
+  }
+  .es-glance-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.10em;
+    color: var(--color-gray);
+    margin-bottom: 2pt;
+  }
+  .es-glance-label.deadline { color: var(--color-red); }
+  .es-glance-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+  }
+
+  .es-pillars {
+    flex: 0 0 auto;
+    padding-top: var(--space-5);
+  }
+
+  .es-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+  .es-pillar {
+    background: var(--color-panel);
+    border-radius: 4pt;
+    padding: var(--space-4);
+  }
+  .es-pillar-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+  }
+  .es-pillar-body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-charcoal);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="es-outer">
+
+  <div class="es-top">
+    <div class="es-left">
+      <div class="es-title-area">
+        <h1 class="page-title">{{ page_title }}</h1>
+        <div class="standfirst">{{ standfirst }}</div>
+      </div>
+      <div class="es-body-area">
+        {% for p in body_paragraphs %}<p>{{ p }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <aside class="es-glance">
+      <div class="es-glance-header">AT A GLANCE</div>
+      {% for label, value, is_deadline in at_a_glance %}
+      <div class="es-glance-row">
+        <div class="es-glance-label{% if is_deadline %} deadline{% endif %}">{{ label }}</div>
+        <div class="es-glance-value">{{ value }}</div>
+      </div>
+      {% endfor %}
+    </aside>
+  </div>
+
+  <div class="es-pillars">
+    <div class="es-pillars-grid">
+      {% for pillar in pillars %}
+      <div class="es-pillar">
+        <div class="es-pillar-title">{{ pillar.title }}</div>
+        <div class="es-pillar-body">{{ pillar.body }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
