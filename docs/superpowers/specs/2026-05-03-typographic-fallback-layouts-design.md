@@ -1,5 +1,11 @@
 # Typographic Fallback Layouts — Design
 
+> ⚠️ **SUPERSEDED 2026-05-03 (same day).** Off-brand: the Branding Board rules
+> out decorative/script fonts, but this addendum added Playfair Display.
+> Replaced by:
+> [`2026-05-03-plan-2-prime-master-driven-design.md`](./2026-05-03-plan-2-prime-master-driven-design.md).
+> Never executed.
+
 **Status:** Approved 2026-05-03 (brainstorming session, Daniel + Claude)
 **Parent spec:** `docs/superpowers/specs/2026-05-01-plan-2-brand-layout-design.md`
 **Predecessor:** Plan 2 — Brand + Layout System (complete; 18 layouts shipped)

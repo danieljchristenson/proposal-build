@@ -1,5 +1,10 @@
 # Plan 2 — Brand + Layout System: Design
 
+> ⚠️ **SUPERSEDED 2026-05-03.** Decision 6 ("master is informal directional
+> reference only") was wrong. Replaced by:
+> [`2026-05-03-plan-2-prime-master-driven-design.md`](./2026-05-03-plan-2-prime-master-driven-design.md).
+> Implementation moved to `archive/iteration-1-abstract-layouts/`.
+
 **Status:** Approved 2026-05-01 (brainstorming session, Daniel + Claude)
 **Parent spec:** `docs/superpowers/specs/2026-05-01-proposal-builder-skill-design.md`
 **Predecessor:** Plan 1 — Repo restructure + skill scaffolding (complete)

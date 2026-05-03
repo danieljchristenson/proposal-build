@@ -1,5 +1,10 @@
 # Plan 2 — Brand + Layout System Implementation Plan
 
+> ⚠️ **SUPERSEDED 2026-05-03.** This plan executed but its output (18 abstract
+> layouts) was rejected. Replaced by:
+> [`2026-05-03-plan-2-prime-master-driven-layouts.md`](./2026-05-03-plan-2-prime-master-driven-layouts.md).
+> Output preserved at `archive/iteration-1-abstract-layouts/`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship the deployable brand + layout foundation: page geometry, embedded Roboto + Poppins fonts, `brand.css` design tokens, a Jinja2 `base.html` shell, all 18 slide layouts, and a fixture-driven test suite that proves every layout renders correctly with embedded fonts at the right page size.
