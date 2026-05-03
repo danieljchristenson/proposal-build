@@ -28,3 +28,6 @@ tests/_output/
 
 # Visual brainstorming companion
 .superpowers/
+
+# Transient artefacts (regenerated as needed)
+.brainstorm-tmp/
