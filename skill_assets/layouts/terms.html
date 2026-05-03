@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Terms — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-11.png
+
+     Top: page title (Poppins Black 50pt) + standfirst.
+     Full-width brand-red banner: 2 critical dates side-by-side.
+     2×2 card grid: Payment, Insurance, Change Orders, Validity.
+     Dark charcoal workflow strip: AFTER APPROVAL → step · step · step.
+
+     Layout note: the page-content box is position:absolute with
+     top:0.85in, bottom:0.55in (~439pt available). We use display:block
+     with explicit heights to guarantee the workflow strip is always visible.
+     WeasyPrint clipping is avoided by keeping each section strictly sized. */
+
+  /* ── Top: page title + standfirst ── */
+  .terms-title-area {
+    margin-bottom: var(--space-3);
+  }
+
+  .terms-title-area .page-title {
+    font-size: 38pt;
+    margin-bottom: var(--space-1);
+  }
+
+  .terms-title-area .standfirst {
+    font-size: 13pt;
+    margin: 0;
+  }
+
+  /* ── Red date banner ── */
+  .terms-date-banner {
+    background: var(--color-red);
+    border-radius: 3pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-3) var(--space-5);
+    margin-bottom: var(--space-3);
+  }
+
+  .terms-date-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .terms-date-item + .terms-date-item {
+    border-left: 1pt solid rgba(255, 255, 255, 0.25);
+    padding-left: var(--space-5);
+  }
+
+  .terms-date-value {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-xl);
+    line-height: 1.1;
+    color: white;
+    white-space: nowrap;
+  }
+
+  .terms-date-desc {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    line-height: 1.45;
+    color: white;
+    opacity: 0.9;
+    padding-top: 2pt;
+  }
+
+  /* ── 2×2 card grid ── */
+  .terms-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--space-2);
+    height: 210pt;
+    margin-bottom: var(--space-2);
+  }
+
+  .terms-card {
+    background: var(--color-panel);
+    border-radius: 4pt;
+    border-left: 3pt solid var(--color-red);
+    padding: var(--space-3) var(--space-4);
+    overflow: hidden;
+  }
+
+  .terms-card-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  .terms-card-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: var(--color-charcoal);
+  }
+
+  /* ── Dark workflow strip ── */
+  .terms-workflow {
+    background: var(--color-charcoal);
+    border-radius: 3pt;
+    padding: var(--space-3) var(--space-5);
+    display: flex;
+    align-items: center;
+  }
+
+  .terms-workflow-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: white;
+    white-space: nowrap;
+    margin-right: var(--space-3);
+  }
+
+  .terms-workflow-arrow {
+    color: var(--color-red);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    margin-right: var(--space-3);
+  }
+
+  .terms-workflow-steps {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    color: var(--color-light);
+    opacity: 0.85;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+  <!-- Page title + standfirst -->
+  <div class="terms-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Red date banner -->
+  <div class="terms-date-banner">
+    {% for date, desc in critical_dates %}
+    <div class="terms-date-item">
+      <div class="terms-date-value">{{ date }}</div>
+      <div class="terms-date-desc">{{ desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- 2×2 card grid -->
+  <div class="terms-cards">
+    {% for title, body in term_panels %}
+    <div class="terms-card">
+      <div class="terms-card-title">{{ title }}</div>
+      <div class="terms-card-body">{{ body }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Dark workflow strip -->
+  <div class="terms-workflow">
+    <div class="terms-workflow-label">AFTER APPROVAL</div>
+    <div class="terms-workflow-arrow">→</div>
+    <div class="terms-workflow-steps">{{ after_approval_steps | join(" · ") }}</div>
+  </div>
+
+{% endblock %}

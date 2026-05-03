@@ -109,6 +109,10 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Investment", "Three levels", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$225,000", "$345,000", "$485,000", "RECOMMENDED", "MULTI-YEAR PARTNERSHIP", "9% OFF"]),
     ("investment_riverside", "investment", "riverside", "investment_ctx",
         ["Investment", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$184,500", "$284,500", "$384,500", "RECOMMENDED", "MULTI-YEAR PARTNERSHIP"]),
+    ("terms_pier39",    "terms", "pier_39",   "terms_ctx",
+        ["Terms & Next Steps", "November 14, 2026", "August 22, 2026", "PAYMENT SCHEDULE", "INSURANCE & PERMITS", "AFTER APPROVAL"]),
+    ("terms_riverside", "terms", "riverside", "terms_ctx",
+        ["Terms & Next Steps", "October 30, 2026", "August 22, 2026", "PAYMENT SCHEDULE", "INSURANCE & PERMITS", "AFTER APPROVAL"]),
 ]
 
 
