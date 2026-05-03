@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block body_class %}page-dark{% endblock %}
+{% block footer %}{% endblock %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — Zone {{ zone_num }}: {{ zone_name }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone Solo Fullbleed — signature zone, dark, full-bleed image top, dark text panel bottom.
+     Used for the one statement zone per destination proposal (e.g. Pier 39 Zone 03 Bay Terrace).
+
+     Full-bleed strategy: override .page-content to cover the entire page
+     (same trick as cover.html). The layout then controls all positioning.
+
+     Page splits into two horizontal bands:
+       top  ~65% — hero image area, true full-bleed to all 4 page edges
+       bottom ~35% — darker text panel with eyebrow, zone name, subtitle, 2-col bullets
+
+     Page number is top-right, outside the normal footer chrome. */
+
+  body.page-dark .page-content {
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 0;
+  }
+
+  /* ── Outer wrapper: full page, vertical split ── */
+  .zf-outer {
+    display: flex;
+    flex-direction: column;
+    height: 7.5in;
+    width: 13.333in;
+    position: relative;
+  }
+
+  /* ── Top band: hero image, full-bleed ── */
+  .zf-hero {
+    flex: 0 0 55%;
+    position: relative;
+    overflow: hidden;
+    background: #2a2a2a;
+  }
+
+  .zf-hero-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .zf-hero-placeholder {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.35);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* ── Bottom band: darker text panel ── */
+  .zf-panel {
+    flex: 1 1 0;
+    background: #0d0d0d;
+    padding: 0.25in 0.55in 0.25in 0.55in;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* Eyebrow */
+  .zf-panel .eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  /* Zone name */
+  .zf-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36pt;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--color-light);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  /* Standfirst / subtitle */
+  .zf-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 13pt;
+    line-height: 1.35;
+    color: #a0a0a0;
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  /* 2-column bullet grid */
+  .zf-bullets {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.6in;
+    row-gap: 0;
+  }
+
+  .zf-col {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .zf-col li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: #dcdcdc;
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  /* Red bullet */
+  .zf-col li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* ── Page number — top-right, overlaid on hero ── */
+  .zf-page-num {
+    position: absolute;
+    top: 0.22in;
+    right: 0.30in;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 9pt;
+    letter-spacing: 0.04em;
+    color: rgba(236, 239, 241, 0.55);
+    z-index: 10;
+  }
+</style>
+{% endblock %}
+{% block content %}
+{% set half = (included_elements | length + 1) // 2 %}
+<div class="zf-outer">
+
+  <!-- Top: full-bleed hero image or dark placeholder -->
+  <div class="zf-hero">
+    {% if hero_image %}
+    <img class="zf-hero-img" src="{{ hero_image }}" alt="{{ zone_name }}">
+    {% else %}
+    <div class="zf-hero-placeholder">[FULL-BLEED — {{ zone_name }} signature installation]</div>
+    {% endif %}
+  </div>
+
+  <!-- Bottom: text panel -->
+  <div class="zf-panel">
+    <div class="eyebrow">ZONE {{ zone_num }}</div>
+    <div class="zf-zone-name">{{ zone_name }}</div>
+    <div class="zf-subtitle">{{ zone_subtitle }}</div>
+
+    <!-- 2-column bullets: first half left, second half right -->
+    <div class="zf-bullets">
+      <ul class="zf-col">
+        {% for element in included_elements[:half] %}
+        <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+      <ul class="zf-col">
+        {% for element in included_elements[half:] %}
+        <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Page number overlaid top-right on hero -->
+  <div class="zf-page-num">{{ page_num }} / {{ page_total }}</div>
+
+</div>
+{% endblock %}
