@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_eyebrow }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Case Study — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-09.png
+
+     Top: eyebrow (red caps "CASE STUDY") + page title (Poppins Black 50pt)
+          + standfirst italic gray below.
+     Body: 2-column grid — left: hero image area; right: 3 stacked
+           narrative sections (THE CHALLENGE / OUR APPROACH / THE OUTCOME).
+
+     Layout strategy: outer flex column; title-area auto; body flex: 1 1 0. */
+
+  .cs-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: eyebrow + title + standfirst ── */
+  .cs-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .cs-title-area .eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .cs-title-area .page-title {
+    margin-bottom: 0;
+  }
+
+  /* ── Body: 2-column grid ── */
+  .cs-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: var(--space-6);
+  }
+
+  /* ── Left: hero image container ── */
+  .cs-image-col {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3pt;
+    background: #2A2A2A;  /* dark placeholder when no image */
+  }
+
+  .cs-image-col img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Placeholder label shown when hero_image is None */
+  .cs-image-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: rgba(255, 255, 255, 0.45);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  /* ── Right: narrative sections ── */
+  .cs-narrative-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cs-section {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .cs-section + .cs-section {
+    margin-top: var(--space-4);
+  }
+
+  .cs-section-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  .cs-section-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="cs-outer">
+
+  <!-- Eyebrow + page title + standfirst -->
+  <div class="cs-title-area">
+    <div class="eyebrow">{{ page_eyebrow }}</div>
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 2-column body -->
+  <div class="cs-body">
+
+    <!-- Left: hero image (or dark placeholder) -->
+    <div class="cs-image-col">
+      {% if hero_image %}
+      <img src="{{ hero_image }}" alt="Case study hero image">
+      {% else %}
+      <div class="cs-image-placeholder">
+        [{{ client_company }} — hero photo]
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right: 3 narrative sections -->
+    <div class="cs-narrative-col">
+
+      <div class="cs-section">
+        <div class="cs-section-label">The Challenge</div>
+        <p class="cs-section-body">{{ challenge }}</p>
+      </div>
+
+      <div class="cs-section">
+        <div class="cs-section-label">Our Approach</div>
+        <p class="cs-section-body">{{ approach }}</p>
+      </div>
+
+      <div class="cs-section">
+        <div class="cs-section-label">The Outcome</div>
+        <p class="cs-section-body">{{ outcome }}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

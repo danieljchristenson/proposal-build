@@ -101,6 +101,14 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Scope of Work", "YOUR PROGRAM INCLUDES", "OPTIONAL ADD-ONS", "+$24K", "Synchronized music"]),
     ("scope_riverside", "scope", "riverside", "scope_ctx",
         ["Scope of Work", "YOUR PROGRAM INCLUDES", "OPTIONAL ADD-ONS", "Custom-fabricated wreaths"]),
+    ("case_study_pier39",    "case_study", "pier_39",   "case_study_ctx",
+        ["CASE STUDY", "Oregon Zoo", "ZooLights 2025", "31% YoY increase"]),
+    ("case_study_riverside", "case_study", "riverside", "case_study_ctx",
+        ["CASE STUDY", "Long Beach Transit", "14 transit stations", "Zero revenue-service disruptions"]),
+    ("investment_pier39",    "investment", "pier_39",   "investment_ctx",
+        ["Investment", "Three levels", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$225,000", "$345,000", "$485,000", "RECOMMENDED", "MULTI-YEAR PARTNERSHIP", "9% OFF"]),
+    ("investment_riverside", "investment", "riverside", "investment_ctx",
+        ["Investment", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$184,500", "$284,500", "$384,500", "RECOMMENDED", "MULTI-YEAR PARTNERSHIP"]),
 ]
 
 
