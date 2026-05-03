@@ -156,11 +156,15 @@ body.page-dark  .page-footer { color: var(--color-light); opacity: 0.65; }
 
 .page-content {
   position: absolute;
-  top: var(--space-8);
+  /* Top: 0.85in (~61pt) — clears the chrome (header at 16pt + ~22pt of
+     name/tag stack = ~38pt consumed) with master-comparable breathing room
+     above any page-title. Layouts add their own padding/grid inside. */
+  top: 0.85in;
   left: var(--space-6);
   right: var(--space-6);
-  bottom: var(--space-8);
-  /* Layouts add their own padding/grid inside .page-content. */
+  /* Bottom: 0.55in (~40pt) — clears footer (8pt text at bottom:16pt + ~10pt
+     breathing room). Layouts with no footer override .page-content. */
+  bottom: 0.55in;
 }
 
 /* ===== Global element rules ===== */
