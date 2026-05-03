@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone 3-up — three zones side by side on a light page, footer present.
+     Same structure as zone_2up but with a 3-column grid.
+
+     Tighter typography to fit three columns: zone names at --text-xl (19pt),
+     subtitles at 10pt. Bullet font stays at --text-sm (11pt) for readability.
+
+     Layout strategy: outer flex column; title-area is auto height; body
+     grid grows to fill the rest (flex: 1 1 0). */
+
+  .z3-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .z3-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .z3-title-area .page-title {
+    font-size: 36pt;
+  }
+
+  /* ── Body: 3-column grid ── */
+  .z3-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* ── Per-zone column ── */
+  .z3-zone {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .z3-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-xl);   /* 19pt — tighter than zone_2up's 24pt */
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    margin: var(--space-2) 0 var(--space-2) 0;
+  }
+
+  .z3-zone-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 10pt;             /* slightly tighter than zone_2up's 11pt */
+    line-height: 1.35;
+    color: var(--color-gray);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  /* Divider line between subtitle and bullet list */
+  .z3-zone-rule {
+    border: none;
+    border-top: 1pt solid #D8D8D8;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .z3-elements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .z3-elements-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);   /* 11pt — tighter than zone_2up's 12pt */
+    line-height: 1.5;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  .z3-elements-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="z3-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="z3-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 3-column zone grid -->
+  <div class="z3-body">
+    {% for zone in zones %}
+    <div class="z3-zone">
+      <div class="eyebrow">ZONE {{ zone.num }}</div>
+      <div class="z3-zone-name">{{ zone.name }}</div>
+      <div class="z3-zone-subtitle">{{ zone.subtitle }}</div>
+      <hr class="z3-zone-rule">
+      <ul class="z3-elements-list">
+        {% for element in zone.included_elements %}
+        <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
