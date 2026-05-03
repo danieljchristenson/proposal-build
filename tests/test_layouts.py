@@ -113,6 +113,10 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Terms & Next Steps", "November 14, 2026", "August 22, 2026", "PAYMENT SCHEDULE", "INSURANCE & PERMITS", "AFTER APPROVAL"]),
     ("terms_riverside", "terms", "riverside", "terms_ctx",
         ["Terms & Next Steps", "October 30, 2026", "August 22, 2026", "PAYMENT SCHEDULE", "INSURANCE & PERMITS", "AFTER APPROVAL"]),
+    ("sign_off_pier39",    "sign_off", "pier_39",   "sign_off_ctx",
+        ["Let's Make It Happen", "WHAT YOU'RE APPROVING", "CLIENT AUTHORIZATION", "Canva e-signature"]),
+    ("sign_off_riverside", "sign_off", "riverside", "sign_off_ctx",
+        ["Let's Make It Happen", "WHAT YOU'RE APPROVING", "RCTC AUTHORIZATION", "Canva e-signature"]),
 ]
 
 

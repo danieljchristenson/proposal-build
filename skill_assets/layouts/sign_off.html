@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Sign-off — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-12.png
+
+     Top: page title "Let's Make It Happen" (Poppins Black 50pt) + standfirst.
+     Card: WHAT YOU'RE APPROVING red caps label + body.
+     2-column grid: two signature blocks, each with dark header bar + 4 rows.
+     Bottom: italic gray digital signing note. */
+
+  /* ── Top title area ── */
+  .so-title-area {
+    margin-bottom: var(--space-4);
+  }
+
+  .so-title-area .page-title {
+    font-size: 44pt;
+    margin-bottom: var(--space-1);
+  }
+
+  /* ── "What you're approving" card ── */
+  .so-approving-card {
+    background: var(--color-panel);
+    border-radius: 4pt;
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-4);
+  }
+
+  .so-approving-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  .so-approving-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+
+  /* ── 2-column signature grid ── */
+  .so-sig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin-bottom: var(--space-4);
+  }
+
+  .so-sig-block {
+    background: var(--color-panel);
+    border-radius: 4pt;
+    overflow: hidden;
+  }
+
+  .so-sig-header {
+    background: var(--color-charcoal);
+    color: var(--color-light);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .so-sig-rows {
+    padding: var(--space-3) var(--space-4) var(--space-4) var(--space-4);
+  }
+
+  .so-sig-row {
+    margin-bottom: var(--space-3);
+  }
+
+  .so-sig-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .so-sig-row-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-gray);
+    margin-bottom: var(--space-1);
+  }
+
+  .so-sig-row-line {
+    border: none;
+    border-bottom: 1pt solid #C0C0C0;
+    height: 12pt;
+    width: 100%;
+    display: block;
+  }
+
+  /* ── Digital signing note ── */
+  .so-signing-note {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: var(--color-gray);
+    text-align: center;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+  <!-- Page title + standfirst -->
+  <div class="so-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- What you're approving card -->
+  <div class="so-approving-card">
+    <div class="so-approving-label">WHAT YOU'RE APPROVING</div>
+    <p class="so-approving-body">{{ what_youre_approving }}</p>
+  </div>
+
+  <!-- 2-column signature blocks -->
+  <div class="so-sig-grid">
+
+    <!-- Client block -->
+    <div class="so-sig-block">
+      <div class="so-sig-header">{{ client_party_label }}</div>
+      <div class="so-sig-rows">
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">SIGNATURE</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">PRINTED NAME</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">TITLE</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">DATE</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- St. Nick's block -->
+    <div class="so-sig-block">
+      <div class="so-sig-header">{{ stnicks_party_label }}</div>
+      <div class="so-sig-rows">
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">SIGNATURE</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">PRINTED NAME</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">TITLE</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">DATE</div>
+          <div class="so-sig-row-line"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Digital signing note -->
+  {% if digital_signing_note %}
+  <p class="so-signing-note">{{ digital_signing_note }}</p>
+  {% endif %}
+
+{% endblock %}
