@@ -1,17 +1,19 @@
-"""Hand-built Jinja2 contexts for each of the 18 Plan 2 layouts.
+"""Riverside MetroLink fixture — zone-heavy multi-station civic project.
 
-Anchored on the Downtown Riverside MetroLink project where data exists.
-Where Riverside doesn't yet have content (no case study selected, no
-past-work library populated), values are plausible-but-fabricated and
-consistent with St. Nick's voice and existing examples.
+Anchored on the same Riverside MetroLink project as before, but reshaped
+from the old "showcase categories" model to true zone vocabulary. Each
+station on the line is a zone. With 6 zones the deck would stretch out
+endlessly using zone_solo only — Plan 3 will pick zone_2up / zone_3up /
+zone_index based on count.
 
-Plan 3's parsers will produce dicts of the same shape from real
-Brief.md + Scope Worksheet.xlsx + rendering folders. Until then, this
-file IS the data.
+This fixture exists to prove the zone-grouped layouts work at scale.
+The destination-style fixture (Pier 39, 3 zones) lives in pier_39.py.
 
-Filenames in *_image / *_renderings keys are paths relative to the
-repo root, used by layouts as <img src="file://..."> URLs WeasyPrint
-will resolve at render time.
+Per the 2026-05-03 decision (memory: project_riverside_renderings_in_fixture):
+this fixture wires four real renderings from the Downtown Riverside
+MetroLink project folder so the eyeball pass is meaningful. Pier 39
+stays image-less. Plan 3's AE workflow will replace these test-fixture
+defaults with per-project AE selections.
 """
 from __future__ import annotations
 
@@ -23,69 +25,82 @@ RENDERINGS_DIR = RIVERSIDE / "02 - Renderings"
 BASE_SCOPE = RENDERINGS_DIR / "Base Scope"
 ENHANCEMENTS = RENDERINGS_DIR / "Enhancements"
 
+NO_IMAGE = None
 
-def _path(d: Path, name: str) -> str:
-    """Return a file:// URL for an absolute repo-relative rendering path.
-
-    WeasyPrint resolves these at render time. We return file:// URLs
-    rather than relative paths because the layouts live in
-    skill_assets/layouts/ and renderings live elsewhere — base_url
-    resolution would not span those trees.
-    """
-    p = d / name
-    return p.as_uri()
+# Real renderings wired into hero_image fields (option A, 2026-05-03).
+# Stored as file:// URIs so WeasyPrint resolves absolute paths regardless of
+# the test conftest's base_url. Path.as_uri() percent-encodes spaces.
+COVER_HERO = (BASE_SCOPE / "Wreath - Brick Column Night.jpg").as_uri()
+CREATIVE_HERO = (BASE_SCOPE / "Pole Banner Artwork - Holiday Express 01.jpg").as_uri()
+FLAGSHIP_HERO = (BASE_SCOPE / "Walk-Through Ornament - Warm White.png").as_uri()
+CASE_STUDY_HERO = (BASE_SCOPE / "Evening Lighting - Station Awning 01.png").as_uri()
 
 
-# Common project-wide values reused by multiple fixtures.
 PROJECT = {
     "client_company": "Riverside County Transportation Commission (RCTC)",
-    "client_short": "RCTC",
-    "decision_maker": "Jacklyn Moreno",
-    "decision_maker_title": "Capital Projects Manager",
-    "project_name": "Downtown Riverside MetroLink — 2026 Holiday Program",
-    "project_short": "Riverside MetroLink",
+    "client_short": "RCTC METROLINK",
+    "project_name": "Riverside MetroLink",
+    "project_short": "MetroLink",
     "project_year": 2026,
+    "project_subtitle": "Six-Station Civic Holiday Program",
     "presenter_name": "Jonathan Yang",
-    "presenter_email": "jonathan@st-nicks.com",
-    "presenter_phone": "(562) 438-0017",
-    "design_phrase": "Holiday Express",
-    "voice": "civic",
+    "presenter_title": "Account Executive",
+    "presenter_org": "St. Nick's Christmas Lighting & Décor",
+    "proposal_date": "May 12, 2026",
+    "page_total": 14,   # +1 vs Pier 39 because this deck includes a zone_index slide
 }
 
 
-# Each layout's fixture is appended below by its task.
-# (Layouts are added in the order of the slide catalog.)
+# Six stations along the MetroLink line — each is a zone.
+ZONES = [
+    {"num": "01", "name": "Downtown Riverside",   "subtitle": "The flagship station — civic centerpiece.",
+     "included_elements": ["Custom-fabricated wreaths at every entrance", "Full-canopy garland across the platform overhang", "Pole banner program (8 poles)"]},
+    {"num": "02", "name": "La Sierra",            "subtitle": "First park-and-ride stop — community gateway.",
+     "included_elements": ["Wreaths at primary entrance", "Pole banner program (4 poles)", "Lighted accent at platform sign"]},
+    {"num": "03", "name": "Pedley",               "subtitle": "Mid-line residential stop — restrained festive treatment.",
+     "included_elements": ["Garland across platform railing", "Two pole banners at station entry"]},
+    {"num": "04", "name": "Riverside-Hunter Park","subtitle": "University-adjacent — student-traffic focus.",
+     "included_elements": ["Pole banner program (6 poles)", "Lighted gateway display at the bus interchange", "Wreaths at the eastbound entry"]},
+    {"num": "05", "name": "Moreno Valley/March Field","subtitle": "Outer line — visible from the freeway.",
+     "included_elements": ["Large-format pole banner program (10 poles, freeway-side)", "Lighted snowflake constellation along the platform"]},
+    {"num": "06", "name": "Perris-Downtown",      "subtitle": "End of line — community arrival moment.",
+     "included_elements": ["Walk-through ornament arch at the plaza", "Wreaths and garland at all entrances", "Pole banner program (4 poles)"]},
+]
 
 
 # ===== Slide 1 — Cover =====
 cover_ctx = {
     **PROJECT,
-    "cover_image": _path(BASE_SCOPE, "Wreaths - Station Entrance 01.png"),
-    "presentation_date": "May 2026",
+    "page_num": 1,
+    "season_label": "2026 HOLIDAY SEASON",
+    "hero_image": COVER_HERO,
+    "prepared_by_org": "St. Nick's Christmas Lighting & Décor",
 }
 
 
 # ===== Slide 2 — Executive Summary =====
 exec_summary_ctx = {
     **PROJECT,
-    "tier_recommended": "Enhanced",
-    "deck_length": 16,
-    "investment_total": "$284,500",
-    "go_live_date": "November 20, 2026",
-    "season_end_date": "January 5, 2027",
+    "page_num": 2,
+    "page_title": "Executive Summary",
+    "standfirst": "A six-station holiday program for the Riverside MetroLink line, at a glance.",
+    "body_paragraphs": [
+        "St. Nick's is proposing a coordinated holiday décor program across all six stations of the Riverside MetroLink line — a single visual identity that scales from flagship Downtown Riverside through to Perris-Downtown.",
+        "Our approach builds civic pride at every stop while keeping operational discipline tight: install and removal coordinate with revenue service hours, all materials clear MetroLink overhead catenary safety envelope, and the design language repeats so every station reads as part of one program.",
+    ],
+    "at_a_glance": [
+        ("PROJECT", "2026 Civic Holiday Program", False),
+        ("STATIONS", "Six (Downtown Riverside → Perris-Downtown)", False),
+        ("RECOMMENDED TIER", "Enhanced", False),
+        ("INVESTMENT RANGE", "$184K — $384K", False),
+        ("GO LIVE", "Fri, Nov 20, 2026", False),
+        ("FABRICATION LOCK", "Aug 22, 2026", True),
+        ("SIGNING DEADLINE", "Oct 30, 2026", True),
+    ],
     "pillars": [
-        {
-            "title": "Civic Pride",
-            "body": "A holiday program that elevates Riverside as a destination — drawing visitors to a transit hub typically used in transit only.",
-        },
-        {
-            "title": "Operational Discipline",
-            "body": "Materials engineered for transit weather and high foot traffic; install and removal coordinated with MetroLink service hours.",
-        },
-        {
-            "title": "Repeatable Investment",
-            "body": "Decor designed for multi-season reuse; the 2026 program builds the base for 2027 and 2028 expansions.",
-        },
+        {"title": "Civic Pride",            "body": "A holiday program that elevates Riverside as a destination, not just a transit stop."},
+        {"title": "Operational Discipline", "body": "Materials engineered for transit weather; install coordinated with MetroLink service hours."},
+        {"title": "Repeatable Investment",  "body": "Decor designed for multi-season reuse; 2026 builds the base for 2027 and 2028."},
     ],
 }
 
@@ -93,372 +108,208 @@ exec_summary_ctx = {
 # ===== Slide 3 — Our Understanding =====
 understanding_ctx = {
     **PROJECT,
-    "customer_goals": [
-        "Establish RCTC's MetroLink station as a regional holiday destination",
-        "Drive non-transit foot traffic to the downtown station and adjoining plaza",
-        "Position Riverside County as a leader in civic seasonal programming",
+    "page_num": 3,
+    "page_title": "Our Understanding",
+    "standfirst": "Playback of discovery — so we're all working from the same page.",
+    "panels": [
+        {"title": "VENUE & CONTEXT", "body": "The MetroLink line connects six communities across Riverside County. Holiday season foot-traffic spikes at flagship Downtown Riverside; outer stations carry mostly commuter and park-and-ride traffic with civic-pride significance for local residents."},
+        {"title": "GOALS FOR 2026",  "body": "Establish RCTC's MetroLink line as a regional holiday destination; drive non-transit foot traffic to Downtown Riverside in particular; position the County as a leader in civic seasonal programming."},
+        {"title": "KEY CONSTRAINTS", "body": "All decor must clear MetroLink overhead catenary safety envelope. Install and removal must occur outside revenue service hours. Materials must withstand winter Santa Ana wind events."},
+        {"title": "WHAT SUCCESS LOOKS LIKE", "body": "Measurable increase in evening visitors during the program window. Local press and social media coverage of the activation. Zero MetroLink operational disruptions during install/strike."},
     ],
-    "success_criteria": [
-        "Measurable increase in evening visitors during the program window",
-        "Local press and social media coverage of the activation",
-        "Zero MetroLink operational disruptions during install/strike",
-    ],
-    "constraints": [
-        "All decor must clear MetroLink overhead catenary safety envelope",
-        "Install and removal must occur outside revenue service hours",
-        "Materials must withstand winter Santa Ana wind events",
-    ],
-    "tier_recommended": "Enhanced",
-    "tier_rationale": "Balances civic visual impact with disciplined investment.",
 }
 
 
 # ===== Slide 4 — Creative Vision =====
 creative_vision_ctx = {
     **PROJECT,
-    "hero_image": _path(BASE_SCOPE, "Evening Lighting - Tree Lights Street.png"),
-    "creative_direction": (
-        "Holiday Express transforms the MetroLink station into the heart of "
-        "Riverside's holiday season — a warm, civic-scaled invitation visible "
-        "from blocks away. Wreaths and garlands frame each entrance like a "
-        "ceremonial gateway; evening lighting turns the platform itself into "
-        "the destination after sundown."
-    ),
+    "page_num": 4,
+    "page_title": "Creative Vision",
+    "standfirst": "The design direction for the 2026 MetroLink program.",
+    "design_phrase": "Holiday Express.",
+    "design_direction_body": "A civic-scale holiday aesthetic that turns the MetroLink line itself into the holiday gesture. Wreaths and garlands frame each station entrance like a ceremonial gateway; evening lighting turns the platforms themselves into destinations after sundown. The same design vocabulary repeats at every stop so the line reads as one program from end to end.",
     "phases": [
-        {"label": "Welcome", "body": "Wreaths and garlands at every station entrance — the holiday begins at the curb."},
-        {"label": "Journey", "body": "Pole banners and evening lighting carry the design language down the platform."},
-        {"label": "Arrival", "body": "Walk-through ornament and lit displays at the plaza — a destination, not a transfer."},
+        {"label": "WELCOME",  "body": "Wreaths and garlands at every station entrance — the holiday begins at the curb."},
+        {"label": "JOURNEY",  "body": "Pole banners and platform lighting carry the design language down the line."},
+        {"label": "ARRIVAL",  "body": "Walk-through ornament and lit displays at end-of-line — a destination, not a transfer."},
     ],
+    "hero_image": CREATIVE_HERO,
 }
 
 
-# ===== Slide 5a — Showcase Hero (1–3 items) =====
-showcase_hero_ctx = {
+# ===== Slide 5 — Zone Index (overview of all 6 zones) =====
+zone_index_ctx = {
     **PROJECT,
-    "section_title": "Station Entrances",
-    "section_subtitle": "First impressions at the curb",
-    "hero_image": _path(BASE_SCOPE, "Wreaths - Station Entrance 01.png"),
-    "hero_caption": "Custom-finished wreath, primary station entrance",
-    "items": [
-        {"name": "Custom Wreaths", "qty": 4, "note": "Each station entrance"},
-        {"name": "Garland Swags", "qty": 6, "note": "Spans entrance overhang"},
-        {"name": "Pole Wraps", "qty": 8, "note": "Approach from plaza"},
+    "page_num": 5,
+    "page_title": "The Program at a Glance",
+    "standfirst": "Six stations, one design language. Here's how the program reads from end to end.",
+    "zones": ZONES,
+}
+
+
+# ===== Slide 6 — Zone solo: Downtown Riverside (flagship, signature treatment) =====
+zone_flagship_ctx = {
+    **PROJECT,
+    "page_num": 6,
+    "zone_num": "01",
+    "zone_name": "Downtown Riverside",
+    "zone_subtitle": "The flagship station — civic centerpiece.",
+    "included_elements": ZONES[0]["included_elements"] + [
+        "Lighted walk-through arch at plaza forecourt",
+        "Evening lighting program — platform + awning + curb-edge",
+        "On-site QC walkthrough with RCTC Capital Projects",
     ],
+    "hero_image": FLAGSHIP_HERO,
 }
 
 
-# ===== Slide 5b — Showcase 2-up (3–6 items) =====
-showcase_2up_ctx = {
+# ===== Slide 7 — Zones 2-up: La Sierra + Pedley =====
+zone_2up_a_ctx = {
     **PROJECT,
-    "section_title": "Platform & Plaza",
-    "section_subtitle": "Where transit meets celebration",
-    "tiles": [
-        {
-            "image": _path(BASE_SCOPE, "Garlands - Decorated Swag - Plaza Fence.png"),
-            "name": "Decorated Plaza Fence Garland",
-            "note": "Continuous run, plaza-side fence",
-        },
-        {
-            "image": _path(BASE_SCOPE, "Evening Lighting - Platform Railing.png"),
-            "name": "Platform Railing Lighting",
-            "note": "Warm-white LED, dusk-to-2am program",
-        },
-    ],
+    "page_num": 7,
+    "page_title": "Program Zones",
+    "standfirst": "Stations 02 and 03 — the gateway and the residential stop.",
+    "zones": [ZONES[1], ZONES[2]],
 }
 
 
-# ===== Slide 5c — Showcase 3-up (6–10 items) =====
-showcase_3up_ctx = {
+# ===== Slide 8 — Zones 3-up: Hunter Park + Moreno Valley + Perris =====
+zone_3up_ctx = {
     **PROJECT,
-    "section_title": "Pole Decor",
-    "section_subtitle": "Length-of-corridor design language",
-    "tiles": [
-        {
-            "image": _path(BASE_SCOPE, "Pole Banner - Happy Holidays.png"),
-            "name": "Happy Holidays Pole Banner",
-            "note": "Both faces, weather-treated",
-        },
-        {
-            "image": _path(BASE_SCOPE, "Pole Banner Artwork - Holiday Express 01.jpg"),
-            "name": "Holiday Express Banner — A",
-            "note": "Custom artwork; train-themed",
-        },
-        {
-            "image": _path(BASE_SCOPE, "Pole Banner Artwork - Holiday Express 02.jpg"),
-            "name": "Holiday Express Banner — B",
-            "note": "Custom artwork; track-themed",
-        },
-    ],
+    "page_num": 8,
+    "page_title": "Program Zones",
+    "standfirst": "Stations 04, 05, and 06 — the outer line.",
+    "zones": [ZONES[3], ZONES[4], ZONES[5]],
 }
 
 
-# ===== Slide 5d — Showcase 4-up (overflow) =====
-showcase_4up_ctx = {
-    **PROJECT,
-    "section_title": "Evening Program",
-    "section_subtitle": "After-dark activations",
-    "tiles": [
-        {
-            "image": _path(BASE_SCOPE, "Evening Lighting - Tree Lights Street.png"),
-            "name": "Street Tree Lights",
-            "note": "Warm white",
-        },
-        {
-            "image": _path(BASE_SCOPE, "Evening Lighting - Station Awning 01.png"),
-            "name": "Station Awning Lights",
-            "note": "Architectural perimeter",
-        },
-        {
-            "image": _path(BASE_SCOPE, "Evening Lighting - Platform Railing.png"),
-            "name": "Platform Railing",
-            "note": "Approach lighting",
-        },
-        {
-            "image": _path(BASE_SCOPE, "Evening Lighting - Curb Edge.png"),
-            "name": "Curb Edge Lighting",
-            "note": "Vehicle-side warmth",
-        },
-    ],
-}
-
-
-# ===== Slide 5e — Showcase full-bleed (single hero) =====
-showcase_fullbleed_ctx = {
-    **PROJECT,
-    "section_title": "The Walk-Through Moment",
-    "hero_image": _path(ENHANCEMENTS, "Walk-Through Display - Lighted Gift Box.png"),
-    "caption": (
-        "A 12-foot lighted gift-box arch on the plaza — the photo "
-        "moment that gets shared, that brings visitors back."
-    ),
-}
-
-
-# ===== Slide N+1 — Scope of Work =====
+# ===== Slide 9 — Scope of Work =====
 scope_ctx = {
     **PROJECT,
-    "inclusions": [
-        "Custom-fabricated wreaths (4× station entrances)",
-        "Decorated and undecorated garland swags (plaza + street fence)",
-        "Pole banner program (8 poles, 2 artwork variants)",
-        "Evening lighting program (platform, awning, street tree, curb edge)",
-        "Walk-through ornament arch (plaza centerpiece)",
+    "page_num": 9,
+    "page_title": "Scope of Work",
+    "standfirst": "What your investment includes, and what you can add on.",
+    "includes": [
+        "Custom-fabricated wreaths (every station entrance)",
+        "Decorated and undecorated garland (six stations)",
+        "Pole banner program (32 poles total, two artwork variants)",
+        "Evening lighting program — Downtown Riverside (4 zones)",
+        "Walk-through ornament arch — flagship station",
         "Install + strike per MetroLink operational windows",
-        "On-site QC walkthrough with RCTC capital projects",
+        "On-site QC walkthrough with RCTC Capital Projects",
         "Storage between deinstall and 2027 program",
     ],
     "add_ons": [
-        "Spiral LED tree at station forecourt",
-        "Lighted bell display, plaza-side",
-        "Lighted snowflakes on platform railing",
-        "Lighted gift-box towers, plaza pair",
-    ],
-    "exclusions": [
-        "MetroLink overhead catenary work (any modifications)",
-        "Permanent electrical infrastructure",
-        "After-hours security",
+        ("Spiral LED tree at flagship forecourt",      "+$8K"),
+        ("Lighted bell display, plaza-side",           "+$5K"),
+        ("Lighted snowflakes on platform railing (per station)", "+$2K each"),
+        ("Lighted gift-box towers, plaza pair",        "+$7K"),
+        ("Walk-through display refresh (existing arch)","+$3K"),
+        ("Multi-year partnership (see Investment page)","Varies"),
     ],
 }
 
 
-# ===== Slide N+2 — Sample of Our Work =====
-sample_of_work_ctx = {
-    **PROJECT,
-    "tiles": [
-        # 6 tiles. Riverside doesn't have a populated past_work_library yet
-        # (Plan 9), so these reference plausible fixture entries by name and
-        # use available rendering files as stand-in imagery.
-        {"image": _path(ENHANCEMENTS, "Lighted Bell Display - Scene.png"),
-         "name": "The Music Center", "location": "Los Angeles", "year": 2024},
-        {"image": _path(ENHANCEMENTS, "Spiral Tree - LED Red Green.png"),
-         "name": "Pier 39", "location": "San Francisco", "year": 2023},
-        {"image": _path(ENHANCEMENTS, "Walk-Through Display - Lighted Gift Box.png"),
-         "name": "Oregon Zoo", "location": "Portland", "year": 2024},
-        {"image": _path(BASE_SCOPE, "Wreath - Brick Column Night.jpg"),
-         "name": "JFK Terminal 1", "location": "New York", "year": 2023},
-        {"image": _path(BASE_SCOPE, "Large Tree - Traditional Ornaments.png"),
-         "name": "Sphere — Holiday Tree", "location": "Las Vegas", "year": 2024},
-        {"image": _path(BASE_SCOPE, "Walk-Through Ornament - Warm White.png"),
-         "name": "LED Angels Program", "location": "Long Beach", "year": 2024},
-    ],
-}
-
-
-# ===== Slide N+3 — Case Study =====
+# ===== Slide 10 — Case Study =====
 case_study_ctx = {
     **PROJECT,
-    "case_study_name": "Oregon Zoo — ZooLights",
-    "case_study_image": _path(ENHANCEMENTS, "Lighted Gift Box Tower 01.png"),
-    "challenge": (
-        "Drive evening attendance during the slowest revenue months while "
-        "maintaining the zoo's family-friendly identity and operating "
-        "within a tight nonprofit budget."
-    ),
-    "approach": (
-        "A modular lighting program designed to grow over three seasons. "
-        "Year-one investment in a hero walkway and signature animal lights; "
-        "years two and three add adjacent zones using compatible hardware."
-    ),
-    "outcome": (
-        "47% increase in evening attendance during the program window. "
-        "Year-three program ran with no new capital outlay. Press coverage "
-        "in The Oregonian, KGW, and Travel + Leisure."
-    ),
+    "page_num": 10,
+    "page_eyebrow": "CASE STUDY",
+    "page_title": "Long Beach Transit · 2024",
+    "standfirst": "A multi-station civic holiday program at scale, delivered in a single season.",
+    "challenge": "Roll out a coordinated holiday décor program across 14 transit stations on a tight budget and an even tighter install window — all installs had to land within a 21-day overnight window without disrupting revenue service.",
+    "approach":  "Standardized fabrication kits per station tier (flagship / standard / outpost). Pre-staged shipments at the operations yard. Crew rotated through stations on a strict overnight schedule with QC walks at sunrise.",
+    "outcome":   "All 14 stations live on schedule. Zero revenue-service disruptions. Local press coverage at six of the fourteen stations. Program renewed for 2025 with three additional stations.",
+    "hero_image": CASE_STUDY_HERO,
 }
 
 
-# ===== Slide N+4a — Investment (3-tier) =====
-investment_tiered_ctx = {
+# ===== Slide 11 — Investment =====
+investment_ctx = {
     **PROJECT,
+    "page_num": 11,
+    "page_title": "Investment",
+    "standfirst": "Three levels of program. Pick what fits your season.",
     "tiers": [
         {
-            "name": "Essential",
-            "tagline": "The disciplined civic baseline",
-            "price": "$184,500",
-            "highlights": [
-                "Custom wreaths at every entrance",
-                "Garland program — plaza fence",
-                "Pole banner program — 8 poles",
-                "Standard install + strike",
-            ],
+            "name": "ESSENTIAL", "rule_color": "gray", "tagline": "FLAGSHIP-ONLY PRESENCE",
+            "highlights": ["Downtown Riverside only", "Core wreaths + garland", "Pole banner program (8 poles)", "Standard install + strike"],
+            "price": "$184,500", "is_recommended": False,
         },
         {
-            "name": "Enhanced",
-            "tagline": "Recommended — civic moment, full evening program",
-            "price": "$284,500",
-            "is_recommended": True,
-            "highlights": [
-                "Everything in Essential",
-                "Full evening lighting program",
-                "Walk-through ornament — plaza centerpiece",
-                "Coordinated install per MetroLink ops windows",
-            ],
+            "name": "ENHANCED",  "rule_color": "red",  "tagline": "FULL LINE PROGRAM",
+            "highlights": ["Everything in Essential, plus:", "All six stations covered", "Evening lighting program at flagship", "Walk-through ornament — flagship plaza", "MetroLink ops-window install"],
+            "price": "$284,500", "is_recommended": True,
         },
         {
-            "name": "Signature",
-            "tagline": "A regional destination",
-            "price": "$384,500",
-            "highlights": [
-                "Everything in Enhanced",
-                "Spiral LED tree — station forecourt",
-                "Lighted bell + gift-box towers",
-                "Programmatic snowflake railing",
-                "On-site staffing during install + strike",
-            ],
+            "name": "SIGNATURE", "rule_color": "navy", "tagline": "REGIONAL DESTINATION",
+            "highlights": ["Everything in Enhanced, plus:", "Spiral LED tree — flagship forecourt", "Lighted bell + gift-box towers", "Programmatic snowflake railing (all stations)", "On-site staffing during install + strike"],
+            "price": "$384,500", "is_recommended": False,
         },
     ],
+    "partnership_discounts": [
+        ("2-YEAR", "4% OFF"),
+        ("3-YEAR", "6% OFF"),
+        ("5-YEAR", "9% OFF"),
+    ],
+    "footer_note": "Pricing valid 30 days from proposal date. Fabrication must be locked by Aug 22, 2026.",
 }
 
 
-# ===== Slide N+4b — Investment (single tier) =====
-investment_single_ctx = {
-    **PROJECT,
-    "price": "$284,500",
-    "tier_name": "Enhanced",
-    "highlights": [
-        "Custom wreaths — every station entrance",
-        "Garland program — plaza + street fence",
-        "Pole banner program — 8 poles, 2 artwork variants",
-        "Full evening lighting program — 4 zones",
-        "Walk-through ornament — plaza centerpiece",
-        "Install + strike per MetroLink ops windows",
-        "Storage between deinstall and 2027 program",
-    ],
-    "totals_breakdown": [
-        ("Materials", "$148,200"),
-        ("Fabrication", "$52,800"),
-        ("Install + strike", "$58,500"),
-        ("PM + QC", "$25,000"),
-    ],
-}
-
-
-# ===== Slide N+5 — Add-Ons =====
-add_ons_ctx = {
-    **PROJECT,
-    "items": [
-        {"id": "E1", "name": "Spiral LED Tree", "location": "Station forecourt",
-         "qty": 1, "unit": "ea", "price_each": "$8,500", "total": "$8,500"},
-        {"id": "E2", "name": "Lighted Bell Display", "location": "Plaza-side",
-         "qty": 4, "unit": "ea", "price_each": "$1,250", "total": "$5,000"},
-        {"id": "E3", "name": "Lighted Snowflakes — Railing",
-         "location": "Platform north railing", "qty": 12, "unit": "ea",
-         "price_each": "$185", "total": "$2,220"},
-        {"id": "E4", "name": "Lighted Gift-Box Tower",
-         "location": "Plaza, both sides", "qty": 2, "unit": "ea",
-         "price_each": "$3,400", "total": "$6,800"},
-        {"id": "E5", "name": "Walk-Through Display Refresh",
-         "location": "Existing arch", "qty": 1, "unit": "LS",
-         "price_each": "$3,200", "total": "$3,200"},
-    ],
-    "subtotal": "$25,720",
-}
-
-
-# ===== Slide N+6 — Terms & Next Steps =====
+# ===== Slide 12 — Terms & Next Steps =====
 terms_ctx = {
     **PROJECT,
-    "key_dates": [
-        ("Signing deadline", "October 30, 2026"),
-        ("Fabrication lock", "August 22, 2026"),
-        ("Install begins", "November 10, 2026"),
-        ("Go live", "November 20, 2026"),
-        ("Season end", "January 5, 2027"),
-        ("Strike complete", "January 15, 2027"),
+    "page_num": 12,
+    "page_title": "Terms & Next Steps",
+    "standfirst": "The critical dates and terms for the 2026 program.",
+    "critical_dates": [
+        ("October 30, 2026", "Execute by this date to guarantee the install schedule."),
+        ("August 22, 2026",  "All custom fabrication must be approved by this date (90 days pre-Go Live)."),
     ],
-    "payment_schedule": [
-        ("On signing", "30%"),
-        ("On fabrication start", "40%"),
-        ("On go-live", "30%"),
+    "term_panels": [
+        ("PAYMENT SCHEDULE",   "30% deposit on signing — required to lock the install schedule. 40% on fabrication start. 30% on go-live. Net-15 terms on final invoice."),
+        ("INSURANCE & PERMITS","$5M Umbrella over $1M/$2M Commercial General Liability and $1M Auto; full Workers' Comp at statutory limits. Certificates issued to RCTC at signing. MetroLink coordination handled by RCTC; we provide full documentation support."),
+        ("CHANGE ORDERS",      "Includes 2 creative revision rounds before Fabrication Lock (Aug 22, 2026). Scope or timeline changes after that date follow our standard change-order workflow — written approval required, priced at materials + 35%."),
+        ("PROPOSAL VALIDITY",  "This proposal is valid 60 days from May 12, 2026. Materials pricing subject to market conditions thereafter. Sign by Oct 30 to lock schedule."),
     ],
-    "insurance_summary": (
-        "St. Nick's carries $5M general liability and $2M auto. "
-        "Certificates issued to RCTC at signing."
-    ),
-    "change_orders_summary": (
-        "Scope or timeline changes after fabrication lock follow our "
-        "standard change-order workflow — written approval required, "
-        "priced at materials + 35%."
-    ),
-    "validity_days": 60,
+    "after_approval_steps": ["Kickoff call within 48 hrs", "Creative window opens", "Renderings final by Aug 1"],
 }
 
 
-# ===== Slide N+7 — Sign Block =====
-sign_block_ctx = {
+# ===== Slide 13 — Sign-off =====
+sign_off_ctx = {
     **PROJECT,
-    "client_signer_name": "Jacklyn Moreno",
-    "client_signer_title": "Capital Projects Manager",
-    "client_signer_org": "Riverside County Transportation Commission",
-    "stnicks_signer_name": "Daniel Christenson",
-    "stnicks_signer_title": "Director of Sales",
-    "stnicks_signer_org": "St. Nick's Holiday Decor",
-    "instructions": (
-        "Sign and return to your St. Nick's representative. We'll countersign "
-        "and return a fully executed copy along with your project kickoff packet."
-    ),
+    "page_num": 13,
+    "page_title": "Let's Make It Happen",
+    "standfirst": "Sign below to launch the 2026 MetroLink Holiday Program.",
+    "what_youre_approving": "The 2026 Riverside MetroLink Holiday Program — six stations from Downtown Riverside through Perris-Downtown, live Nov 20, 2026 through Jan 5, 2027, at the tier and add-ons you select on the Investment page.",
+    "client_party_label":   "RCTC AUTHORIZATION",
+    "stnicks_party_label":  "ST. NICK'S AUTHORIZED SIGNATURE",
+    "digital_signing_note": "Prefer to sign digitally? Use the Canva e-signature link in your email. Questions? Reply directly — we'll respond within 24 hours.",
 }
 
 
-# ===== Slide N+8 — About St. Nick's =====
+# ===== Slide 14 — About St. Nick's =====
 about_ctx = {
     **PROJECT,
-    "company_blurb": (
-        "St. Nick's is a holiday decor design and fabrication studio "
-        "serving civic, retail, and hospitality clients across North America "
-        "since 2008. We design programs that scale across years, fabricate "
-        "in-house, and run our own install crews."
-    ),
-    "stats": [
-        {"value": "17", "label": "Years in business"},
-        {"value": "120+", "label": "Annual programs"},
-        {"value": "32 states", "label": "Active geography"},
-        {"value": "100%", "label": "In-house fabrication"},
+    "page_num": 14,
+    "page_title": "About St. Nick's",
+    "standfirst": "25 years of large-scale holiday design, installation, and service.",
+    "company_facts": [
+        "Founded 1998 (dba St. Nick's) — T&G Global, LLC",
+        "14 full-time team · 30–45 seasonal staff",
+        "B-General Building Contractor #990427",
+        "Certified Small Business Supplier #1626660",
+        "$5M Umbrella · $1M/$2M GL · $1M Auto · Full Workers' Comp",
+        "200+ commercial venues across North America",
     ],
     "team": [
-        {"name": "Daniel Christenson", "title": "Director of Sales", "email": "daniel@st-nicks.com"},
-        {"name": "Jonathan Yang", "title": "Account Executive", "email": "jonathan@st-nicks.com"},
-        {"name": "Stephanie Escobar", "title": "Past Work Curator", "email": "stephanie@st-nicks.com"},
-        {"name": "Abigail Lacson", "title": "Brand & Design", "email": "abigail@st-nicks.com"},
+        {"name": "Nicholas Adams",   "role": "Founder"},
+        {"name": "Wade Francis",     "role": "Chief Financial Officer"},
+        {"name": "Brenda Sheridan",  "role": "Director of Operations"},
+        {"name": "Daniel Christenson","role": "Director of Sales"},
+        {"name": "Stephanie Escobar","role": "Creative Director"},
+        {"name": "Carlos Vasquez & Alonso Salazar", "role": "Senior Installers / Project Managers"},
     ],
+    "contact_strip": "ST-NICKS.COM  ·  (562) 438-0017  ·  6861 Walker St, La Palma, CA 90623  ·  © 2026 St. Nick's Christmas Lighting & Décor",
 }
