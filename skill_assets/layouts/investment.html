@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Investment — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-10.png
+
+     Top: page title (Poppins Black 50pt) + standfirst.
+     Middle: 3 tier cards in a row (grid 3 cols).
+       - Thin top rule per tier (gray / red / navy).
+       - Recommended card gets "★ RECOMMENDED ★" red banner above it + tinted bg.
+       - Each card: tier name + tagline (red caps) + thin rule + bulleted
+         highlights + big price + "ALL-IN · TAX EXCLUDED" footnote.
+     Below cards: dark MULTI-YEAR PARTNERSHIP strip.
+     Bottom: small footer note.
+
+     WeasyPrint pitfall: flex gap on tier cards can miscalculate intrinsic
+     height and produce multi-page output. Use margin-bottom on children
+     rather than gap on the flex parent. */
+
+  .inv-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .inv-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Tier grid wrapper (includes recommended banner row) ── */
+  .inv-tiers-wrapper {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-4);
+    align-items: end;   /* cards align to bottom so recommended banner sits above */
+  }
+
+  /* Each column is a flex column: optional banner + card */
+  .inv-tier-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Recommended banner ── */
+  .inv-recommended-banner {
+    background: var(--color-red);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: var(--space-2) 0;
+    border-radius: 3pt 3pt 0 0;
+  }
+
+  /* Spacer for non-recommended columns so cards align at top */
+  .inv-banner-spacer {
+    /* same height as the banner — computed via padding */
+    height: calc(var(--text-xs) * 1.45 + var(--space-2) * 2);
+  }
+
+  /* ── Tier card ── */
+  .inv-card {
+    flex: 1 1 0;
+    background: white;
+    border: 1pt solid #E0E0E0;
+    box-sizing: border-box;
+    padding: var(--space-4);
+    overflow: hidden;
+  }
+
+  .inv-card.recommended {
+    background: #FFF8F8;
+  }
+
+  /* Recommended card has no top radius (banner above provides it) */
+  .inv-recommended-banner + .inv-card {
+    border-radius: 0 0 3pt 3pt;
+    border-top: none;
+  }
+
+  .inv-card:not(.recommended) {
+    border-radius: 3pt;
+  }
+
+  /* Top rule strip (replaces border-top on non-recommended; on recommended
+     we use a colored bottom-border of the banner) */
+  .inv-card-rule {
+    height: 4pt;
+    margin: 0 calc(-1 * var(--space-4)) var(--space-4) calc(-1 * var(--space-4));
+    /* negative margins bleed to card edge */
+  }
+  .inv-card-rule.gray  { background: #9E9E9E; }
+  .inv-card-rule.red   { background: var(--color-red); }
+  .inv-card-rule.navy  { background: var(--color-navy); }
+
+  /* Tier name */
+  .inv-tier-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-2xl);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+  }
+
+  /* Tagline */
+  .inv-tier-tagline {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin-bottom: var(--space-3);
+  }
+
+  /* Thin divider between tagline and highlights */
+  .inv-tier-divider {
+    height: 1pt;
+    background: #E0E0E0;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Highlights bullet list */
+  .inv-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: var(--space-4);
+  }
+
+  .inv-highlights li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--color-charcoal);
+    padding-left: var(--space-4);
+    position: relative;
+    margin-bottom: var(--space-1);
+  }
+
+  .inv-highlights li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 11pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* Price */
+  .inv-price {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-3xl);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-1);
+  }
+
+  /* All-in footnote */
+  .inv-allin {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gray);
+  }
+
+  /* ── MULTI-YEAR PARTNERSHIP dark strip ── */
+  .inv-partnership {
+    flex: 0 0 auto;
+    background: var(--color-charcoal);
+    color: var(--color-light);
+    border-radius: 3pt;
+    padding: var(--space-4) var(--space-5);
+    margin-top: var(--space-4);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .inv-partnership-heading {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    line-height: 1.2;
+    margin-bottom: var(--space-1);
+  }
+
+  .inv-partnership-subtitle {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    color: var(--color-light);
+    opacity: 0.75;
+  }
+
+  /* Discount items row */
+  .inv-discounts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .inv-discount-item {
+    text-align: center;
+  }
+
+  .inv-discount-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-light);
+    opacity: 0.6;
+    margin-bottom: var(--space-1);
+  }
+
+  .inv-discount-value {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-2xl);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: white;
+  }
+
+  /* ── Footer note ── */
+  .inv-footer-note {
+    flex: 0 0 auto;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+    margin-top: var(--space-3);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="inv-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="inv-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 3 tier columns -->
+  <div class="inv-tiers-wrapper">
+    {% for tier in tiers %}
+    <div class="inv-tier-col">
+
+      {% if tier.is_recommended %}
+      <div class="inv-recommended-banner">&#9733; RECOMMENDED &#9733;</div>
+      {% else %}
+      <div class="inv-banner-spacer"></div>
+      {% endif %}
+
+      <div class="inv-card {% if tier.is_recommended %}recommended{% endif %}">
+        <div class="inv-card-rule {{ tier.rule_color }}"></div>
+        <div class="inv-tier-name">{{ tier.name }}</div>
+        <div class="inv-tier-tagline">{{ tier.tagline }}</div>
+        <div class="inv-tier-divider"></div>
+        <ul class="inv-highlights">
+          {% for item in tier.highlights %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+        <div class="inv-price">{{ tier.price }}</div>
+        <div class="inv-allin">ALL-IN &middot; TAX EXCLUDED</div>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- MULTI-YEAR PARTNERSHIP dark strip -->
+  <div class="inv-partnership">
+    <div>
+      <div class="inv-partnership-heading">MULTI-YEAR PARTNERSHIP</div>
+      <div class="inv-partnership-subtitle">Lock in rates and save:</div>
+    </div>
+    <div class="inv-discounts">
+      {% for label, off in partnership_discounts %}
+      <div class="inv-discount-item">
+        <div class="inv-discount-label">{{ label }}</div>
+        <div class="inv-discount-value">{{ off }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Footer note -->
+  {% if footer_note %}
+  <div class="inv-footer-note">{{ footer_note }}</div>
+  {% endif %}
+
+</div>
+{% endblock %}
