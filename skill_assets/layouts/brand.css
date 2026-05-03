@@ -1,11 +1,11 @@
 /* St. Nick's Proposal Builder — locked brand tokens
  *
- * This file is the single source of truth for brand colors, fonts,
- * type scale, spacing scale, and page geometry. Layouts may add
+ * Single source of truth for brand colors, fonts, type scale, spacing
+ * scale, page geometry, and persistent page chrome. Layouts may add
  * layout-specific styles inline but must NEVER write hex colors,
  * raw font names, or raw pixel sizes — always use the tokens here.
  *
- * See docs/superpowers/specs/2026-05-01-plan-2-brand-layout-design.md
+ * See docs/superpowers/specs/2026-05-03-plan-2-prime-master-driven-design.md
  * for design rationale.
  */
 
@@ -40,19 +40,30 @@
   font-weight: 500;
   font-style: normal;
 }
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
 
 /* ===== Design tokens ===== */
 :root {
-  /* Colors — locked by parent spec §3 */
-  --color-red: #B31315;       /* Headlines, accents, CTAs ONLY — never block fill */
-  --color-charcoal: #1C1C1C;  /* Body on light backgrounds */
-  --color-gray: #555555;      /* Captions, secondary text */
-  --color-navy: #12355B;      /* Secondary accent */
+  /* Brand colors — verbatim from the Branding Board */
+  --color-red: #B31315;       /* Headlines, accents, CTAs, eyebrows */
+  --color-charcoal: #1C1C1C;  /* Body on light backgrounds; dark page bg */
+  --color-gray: #555555;      /* Captions, secondary text, footer */
+  --color-navy: #12355B;      /* Secondary accent; tier rule on Investment */
   --color-light: #ECEFF1;     /* Body on dark backgrounds; light fills */
 
+  /* Plan 2-prime additions for card surfaces */
+  --color-panel: #F2F2F2;     /* Card / panel background — distinct from --color-light */
+  --color-green: #1B7A3F;     /* Scope page "YOUR PROGRAM INCLUDES" header — only used there */
+
   /* Font families */
-  --font-heading: "Roboto", sans-serif;
-  --font-body: "Poppins", sans-serif;
+  --font-heading: "Roboto", sans-serif;     /* Subheadings, key statements, labels */
+  --font-body: "Poppins", sans-serif;       /* Body, long-form, captions */
+  --font-display: "Poppins", sans-serif;    /* Heavy display headlines (use weight 900) */
 
   /* Typographic scale — geometric ~1.25 minor third, base = 12pt body */
   --text-xs:   9pt;
@@ -76,37 +87,90 @@
 
 /* ===== Page geometry ===== */
 @page {
-  size: 13.333in 7.5in;          /* 16:9 widescreen, landscape */
-  margin: var(--space-6);        /* Default margin; layouts may override */
+  size: 13.333in 7.5in;
+  margin: 0;
 }
 
-/* ===== Global element rules ===== */
+/* ===== Page chrome — persistent header, footer, body background ===== */
 html, body {
   margin: 0;
   padding: 0;
   font-family: var(--font-body);
   font-weight: 400;
   font-size: var(--text-base);
-  color: var(--color-charcoal);
   line-height: 1.45;
-  background: white;
+  width: 13.333in;
+  height: 7.5in;
 }
 
+body.page-light {
+  background: white;
+  color: var(--color-charcoal);
+}
+
+body.page-dark {
+  background: var(--color-charcoal);
+  color: var(--color-light);
+}
+
+.page-header {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-6);
+}
+.page-header .brand-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 11pt;
+  letter-spacing: 0.06em;
+  line-height: 1.0;
+}
+.page-header .brand-tag {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 7pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 4pt;
+  opacity: 0.85;
+}
+body.page-light .page-header { color: var(--color-charcoal); }
+body.page-dark  .page-header { color: var(--color-light); }
+
+.page-footer {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--space-6);
+  right: var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 8pt;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+body.page-light .page-footer { color: var(--color-gray); }
+body.page-dark  .page-footer { color: var(--color-light); opacity: 0.65; }
+
+.page-content {
+  position: absolute;
+  top: var(--space-8);
+  left: var(--space-6);
+  right: var(--space-6);
+  bottom: var(--space-8);
+  /* Layouts add their own padding/grid inside .page-content. */
+}
+
+/* ===== Global element rules ===== */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--color-charcoal);
   margin: 0 0 var(--space-3) 0;
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
-
-h1 { font-size: var(--text-3xl); color: var(--color-red); }
-h2 { font-size: var(--text-2xl); }
-h3 { font-size: var(--text-xl); }
-h4 { font-size: var(--text-lg); }
-h5 { font-size: var(--text-base); }
-h6 { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.08em; }
 
 p {
   margin: 0 0 var(--space-3) 0;
@@ -127,40 +191,74 @@ img {
   display: block;
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: var(--text-sm);
-}
-
-th, td {
-  text-align: left;
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-light);
-}
-
-th {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  color: var(--color-charcoal);
-  text-transform: uppercase;
-  font-size: var(--text-xs);
-  letter-spacing: 0.05em;
-}
-
-/* Utility: caption text */
-.caption {
-  font-size: var(--text-xs);
-  color: var(--color-gray);
-  font-weight: 300;
-}
-
-/* Utility: small uppercase label */
+/* Utility: small uppercase label (Roboto Bold caps, brand red) */
 .label {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-gray);
+  letter-spacing: 0.06em;
+  color: var(--color-red);
+}
+
+/* Utility: section eyebrow, slightly tighter than .label, used for "ZONE 01", "CASE STUDY" */
+.eyebrow {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 10pt;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--color-red);
+}
+
+/* Utility: page-title hero (Poppins Black at 50pt) */
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 50pt;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* Utility: italic standfirst beneath the page title */
+.standfirst {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 16pt;
+  line-height: 1.35;
+  margin: var(--space-2) 0 0 0;
+}
+body.page-light .page-title { color: var(--color-charcoal); }
+body.page-dark  .page-title { color: var(--color-light); }
+body.page-light .standfirst { color: var(--color-gray); }
+body.page-dark  .standfirst { color: var(--color-light); opacity: 0.7; }
+
+/* Card pattern — used by Understanding, Scope, Terms, Sign-off */
+.card {
+  background: var(--color-panel);
+  border-radius: 4pt;
+  padding: var(--space-4);
+  box-shadow: 0 1pt 3pt rgba(0, 0, 0, 0.08);
+}
+.card.red-rule { border-left: 3pt solid var(--color-red); }
+.card.has-header { padding: 0; overflow: hidden; }
+.card .card-header {
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-light);
+}
+.card.has-header.green .card-header { background: var(--color-green); }
+.card.has-header.red   .card-header { background: var(--color-red); }
+.card .card-body {
+  padding: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-charcoal);
 }
