@@ -1,8 +1,8 @@
-"""Asserts the 5 required font files exist in skill_assets/fonts/.
+"""Asserts the required font files exist in skill_assets/fonts/.
 
-Per parent spec §3 / Plan 2 design §5, fonts MUST be embedded in the
-skill bundle and never loaded from the system. This test catches
-accidental deletion or wrong filename.
+Per parent spec §3 / Plan 2-prime design §6, fonts MUST be embedded in the
+skill bundle and never loaded from the system. This test catches accidental
+deletion or wrong filename.
 """
 from pathlib import Path
 
@@ -15,6 +15,7 @@ REQUIRED_FONTS = [
     "Poppins-Light.ttf",
     "Poppins-Regular.ttf",
     "Poppins-Medium.ttf",
+    "Poppins-Black.ttf",
 ]
 
 
