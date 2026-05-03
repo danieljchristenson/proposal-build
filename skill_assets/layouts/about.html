@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block body_class %}page-dark{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* About — dark page.
+     Master ref: Master Proposal Reference/master-pages/page-13.png
+
+     Top: page title (Poppins Black 50pt white) + standfirst.
+     Below: 2-column grid:
+       Left — THE COMPANY label + bulleted company_facts (white, red bullets).
+       Right — YOUR TEAM label + team list (name bold white + role light gray).
+     Footer: overridden — full-width brand-red contact strip at bottom.
+
+     The standard page-footer is replaced by the red contact strip via the footer block.
+     page-content is adjusted to bottom:36pt so content fills to the strip's top. */
+
+  /* Extend content area down to the red strip (which is 36pt tall).
+     The standard bottom is 0.55in=39.6pt. We keep similar clearance. */
+  body.page-dark .page-content {
+    bottom: 36pt;
+  }
+
+  /* ── Top title area ── */
+  .ab-title-area {
+    margin-bottom: var(--space-5);
+  }
+
+  .ab-title-area .page-title {
+    font-size: 44pt;
+    margin-bottom: var(--space-1);
+  }
+
+  /* ── 2-column body grid ── */
+  .ab-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  /* Section label (red caps) */
+  .ab-section-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Company facts — bulleted list ── */
+  .ab-facts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ab-facts li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-light);
+    padding-left: var(--space-4);
+    position: relative;
+    margin-bottom: var(--space-2);
+  }
+
+  .ab-facts li::before {
+    content: "·";
+    color: var(--color-red);
+    font-weight: 700;
+    font-size: 14pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 1pt;
+  }
+
+  /* ── Team list ── */
+  .ab-team-member {
+    margin-bottom: var(--space-3);
+  }
+
+  .ab-team-name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    line-height: 1.2;
+    color: var(--color-light);
+  }
+
+  .ab-team-role {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-sm);
+    line-height: 1.3;
+    color: var(--color-light);
+    opacity: 0.65;
+  }
+</style>
+{% endblock %}
+
+{% block footer %}
+<footer style="
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36pt;
+  background: var(--color-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+">
+  <div style="
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: white;
+  ">{{ contact_strip }}</div>
+</footer>
+{% endblock %}
+
+{% block content %}
+
+  <!-- Page title + standfirst -->
+  <div class="ab-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <!-- 2-column body: company facts + team -->
+  <div class="ab-body-grid">
+
+    <!-- Left: The Company -->
+    <div>
+      <div class="ab-section-label">THE COMPANY</div>
+      <ul class="ab-facts">
+        {% for fact in company_facts %}
+        <li>{{ fact }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Right: Your Team -->
+    <div>
+      <div class="ab-section-label">YOUR TEAM</div>
+      {% for member in team %}
+      <div class="ab-team-member">
+        <div class="ab-team-name">{{ member.name }}</div>
+        <div class="ab-team-role">{{ member.role }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+{% endblock %}

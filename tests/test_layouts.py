@@ -117,6 +117,10 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Let's Make It Happen", "WHAT YOU'RE APPROVING", "CLIENT AUTHORIZATION", "Canva e-signature"]),
     ("sign_off_riverside", "sign_off", "riverside", "sign_off_ctx",
         ["Let's Make It Happen", "WHAT YOU'RE APPROVING", "RCTC AUTHORIZATION", "Canva e-signature"]),
+    ("about_pier39",    "about", "pier_39",   "about_ctx",
+        ["About St. Nick's", "Founded 1998", "Daniel Christenson", "Director of Sales", "ST-NICKS.COM"]),
+    ("about_riverside", "about", "riverside", "about_ctx",
+        ["About St. Nick's", "Founded 1998", "Daniel Christenson", "Director of Sales", "ST-NICKS.COM"]),
 ]
 
 
