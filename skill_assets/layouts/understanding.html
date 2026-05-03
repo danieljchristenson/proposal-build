@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* IMPORTANT: heights must use % or auto, not hardcoded pt — the
+     .page-content top/bottom sizing is set in brand.css. */
+  .un-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .un-title-area { flex: 0 0 auto; margin-bottom: var(--space-4); }
+  .un-grid {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--space-4);
+    min-height: 0;  /* allow children to shrink in WeasyPrint */
+  }
+  .un-card {
+    background: var(--color-panel);
+    border-left: 3pt solid var(--color-red);
+    padding: var(--space-4);
+    border-radius: 0 4pt 4pt 0;
+    overflow: hidden;
+  }
+  .un-card-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+  .un-card-body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-charcoal);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="un-outer">
+  <div class="un-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    <div class="standfirst">{{ standfirst }}</div>
+  </div>
+  <div class="un-grid">
+    {% for panel in panels %}
+    <div class="un-card">
+      <div class="un-card-title">{{ panel.title }}</div>
+      <div class="un-card-body">{{ panel.body }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

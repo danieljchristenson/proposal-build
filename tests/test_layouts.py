@@ -75,6 +75,10 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Executive Summary", "destination-scale", "Turnkey Delivery", "FABRICATION LOCK", "Aug 22, 2026"]),
     ("exec_summary_riverside", "exec_summary", "riverside", "exec_summary_ctx",
         ["Executive Summary", "Six-Station", "Civic Pride", "FABRICATION LOCK", "Aug 22, 2026"]),
+    ("understanding_pier39",    "understanding", "pier_39",   "understanding_ctx",
+        ["Our Understanding", "Pier 39 is San Francisco's", "VENUE & CONTEXT", "GOALS FOR 2026", "KEY CONSTRAINTS"]),
+    ("understanding_riverside", "understanding", "riverside", "understanding_ctx",
+        ["Our Understanding", "MetroLink line connects", "VENUE & CONTEXT", "GOALS FOR 2026", "KEY CONSTRAINTS"]),
 ]
 
 
