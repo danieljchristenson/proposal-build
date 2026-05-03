@@ -65,7 +65,12 @@ def _assert_text_present(doc: fitz.Document, expected: list[str]) -> None:
 # (out_name, layout_name, fixture_module, ctx_attr, expected_text)
 # Each Plan 2-prime layout task appends one or more entries here.
 LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
-    # appended per task
+    ("cover_pier39",    "cover", "pier_39",   "cover_ctx", [
+        "Pier 39", "San Francisco", "holiday season", "St. Nick's",
+    ]),
+    ("cover_riverside", "cover", "riverside", "cover_ctx", [
+        "Riverside MetroLink", "Six-Station", "holiday season", "St. Nick's",
+    ]),
 ]
 
 

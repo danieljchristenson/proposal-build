@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block body_class %}page-dark{% endblock %}
+{% block footer %}{% endblock %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_name }} — Cover{% endblock %}
+{% block extra_head %}
+<style>
+  /* Cover-only chrome adjustments. The master cover splits the page into
+     a left text panel and a right hero-image panel, both on charcoal but
+     the right slightly lifted with a subtle gradient. */
+  body.page-dark .page-content {
+    /* Override the default content positioning — cover uses full bleed. */
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 0;
+  }
+
+  .cover-grid {
+    display: grid;
+    grid-template-columns: 5in 1fr;
+    height: 7.5in;
+  }
+
+  .cover-left {
+    background: var(--color-charcoal);
+    padding: 1.0in 0.55in 0.55in 0.55in;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--color-light);
+  }
+
+  .cover-right {
+    background: #2a2a2a;  /* Subtle lift from the left charcoal. */
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-right .hero-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-body);
+    font-style: italic;
+    color: rgba(236, 239, 241, 0.4);
+    font-size: var(--text-sm);
+  }
+  .cover-right .cover-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cover-rule {
+    width: 0.4in;
+    height: 2pt;
+    background: var(--color-red);
+    margin-bottom: var(--space-3);
+  }
+  .cover-season {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 11pt;
+    letter-spacing: 0.15em;
+    color: var(--color-red);
+    margin-bottom: var(--space-3);
+  }
+  .cover-project {
+    font-family: var(--font-display);
+    font-weight: 900;
+    /* 60pt fits project names up to ~12 chars per line within the 3.9in
+       content column (5in column minus 2×0.55in padding). The master
+       reference uses ~80pt for "Pier 39" (6 chars); 60pt keeps the same
+       dominant visual weight for longer names like "Riverside MetroLink". */
+    font-size: 60pt;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--color-light);
+    margin: 0 0 var(--space-3) 0;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+  .cover-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 18pt;
+    color: var(--color-light);
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  .cover-prep-block {
+    font-family: var(--font-body);
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--color-light);
+    opacity: 0.85;
+  }
+  .cover-prep-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    color: var(--color-light);
+    opacity: 0.6;
+    margin-bottom: var(--space-1);
+  }
+  .cover-prep-name {
+    font-weight: 600;
+    color: var(--color-light);
+    opacity: 1.0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="cover-grid">
+  <div class="cover-left">
+    <div>
+      <div class="cover-rule"></div>
+      <div class="cover-season">{{ season_label }}</div>
+      <h1 class="cover-project">{{ project_name }}</h1>
+      <div class="cover-subtitle">{{ project_subtitle }}</div>
+    </div>
+
+    <div class="cover-prep-block">
+      <div class="cover-prep-label">PREPARED BY</div>
+      <div class="cover-prep-name">{{ prepared_by_org }}</div>
+      <div>Proposal Date: {{ proposal_date }}</div>
+    </div>
+  </div>
+
+  <div class="cover-right">
+    {% if hero_image %}
+    <img class="cover-hero-img" src="{{ hero_image }}" alt="{{ project_name }}">
+    {% else %}
+    <div class="hero-placeholder">[ {{ project_name }} hero image — Plan 3 supplies real photo ]</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
