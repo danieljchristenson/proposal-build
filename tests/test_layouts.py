@@ -1,34 +1,32 @@
-"""Parametrized layout tests — one entry per layout in skill_assets/layouts/.
+"""Parametrized layout tests — one entry per layout-render in skill_assets/layouts/.
 
-For each (layout_name, ctx, expected_text) tuple, the test:
-- renders the layout to PDF via the render_layout fixture,
-- asserts the PDF has 1 page at 13.333" × 7.5" (within 1pt),
-- asserts both Roboto and Poppins are listed as embedded fonts
-  (catches the silent system-font-fallback failure mode),
-- asserts every string in expected_text appears in the extracted
-  PDF text (catches blank-page and missing-content failures).
+Each LAYOUT_CASES tuple is (out_name, layout_name, fixture_module, ctx_attr,
+expected_text):
+- out_name: the PDF filename stem written to tests/_output/
+- layout_name: the .html template under skill_assets/layouts/
+- fixture_module: "pier_39" or "riverside" — which fixture module supplies ctx
+- ctx_attr: name of the ctx dict on that module
+- expected_text: substrings that must appear in the rendered PDF text
 
-Each layout task in Plan 2 appends to LAYOUT_CASES below.
+The same layout may be rendered multiple times with different ctxs (e.g.
+zone_solo with zone_01 and zone_02 fixtures). out_name disambiguates.
+
+Per Plan 2-prime: every PDF embeds Roboto + Poppins; no other families.
 """
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 
 import fitz  # pymupdf
 import pytest
 
-# Page dimensions in PDF points (1pt = 1/72in).
 EXPECTED_WIDTH_PT = 13.333 * 72   # 959.976 pt
 EXPECTED_HEIGHT_PT = 7.5 * 72     # 540.000 pt
 DIMENSION_TOLERANCE_PT = 1.0
 
 
 def _font_names(doc: fitz.Document) -> list[str]:
-    """Collect basefont names across all pages.
-
-    pymupdf's get_fonts() returns tuples; index 3 is the basefont name,
-    e.g. 'ABCDEF+Roboto-Bold' (subsetted) or 'Roboto-Bold' (full).
-    """
     names: list[str] = []
     for page in doc:
         for entry in page.get_fonts():
@@ -39,9 +37,9 @@ def _font_names(doc: fitz.Document) -> list[str]:
 def _assert_font_family_present(doc: fitz.Document, family: str) -> None:
     names = _font_names(doc)
     assert any(family in n for n in names), (
-        f"No embedded font with '{family}' in its name. "
-        f"Got: {names}. WeasyPrint may have fallen back to a system font — "
-        f"check brand.css @font-face urls and font file presence."
+        f"No embedded font with '{family}' in its name. Got: {names}. "
+        f"WeasyPrint may have fallen back to a system font — check brand.css "
+        f"@font-face urls and font file presence."
     )
 
 
@@ -56,16 +54,6 @@ def _assert_dimensions(doc: fitz.Document) -> None:
 
 
 def _assert_text_present(doc: fitz.Document, expected: list[str]) -> None:
-    # Normalise line-breaks introduced by PyMuPDF's text extraction (it inserts
-    # \n wherever the renderer wrapped a line, so multi-word fragments that span
-    # a wrap point would never match a verbatim substring check).  Collapsing to
-    # a single space mirrors what a reader sees and keeps assertions readable.
-    #
-    # Case-folding: WeasyPrint applies CSS `text-transform: uppercase` by
-    # rewriting the rendered glyphs to uppercase characters, so PyMuPDF's
-    # text extraction returns e.g. "WELCOME" even when the source content
-    # is "Welcome". The fragments are content assertions, not styling
-    # assertions — case is the layout's job, presence is the test's job.
     raw = " ".join(page.get_text() for page in doc)
     text = " ".join(raw.split()).casefold()
     for fragment in expected:
@@ -74,113 +62,18 @@ def _assert_text_present(doc: fitz.Document, expected: list[str]) -> None:
         )
 
 
-# (layout_name, fixture_attribute_name, list_of_text_fragments_that_must_appear)
-# Each Plan 2 layout task appends one entry here.
-LAYOUT_CASES: list[tuple[str, str, list[str]]] = [
-    ("cover", "cover_ctx", [
-        "Downtown Riverside MetroLink",
-        "Riverside County Transportation Commission",
-        "Holiday Express",
-    ]),
-    ("exec_summary", "exec_summary_ctx", [
-        "Civic Pride",
-        "Operational Discipline",
-        "Repeatable Investment",
-        "Enhanced",
-        "$284,500",
-    ]),
-    ("understanding", "understanding_ctx", [
-        "regional holiday destination",
-        "MetroLink overhead catenary",
-        "Enhanced",
-    ]),
-    ("creative_vision", "creative_vision_ctx", [
-        "Holiday Express transforms",
-        "Welcome",
-        "Journey",
-        "Arrival",
-    ]),
-    ("showcase_hero", "showcase_hero_ctx", [
-        "Station Entrances",
-        "Custom Wreaths",
-        "Pole Wraps",
-    ]),
-    ("showcase_2up", "showcase_2up_ctx", [
-        "Platform & Plaza",
-        "Decorated Plaza Fence Garland",
-        "Platform Railing Lighting",
-    ]),
-    ("showcase_3up", "showcase_3up_ctx", [
-        "Pole Decor",
-        "Happy Holidays Pole Banner",
-        "Holiday Express Banner",
-    ]),
-    ("showcase_4up", "showcase_4up_ctx", [
-        "Evening Program",
-        "Street Tree Lights",
-        "Curb Edge Lighting",
-    ]),
-    ("showcase_fullbleed", "showcase_fullbleed_ctx", [
-        "The Walk-Through Moment",
-        "12-foot lighted gift-box arch",
-    ]),
-    ("scope", "scope_ctx", [
-        "Scope of Work",
-        "Custom-fabricated wreaths",
-        "MetroLink overhead catenary",
-    ]),
-    ("sample_of_work", "sample_of_work_ctx", [
-        "Sample of Our Work",
-        "Pier 39",
-        "Oregon Zoo",
-    ]),
-    ("case_study", "case_study_ctx", [
-        "Oregon Zoo",
-        "47% increase in evening attendance",
-    ]),
-    ("investment_tiered", "investment_tiered_ctx", [
-        "Essential",
-        "Enhanced",
-        "Signature",
-        "$184,500",
-        "$284,500",
-        "$384,500",
-    ]),
-    ("investment_single", "investment_single_ctx", [
-        "$284,500",
-        "Materials",
-        "Install + strike",
-    ]),
-    ("add_ons", "add_ons_ctx", [
-        "Add-Ons",
-        "Spiral LED Tree",
-        "$25,720",
-    ]),
-    ("terms", "terms_ctx", [
-        "Terms & Next Steps",
-        "Signing deadline",
-        "On fabrication start",
-    ]),
-    ("sign_block", "sign_block_ctx", [
-        "Jacklyn Moreno",
-        "Daniel Christenson",
-        "Sign and return",
-    ]),
-    ("about", "about_ctx", [
-        "St. Nick's",
-        "120+",
-        "Daniel Christenson",
-    ]),
+# (out_name, layout_name, fixture_module, ctx_attr, expected_text)
+# Each Plan 2-prime layout task appends one or more entries here.
+LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
+    # appended per task
 ]
 
 
-@pytest.mark.parametrize("layout_name,ctx_attr,expected_text", LAYOUT_CASES)
-def test_layout_renders(layout_name, ctx_attr, expected_text, render_layout):
-    # pytest adds tests/ to sys.path because there's no tests/__init__.py
-    # (Plan 1's pattern), so 'fixtures' is importable as a top-level package.
-    from fixtures import riverside
-    ctx = getattr(riverside, ctx_attr)
-    pdf_path: Path = render_layout(layout_name, ctx)
+@pytest.mark.parametrize("out_name,layout_name,fixture_module,ctx_attr,expected_text", LAYOUT_CASES)
+def test_layout_renders(out_name, layout_name, fixture_module, ctx_attr, expected_text, render_layout):
+    fixtures = importlib.import_module(f"fixtures.{fixture_module}")
+    ctx = getattr(fixtures, ctx_attr)
+    pdf_path: Path = render_layout(layout_name, ctx, out_name=out_name)
 
     assert pdf_path.is_file()
     assert pdf_path.stat().st_size > 5000, "PDF suspiciously small"
@@ -193,16 +86,13 @@ def test_layout_renders(layout_name, ctx_attr, expected_text, render_layout):
         _assert_text_present(doc, expected_text)
 
 
-def test_all_eighteen_layouts_rendered():
-    """After the suite runs, all 18 PDFs must exist for the eyeball pass.
-
-    Skipped if LAYOUT_CASES is incomplete (Plan 2 in progress).
-    """
-    if len(LAYOUT_CASES) < 18:
-        pytest.skip(f"Plan 2 in progress: {len(LAYOUT_CASES)}/18 layouts present.")
+def test_all_layouts_rendered():
+    """After the suite runs, every PDF named in LAYOUT_CASES must exist on disk."""
+    if not LAYOUT_CASES:
+        pytest.skip("LAYOUT_CASES is empty.")
 
     output_dir = Path(__file__).resolve().parent / "_output"
-    expected_pdfs = {f"{name}.pdf" for name, _, _ in LAYOUT_CASES}
+    expected_pdfs = {f"{out}.pdf" for out, _, _, _, _ in LAYOUT_CASES}
     actual_pdfs = {p.name for p in output_dir.glob("*.pdf")}
     missing = expected_pdfs - actual_pdfs
     assert not missing, f"Missing rendered PDFs: {missing}"

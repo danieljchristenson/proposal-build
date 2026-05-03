@@ -1,8 +1,8 @@
 """Test fixtures and helpers shared across the layout test suite.
 
-Plan 2 deliberately keeps rendering glue inside tests/ — Plan 3 will
-write the production render pipeline at skill_assets/generate.py.
-This helper exists only to drive the layout tests.
+Plan 2-prime keeps rendering glue inside tests/ — Plan 3 will write the
+production render pipeline at skill_assets/generate.py. This helper
+exists only to drive the layout tests.
 """
 from __future__ import annotations
 
@@ -30,29 +30,25 @@ def jinja_env() -> Environment:
 
 @pytest.fixture(scope="session")
 def render_layout(jinja_env: Environment):
-    """Render a single layout HTML file to PDF and return the path.
+    """Render a layout HTML file to PDF. Returns the PDF path.
 
     Args:
         layout_name: filename stem under skill_assets/layouts/, e.g. "cover".
         ctx: Python dict passed to Jinja2 as the rendering context.
+        out_name: optional output filename stem. Defaults to layout_name.
+            Use this when the same layout is rendered twice with different
+            ctxs (e.g. zone_solo for two zones from the same fixture).
 
     Returns:
-        Path to the rendered PDF file in tests/_output/{layout_name}.pdf.
-
-    Side effects:
-        Writes the PDF; creates tests/_output/ if missing.
+        Path to the rendered PDF file in tests/_output/{out_name}.pdf.
     """
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    def _render(layout_name: str, ctx: dict[str, Any]) -> Path:
+    def _render(layout_name: str, ctx: dict[str, Any], out_name: str | None = None) -> Path:
         template = jinja_env.get_template(f"{layout_name}.html")
         html_string = template.render(**ctx)
-        out = OUTPUT_DIR / f"{layout_name}.pdf"
-        # base_url tells WeasyPrint how to resolve <link href="brand.css">
-        # and brand.css's relative ../fonts/ urls.
-        HTML(string=html_string, base_url=str(LAYOUTS_DIR)).write_pdf(
-            target=str(out)
-        )
+        out = OUTPUT_DIR / f"{out_name or layout_name}.pdf"
+        HTML(string=html_string, base_url=str(LAYOUTS_DIR)).write_pdf(target=str(out))
         return out
 
     return _render
