@@ -83,6 +83,12 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Creative Vision", "Bayside Twilight", "ARRIVE", "EXPLORE", "CELEBRATE"]),
     ("creative_vision_riverside", "creative_vision", "riverside", "creative_vision_ctx",
         ["Creative Vision", "Holiday Express", "WELCOME", "JOURNEY", "ARRIVAL"]),
+    ("zone_solo_pier39_z01",     "zone_solo", "pier_39",   "zone_01_ctx",
+        ["ZONE 01", "Embarcadero Arrival", "28' illuminated entry arch", "Dusk-to-dawn programming"]),
+    ("zone_solo_pier39_z02",     "zone_solo", "pier_39",   "zone_02_ctx",
+        ["ZONE 02", "Pier Promenade", "Suspended starlight canopy", "Hot cocoa concierge"]),
+    ("zone_solo_riverside_flag", "zone_solo", "riverside", "zone_flagship_ctx",
+        ["ZONE 01", "Downtown Riverside", "Custom-fabricated wreaths", "Evening lighting program"]),
 ]
 
 

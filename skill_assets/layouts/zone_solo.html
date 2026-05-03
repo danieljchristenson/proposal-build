@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
+{% block title %}{{ project_short }} — Zone {{ zone_num }}: {{ zone_name }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone Solo — single zone, light background, footer present.
+     Top section: red ZONE eyebrow + large zone name + italic subtitle.
+     Body: 2-column grid — left has INCLUDED ELEMENTS label + bullet list,
+     right has hero image (or dark placeholder).
+
+     Heights use % / auto only. .page-content top/bottom are owned by
+     brand.css (top: 0.85in, bottom: 0.55in). This layout does NOT
+     override .page-content. Strategy: outer flex column fills the content
+     area; title area is fixed-height auto, body grid grows to fill the rest. */
+
+  .zs-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: eyebrow + zone name + subtitle ── */
+  .zs-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .zs-title-area .eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .zs-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 50pt;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .zs-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 16pt;
+    line-height: 1.35;
+    color: var(--color-gray);
+    margin: 0;
+  }
+
+  /* ── Body: 2-column grid ── */
+  /* flex: 1 1 0 fills the remaining space below the title area.
+     min-height: 0 prevents flex children from overflowing. */
+  .zs-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-8);
+  }
+
+  /* ── Left column: included elements ── */
+  .zs-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  .zs-elements-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    margin-bottom: var(--space-4);
+  }
+
+  .zs-elements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .zs-elements-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  /* Red bullet via ::before pseudo-element */
+  .zs-elements-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 14pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* ── Right column: hero image container ──
+     position: relative + overflow: hidden contains tall portrait images.
+     The image itself is absolutely positioned to fill the container
+     with object-fit: cover (same pattern as creative_vision.html). */
+  .zs-right {
+    position: relative;
+    background: #2a2a2a;
+    border-radius: 3pt;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* min-height prevents collapse when no image supplied */
+    min-height: 1.5in;
+  }
+
+  .zs-hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .zs-placeholder {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.4);
+    text-align: center;
+    padding: var(--space-4);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="zs-outer">
+
+  <!-- Eyebrow + zone name + subtitle -->
+  <div class="zs-title-area">
+    <div class="eyebrow">ZONE {{ zone_num }}</div>
+    <div class="zs-zone-name">{{ zone_name }}</div>
+    <div class="zs-subtitle">{{ zone_subtitle }}</div>
+  </div>
+
+  <!-- 2-column body: bullets left, image right -->
+  <div class="zs-body">
+
+    <!-- Left: INCLUDED ELEMENTS label + bullet list -->
+    <div class="zs-left">
+      <div class="zs-elements-label">Included Elements</div>
+      <ul class="zs-elements-list">
+        {% for element in included_elements %}
+        <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Right: hero image or placeholder -->
+    <div class="zs-right">
+      {% if hero_image %}
+      <img class="zs-hero-img" src="{{ hero_image }}" alt="{{ zone_name }}">
+      {% else %}
+      <div class="zs-placeholder">[ ZONE {{ zone_num }} — hero rendering or past-work photo ]</div>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
