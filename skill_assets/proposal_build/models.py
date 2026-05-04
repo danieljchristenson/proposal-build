@@ -34,6 +34,19 @@ class Zone:
     hero_image: str
     bullets: Tuple[str, ...]
     layout_override: str | None = None
+    # Optional list of additional images for the zone_solo_gallery layout.
+    # When zone_solo_gallery is used, the gallery shows hero_images if non-empty,
+    # otherwise falls back to (hero_image,). Other layouts ignore this field.
+    hero_images: Tuple[str, ...] = ()
+    # Gallery presentation hints (zone_solo_gallery layout only):
+    #   gallery_fit: 'cover' (default) crops to fill; 'contain' shows full image
+    #     with letterboxing — use for banner artwork or anything where the
+    #     full design must be visible.
+    #   gallery_orientation: 'stacked' (default) places images vertically;
+    #     'horizontal' places them side-by-side — best for 2 portrait images
+    #     (e.g., a pair of pole-banner artworks).
+    gallery_fit: str = "cover"
+    gallery_orientation: str = "stacked"
 
     @property
     def is_flagship(self) -> bool:
@@ -42,6 +55,13 @@ class Zone:
     @property
     def is_signature(self) -> bool:
         return "signature" in self.flags
+
+    @property
+    def gallery_images(self) -> Tuple[str, ...]:
+        """Resolved image list for gallery layouts: prefer hero_images, fall back to hero_image."""
+        if self.hero_images:
+            return self.hero_images
+        return (self.hero_image,) if self.hero_image else ()
 
 
 @dataclass(frozen=True)

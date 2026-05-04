@@ -8,7 +8,8 @@ import frontmatter
 from proposal_build.composer.ctx_builders import (
     build_cover_ctx, build_exec_summary_ctx, build_understanding_ctx,
     build_creative_vision_ctx, build_zone_index_ctx, build_zone_solo_ctx,
-    build_zone_solo_fullbleed_ctx, build_zone_2up_ctx, build_zone_3up_ctx,
+    build_zone_solo_fullbleed_ctx, build_zone_solo_gallery_ctx,
+    build_zone_2up_ctx, build_zone_3up_ctx,
     build_scope_ctx, build_case_study_ctx, build_investment_ctx,
     build_terms_ctx, build_sign_off_ctx, build_about_ctx,
 )
@@ -78,7 +79,7 @@ def _resolve_zone_block(model: ProjectModel) -> list[tuple[str, dict]]:
         for entry in model.slide_plan_override:
             layout = entry["layout"]
             zone_names = entry["zones"]
-            if layout in ("zone_solo", "zone_solo_fullbleed"):
+            if layout in ("zone_solo", "zone_solo_fullbleed", "zone_solo_gallery"):
                 if len(zone_names) != 1:
                     raise SlidePlanError(f"{layout} requires exactly 1 zone, got {len(zone_names)}")
                 result.append((layout, {"zone": zone_by_name[zone_names[0]]}))
@@ -109,6 +110,8 @@ def _build_ctx(model: ProjectModel, layout: str, page_num: int, page_total: int,
         return build_zone_solo_ctx(model, page_num, page_total, hint["zone"])
     if layout == "zone_solo_fullbleed":
         return build_zone_solo_fullbleed_ctx(model, page_num, page_total, hint["zone"])
+    if layout == "zone_solo_gallery":
+        return build_zone_solo_gallery_ctx(model, page_num, page_total, hint["zone"])
     if layout == "zone_2up":
         return build_zone_2up_ctx(model, page_num, page_total, hint["zones"])
     if layout == "zone_3up":

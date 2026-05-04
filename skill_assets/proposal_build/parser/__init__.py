@@ -107,6 +107,9 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
             hero_image=z.get("hero_image", ""),
             bullets=tuple(z.get("bullets") or ()),
             layout_override=z.get("layout"),
+            hero_images=tuple(z.get("hero_images") or ()),
+            gallery_fit=z.get("gallery_fit", "cover"),
+            gallery_orientation=z.get("gallery_orientation", "stacked"),
         )
         for z in fm["zones"]
     )

@@ -16,7 +16,7 @@ class SlidePlanError(Exception):
 # Layouts a single zone can be rendered with. Grouping layouts (zone_2up,
 # zone_3up, zone_index) require multiple zones and aren't valid as a per-zone
 # override.
-_VALID_SOLO_OVERRIDES = ("zone_solo", "zone_solo_fullbleed")
+_VALID_SOLO_OVERRIDES = ("zone_solo", "zone_solo_fullbleed", "zone_solo_gallery")
 
 
 def auto_arrange_zones(zones: Sequence[Zone]) -> list[tuple[str, dict]]:

@@ -171,6 +171,22 @@ def build_zone_solo_fullbleed_ctx(model: ProjectModel, page_num: int, page_total
     return build_zone_solo_ctx(model, page_num, page_total, zone)
 
 
+def build_zone_solo_gallery_ctx(model: ProjectModel, page_num: int, page_total: int, zone: Zone) -> dict:
+    """Multi-image variant of zone_solo. Resolves zone.gallery_images to absolute paths."""
+    return {
+        **_project_base(model),
+        "page_num": page_num, "page_total": page_total,
+        "zone_num": zone.num, "zone_name": zone.name, "zone_subtitle": zone.subtitle,
+        "included_elements": list(zone.bullets),
+        "hero_images": [
+            model.resolved_renderings.get(img, img)
+            for img in zone.gallery_images
+        ],
+        "gallery_fit": zone.gallery_fit,
+        "gallery_orientation": zone.gallery_orientation,
+    }
+
+
 def build_zone_2up_ctx(model: ProjectModel, page_num: int, page_total: int, zones: list[Zone]) -> dict:
     return {
         **_project_base(model),

@@ -1,0 +1,175 @@
+<!-- layout-version: 2026-05-04 -->
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-04 -->{% endblock %}
+{% block title %}{{ project_short }} — Zone {{ zone_num }}: {{ zone_name }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone Solo Gallery — like zone_solo but the right column is a stacked
+     gallery of 2-4 images (object-fit: cover). Used for zones that have
+     visually distinct sub-features that one hero can't capture (e.g., Pole
+     Banner Program needs both artwork closeup + in-situ install photo). */
+
+  .zsg-outer { display: flex; flex-direction: column; height: 100%; }
+
+  .zsg-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .zsg-title-area .eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .zsg-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 50pt;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .zsg-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 16pt;
+    line-height: 1.35;
+    color: var(--color-gray);
+    margin: 0;
+  }
+
+  .zsg-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-8);
+  }
+
+  .zsg-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .zsg-elements-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    margin-bottom: var(--space-4);
+  }
+
+  .zsg-elements-list { list-style: none; padding: 0; margin: 0; }
+
+  .zsg-elements-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+  .zsg-elements-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 14pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* Right column: gallery. Stacked vertical by default; horizontal modifier
+     places images side-by-side (best for 2 portrait images). */
+  .zsg-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-height: 1.5in;
+  }
+
+  .zsg-gallery--horizontal {
+    flex-direction: row;
+  }
+
+  .zsg-gallery-item {
+    flex: 1 1 0;
+    position: relative;
+    background: #2a2a2a;
+    border-radius: 3pt;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Default fit is cover (crops to fill). The contain modifier keeps the
+     full image visible — used for banner artwork where every pixel matters. */
+  .zsg-gallery-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .zsg-gallery-img--contain {
+    object-fit: contain;
+    background: #2a2a2a;
+  }
+
+  .zsg-placeholder {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.4);
+    text-align: center;
+    padding: var(--space-4);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="zsg-outer">
+
+  <div class="zsg-title-area">
+    <div class="eyebrow">ZONE {{ zone_num }}</div>
+    <div class="zsg-zone-name">{{ zone_name }}</div>
+    <div class="zsg-subtitle">{{ zone_subtitle }}</div>
+  </div>
+
+  <div class="zsg-body">
+
+    <div class="zsg-left">
+      <div class="zsg-elements-label">Included Elements</div>
+      <ul class="zsg-elements-list">
+        {% for element in included_elements %}
+        <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="zsg-gallery {% if gallery_orientation == 'horizontal' %}zsg-gallery--horizontal{% endif %}">
+      {% if hero_images %}
+        {% for img in hero_images %}
+        <div class="zsg-gallery-item">
+          <img class="zsg-gallery-img {% if gallery_fit == 'contain' %}zsg-gallery-img--contain{% endif %}"
+               src="{{ img }}" alt="{{ zone_name }}">
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="zsg-gallery-item">
+          <div class="zsg-placeholder">[ ZONE {{ zone_num }} — gallery images ]</div>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

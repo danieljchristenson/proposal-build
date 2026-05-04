@@ -33,6 +33,11 @@ zones:
     name: "Pole Banner Program"
     subtitle: "The customer-owned daytime read — branded across all 35 station poles."
     hero_image: "Pole Banner Artwork - Holiday Express 02.jpg"
+    hero_images:
+      - "Pole Banner Artwork - Holiday Express 01.jpg"
+      - "Pole Banner Artwork - Holiday Express 02.jpg"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "35 'Holiday Express' branded pole banners — designed in-house by St. Nick's Creative"
       - "35 powder-coated steel mounting brackets — customer-owned, reusable indefinitely"
@@ -43,6 +48,10 @@ zones:
     name: "Canopy & Platform Lighting"
     subtitle: "Warm-white evening glow across every covered surface — the 'always-on' atmosphere."
     hero_image: "Evening Lighting - Curb Edge.png"
+    hero_images:
+      - "Evening Lighting - Curb Edge.png"
+      - "Evening Lighting - Platform Railing.png"
+      - "Evening Lighting - Tree Lights Street.png"
     bullets:
       - "Warm-white string lighting on the eaves of all 16 platform canopies — 1,024 LF total"
       - "Warm-white string lighting on the two bus-stop waiting canopies — 234 LF total"
@@ -61,6 +70,9 @@ zones:
     name: "Plaza Centerpiece"
     subtitle: "The photo moment in front of the station entrance."
     hero_image: "Large Tree - Traditional Ornaments.png"
+    hero_images:
+      - "Large Tree - Traditional Ornaments.png"
+      - "Spiral Tree - LED Red Green.png"
     bullets:
       - "18 ft Traditional Christmas tree with red, green & gold ornaments (Essential & Enhanced)"
       - "21 ft red-and-green LED Spiral Tree with gold star topper — replaces the Traditional centerpiece (Signature)"
@@ -88,6 +100,9 @@ zones:
     name: "Walk-Through Photo Moments"
     subtitle: "Pedestrian-scale archways guests can step through and photograph."
     hero_image: "Walk-Through Ornament - Warm White.png"
+    hero_images:
+      - "Walk-Through Ornament - Warm White.png"
+      - "Walk-Through Display - Lighted Gift Box.png"
     bullets:
       - "Warm-white walk-through lighted ornament archway at the bus loading island"
       - "Lighted Gift Box walk-through archway with red bow at a second plaza location (Enhanced & Signature)"
@@ -97,6 +112,10 @@ zones:
     name: "Signature Add-Ons"
     subtitle: "Civic-pride centerpieces that anchor the Signature tier."
     hero_image: "Lighted Bell Display - Scene.png"
+    hero_images:
+      - "Lighted Bell Display - Scene.png"
+      - "Lighted Snowflakes - Railing 01.png"
+      - "Lighted Gift Box Tower 01.png"
     bullets:
       - "Custom 'City of Riverside' Mission Inn–style Bell Display — one-time customer-owned purchase (Signature)"
       - "Annual install, removal, and off-season climate-controlled storage of the Bell Display (Signature)"
@@ -104,14 +123,14 @@ zones:
       - "Stacked 12 ft Lighted Gift Box Tower at a TBD second plaza location (Signature)"
 
 slide_plan:
-  - {layout: zone_solo, zones: ["Pole Banner Program"]}
-  - {layout: zone_solo, zones: ["Canopy & Platform Lighting"]}
+  - {layout: zone_solo_gallery, zones: ["Pole Banner Program"]}
+  - {layout: zone_solo_gallery, zones: ["Canopy & Platform Lighting"]}
   - {layout: zone_solo, zones: ["Station Entrance Wreaths"]}
-  - {layout: zone_solo, zones: ["Plaza Centerpiece"]}
+  - {layout: zone_solo_gallery, zones: ["Plaza Centerpiece"]}
   - {layout: zone_solo, zones: ["Perimeter & Driveway Garlands"]}
   - {layout: zone_solo, zones: ["Stair Tower Feature"]}
-  - {layout: zone_solo, zones: ["Walk-Through Photo Moments"]}
-  - {layout: zone_solo, zones: ["Signature Add-Ons"]}
+  - {layout: zone_solo_gallery, zones: ["Walk-Through Photo Moments"]}
+  - {layout: zone_solo_gallery, zones: ["Signature Add-Ons"]}
 ---
 
 ## Creative Direction
