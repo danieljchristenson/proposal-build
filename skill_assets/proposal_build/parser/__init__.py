@@ -5,7 +5,7 @@ resolved ProjectModel. Blocking errors raise; warnings are returned alongside.
 """
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from proposal_build.models import ProjectModel, Zone, Tier
@@ -22,7 +22,7 @@ class ProjectLoadError(Exception):
     """Top-level error during project loading. Contains a descriptive message."""
 
 
-def build_project_model(project_dir: Path) -> tuple:
+def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
     """Returns (model, parse_artifacts) where parse_artifacts has eligible_renderings, scenarios, etc.
 
     Raises ProjectLoadError on any blocking issue.
@@ -202,10 +202,13 @@ def _build_zone_summary(zones: list) -> str:
 
 
 def _fill_pillars(brief, voice, ph):
-    if pillars := brief.sections.get("Pillars"):
-        # If Brief has a Pillars section it's a YAML-ish list — out of scope for V1; treat as override prose
-        # For Plan 3 keep it simple: only voice preset pillars supported
-        return tuple(voice.default_pillars)
+    # V1: Brief-level Pillars override is not supported — voice preset always wins.
+    # If an AE writes a `## Pillars` section, raise rather than silently ignore it.
+    if "Pillars" in brief.sections:
+        raise ProjectLoadError(
+            "Brief 'Pillars' section is not supported in V1; "
+            "remove the section to use the voice preset's pillars."
+        )
     return tuple(
         {"title": p["title"], "body": substitute_placeholders(p["body"], ph)}
         for p in voice.default_pillars
