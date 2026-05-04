@@ -133,6 +133,10 @@
     object-fit: cover;
     display: block;
   }
+  .zs-hero-img--contain {
+    object-fit: contain;
+    background: #2a2a2a;
+  }
 
   .zs-placeholder {
     font-family: var(--font-body);
@@ -170,7 +174,8 @@
     <!-- Right: hero image or placeholder -->
     <div class="zs-right">
       {% if hero_image %}
-      <img class="zs-hero-img" src="{{ hero_image }}" alt="{{ zone_name }}">
+      <img class="zs-hero-img {% if hero_fit is defined and hero_fit == 'contain' %}zs-hero-img--contain{% endif %}"
+           src="{{ hero_image }}" alt="{{ zone_name }}">
       {% else %}
       <div class="zs-placeholder">[ ZONE {{ zone_num }} — hero rendering or past-work photo ]</div>
       {% endif %}

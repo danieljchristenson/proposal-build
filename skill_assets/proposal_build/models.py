@@ -47,6 +47,12 @@ class Zone:
     #     (e.g., a pair of pole-banner artworks).
     gallery_fit: str = "cover"
     gallery_orientation: str = "stacked"
+    # Hero image fit hint (zone_solo / zone_solo_fullbleed layouts):
+    #   hero_fit: 'cover' (default) | 'contain'  — same semantics as gallery_fit
+    #   but applied to the single hero_image. Use 'contain' when the rendering
+    #   is shot at a perspective angle that captures the full space and
+    #   shouldn't be cropped.
+    hero_fit: str = "cover"
 
     @property
     def is_flagship(self) -> bool:

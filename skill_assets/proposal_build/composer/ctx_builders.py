@@ -164,6 +164,7 @@ def build_zone_solo_ctx(model: ProjectModel, page_num: int, page_total: int, zon
         "zone_num": zone.num, "zone_name": zone.name, "zone_subtitle": zone.subtitle,
         "included_elements": list(zone.bullets),
         "hero_image": model.resolved_renderings.get(zone.hero_image, zone.hero_image),
+        "hero_fit": zone.hero_fit,
     }
 
 

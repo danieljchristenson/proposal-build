@@ -52,6 +52,8 @@ zones:
       - "Evening Lighting - Curb Edge.png"
       - "Evening Lighting - Platform Railing.png"
       - "Evening Lighting - Tree Lights Street.png"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "Warm-white string lighting on the eaves of all 16 platform canopies — 1,024 LF total"
       - "Warm-white string lighting on the two bus-stop waiting canopies — 234 LF total"
@@ -61,6 +63,7 @@ zones:
     name: "Station Entrance Wreaths"
     subtitle: "The threshold gesture — what guests see at the front of the station."
     hero_image: "Wreaths - Station Entrance 01.png"
+    hero_fit: "contain"
     bullets:
       - "Four 5 ft custom-fabricated lighted wreaths — one between each pair of entrance brick columns"
       - "Commercial-grade construction with red, green & gold ornament clusters"
@@ -73,6 +76,8 @@ zones:
     hero_images:
       - "Large Tree - Traditional Ornaments.png"
       - "Spiral Tree - LED Red Green.png"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "18 ft Traditional Christmas tree with red, green & gold ornaments (Essential & Enhanced)"
       - "21 ft red-and-green LED Spiral Tree with gold star topper — replaces the Traditional centerpiece (Signature)"
@@ -82,6 +87,7 @@ zones:
     name: "Perimeter & Driveway Garlands"
     subtitle: "Framing the station — perimeter fence, building eave, and the center driveway."
     hero_image: "Garlands - Decorated Swag - Plaza Fence.png"
+    hero_fit: "contain"
     bullets:
       - "Lighted evergreen garland on the front gate and perimeter fence (621 LF)"
       - "Lighted evergreen garland on the building eave (144 LF)"
@@ -91,6 +97,7 @@ zones:
     name: "Stair Tower Feature"
     subtitle: "The vertical landmark — visible from a block away."
     hero_image: "Wreath - Stair Tower with Garlands.png"
+    hero_fit: "contain"
     bullets:
       - "Oversized 10 ft lighted wreath mounted on the stair-tower brick column"
       - "Lighted evergreen garland on the staircase tower and railing — 207 LF (Enhanced & Signature)"
@@ -103,6 +110,8 @@ zones:
     hero_images:
       - "Walk-Through Ornament - Warm White.png"
       - "Walk-Through Display - Lighted Gift Box.png"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "Warm-white walk-through lighted ornament archway at the bus loading island"
       - "Lighted Gift Box walk-through archway with red bow at a second plaza location (Enhanced & Signature)"
@@ -116,6 +125,8 @@ zones:
       - "Lighted Bell Display - Scene.png"
       - "Lighted Snowflakes - Railing 01.png"
       - "Lighted Gift Box Tower 01.png"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "Custom 'City of Riverside' Mission Inn–style Bell Display — one-time customer-owned purchase (Signature)"
       - "Annual install, removal, and off-season climate-controlled storage of the Bell Display (Signature)"

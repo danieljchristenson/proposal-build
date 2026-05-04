@@ -154,11 +154,11 @@
       </ul>
     </div>
 
-    <div class="zsg-gallery {% if gallery_orientation == 'horizontal' %}zsg-gallery--horizontal{% endif %}">
+    <div class="zsg-gallery {% if gallery_orientation is defined and gallery_orientation == 'horizontal' %}zsg-gallery--horizontal{% endif %}">
       {% if hero_images %}
         {% for img in hero_images %}
         <div class="zsg-gallery-item">
-          <img class="zsg-gallery-img {% if gallery_fit == 'contain' %}zsg-gallery-img--contain{% endif %}"
+          <img class="zsg-gallery-img {% if gallery_fit is defined and gallery_fit == 'contain' %}zsg-gallery-img--contain{% endif %}"
                src="{{ img }}" alt="{{ zone_name }}">
         </div>
         {% endfor %}
