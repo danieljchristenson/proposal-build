@@ -36,6 +36,7 @@ zones:
     hero_images:
       - "Pole Banner Artwork - Holiday Express 01.jpg"
       - "Pole Banner Artwork - Holiday Express 02.jpg"
+      - "Pole Banner - Happy Holidays.png"
     gallery_fit: "contain"
     gallery_orientation: "horizontal"
     bullets:
@@ -112,6 +113,7 @@ zones:
       - "Walk-Through Display - Lighted Gift Box.png"
     gallery_fit: "contain"
     gallery_orientation: "horizontal"
+    gallery_emphasis: "feature_first"
     bullets:
       - "Warm-white walk-through lighted ornament archway at the bus loading island"
       - "Lighted Gift Box walk-through archway with red bow at a second plaza location (Enhanced & Signature)"

@@ -47,6 +47,10 @@ class Zone:
     #     (e.g., a pair of pole-banner artworks).
     gallery_fit: str = "cover"
     gallery_orientation: str = "stacked"
+    # gallery_emphasis: 'equal' (default) gives every image the same width;
+    # 'feature_first' makes the first image 2x wider than the rest — use when
+    # one image is the marquee shot and others are supporting context.
+    gallery_emphasis: str = "equal"
     # Hero image fit hint (zone_solo / zone_solo_fullbleed layouts):
     #   hero_fit: 'cover' (default) | 'contain'  — same semantics as gallery_fit
     #   but applied to the single hero_image. Use 'contain' when the rendering

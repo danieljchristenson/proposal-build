@@ -185,6 +185,7 @@ def build_zone_solo_gallery_ctx(model: ProjectModel, page_num: int, page_total: 
         ],
         "gallery_fit": zone.gallery_fit,
         "gallery_orientation": zone.gallery_orientation,
+        "gallery_emphasis": zone.gallery_emphasis,
     }
 
 
