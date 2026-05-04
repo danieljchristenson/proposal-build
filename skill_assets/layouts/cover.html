@@ -30,6 +30,13 @@
     color: var(--color-light);
   }
 
+  /* Prominent cover logo — sits above the project name as the brand mark. */
+  .cover-logo {
+    height: 0.9in;
+    width: auto;
+    margin-bottom: var(--space-5);
+  }
+
   .cover-right {
     background: #2a2a2a;  /* Subtle lift from the left charcoal. */
     position: relative;
@@ -117,6 +124,9 @@
 <div class="cover-grid">
   <div class="cover-left">
     <div>
+      {% if logo_path is defined and logo_path %}
+      <img class="cover-logo" src="{{ logo_path }}" alt="St. Nick's Christmas Lighting & Décor">
+      {% endif %}
       <div class="cover-rule"></div>
       <div class="cover-season">{{ season_label }}</div>
       <h1 class="cover-project">{{ project_name }}</h1>
