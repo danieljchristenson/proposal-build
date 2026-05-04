@@ -4,12 +4,13 @@
 
 {% block extra_head %}
 <style>
-  @page { size: 13.333in 7.5in; margin: 0; }
-  /* Override base.html's fixed-height absolutely-positioned .page-content so
-     WeasyPrint can break this layout across multiple physical pages. The
-     pricing doc paginates: page 1 = items table (may overflow into page 2/3
-     for large tiers), then a forced break before Payment Terms. */
-  html, body { height: auto; }
+  /* US Letter portrait — pricing supplements use a different page size from
+     the 16:9 proposal deck (13.333in x 7.5in) because they're standalone
+     supporting documents and benefit from more vertical room for line items. */
+  @page { size: 8.5in 11in; margin: 0; }
+  /* Override base.html's fixed-dimension absolutely-positioned .page-content so
+     WeasyPrint can break this layout across multiple physical pages. */
+  html, body { width: 8.5in; height: auto; }
   .page-content { position: static; top: auto; bottom: auto; }
   .pricing-page { padding: var(--space-5) var(--space-6); }
   .pricing-header-band {
