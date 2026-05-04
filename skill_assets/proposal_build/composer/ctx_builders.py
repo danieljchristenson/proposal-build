@@ -245,13 +245,14 @@ def build_case_study_ctx(model: ProjectModel, page_num: int, page_total: int,
 
 def build_investment_ctx(model: ProjectModel, page_num: int, page_total: int,
                          tier_totals: dict, partnership_discounts: list) -> dict:
+    th = model.tier_highlights or {}
     tiers = [
         _tier_card("ESSENTIAL", "gray", tier_totals[Tier.ESSENTIAL],
-                   model.recommended_tier == Tier.ESSENTIAL),
+                   model.recommended_tier == Tier.ESSENTIAL, th.get("essential", {})),
         _tier_card("ENHANCED", "red", tier_totals[Tier.ENHANCED],
-                   model.recommended_tier == Tier.ENHANCED),
+                   model.recommended_tier == Tier.ENHANCED, th.get("enhanced", {})),
         _tier_card("SIGNATURE", "navy", tier_totals[Tier.SIGNATURE],
-                   model.recommended_tier == Tier.SIGNATURE),
+                   model.recommended_tier == Tier.SIGNATURE, th.get("signature", {})),
     ]
     return {
         **_project_base(model),
@@ -265,10 +266,12 @@ def build_investment_ctx(model: ProjectModel, page_num: int, page_total: int,
     }
 
 
-def _tier_card(name: str, rule_color: str, price: float, is_recommended: bool) -> dict:
+def _tier_card(name: str, rule_color: str, price: float, is_recommended: bool, highlights_data: dict) -> dict:
     return {
-        "name": name, "rule_color": rule_color, "tagline": "",
-        "highlights": [],   # populated by ctx_builders if needed; minimal for V1
+        "name": name,
+        "rule_color": rule_color,
+        "tagline": highlights_data.get("tagline", ""),
+        "highlights": list(highlights_data.get("items", []) or []),
         "price": f"${price:,.0f}",
         "is_recommended": is_recommended,
     }

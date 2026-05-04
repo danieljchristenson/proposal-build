@@ -135,6 +135,34 @@ zones:
       - "Lighted snowflakes along bridge and platform railings — 12 fixtures (Enhanced & Signature)"
       - "Stacked 12 ft Lighted Gift Box Tower at a TBD second plaza location (Signature)"
 
+tier_highlights:
+  essential:
+    tagline: "Foundation program — base scope"
+    items:
+      - "35-pole branded 'Holiday Express' pole banner program"
+      - "Warm-white string lighting on 16 platform canopies + 2 bus-stop canopies"
+      - "Lighted evergreen garland — perimeter fence, building eave, center driveway (1,026 LF)"
+      - "Four 5 ft lighted entrance wreaths between brick columns"
+      - "10 ft oversized lighted wreath on the stair tower"
+      - "18 ft Traditional centerpiece tree with red, green & gold ornaments"
+      - "Walk-through warm-white lighted ornament archway"
+  enhanced:
+    tagline: "Recommended — adds 5 visual-interest features"
+    items:
+      - "Everything in Essential, PLUS:"
+      - "Lighted snowflakes along bridge and platform railings"
+      - "Walk-through Lighted Gift Box archway with red bow"
+      - "Stacked 12 ft Lighted Gift Box Tower at second plaza location"
+      - "Illuminated 'Happy Holidays' marquee with skyline silhouette"
+      - "Lighted garland on staircase tower & railing (still undecorated)"
+  signature:
+    tagline: "Maximum impact — civic-pride statement"
+    items:
+      - "Everything in Enhanced, PLUS:"
+      - "Custom Mission Inn-style 'City of Riverside' Bell Display"
+      - "21 ft red-and-green LED Spiral Tree (replaces Traditional)"
+      - "ALL four garland sections upgraded to fully decorated"
+
 slide_plan:
   - {layout: zone_solo_gallery, zones: ["Pole Banner Program"]}
   - {layout: zone_solo_gallery, zones: ["Canopy & Platform Lighting"]}

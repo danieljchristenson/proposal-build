@@ -143,6 +143,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         partnership_discounts=partnership_discounts,
         slide_plan_override=tuple(fm.get("slide_plan", ())),
         resolved_renderings={n: str(eligible[n].resolve()) for n in eligible},
+        tier_highlights=fm.get("tier_highlights") or {},
     )
 
     artifacts = {

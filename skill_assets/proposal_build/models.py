@@ -173,6 +173,14 @@ class ProjectModel:
 
     slide_plan_override: Tuple[dict, ...] = ()
     resolved_renderings: Mapping[str, str] = field(default_factory=dict)
+    # Per-tier cards on the Investment slide. AE-authored in Brief frontmatter:
+    #   tier_highlights:
+    #     essential: { tagline: "...", items: [..., ..., ...] }
+    #     enhanced:  { tagline: "...", items: [..., ..., ...] }
+    #     signature: { tagline: "...", items: [..., ..., ...] }
+    # When absent, the Investment slide falls back to empty-tagline / empty-list
+    # cards (the V1 behavior). Map keys are tier names lowercased.
+    tier_highlights: Mapping[str, dict] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
