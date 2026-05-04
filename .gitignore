@@ -31,3 +31,6 @@ tests/_output/
 
 # Transient artefacts (regenerated as needed)
 .brainstorm-tmp/
+
+# Claude Code per-user state (settings.json IS committed; .local.json is per-user)
+.claude/settings.local.json

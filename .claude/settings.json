@@ -1,0 +1,17 @@
+{
+  "env": {
+    "DYLD_FALLBACK_LIBRARY_PATH": "/opt/homebrew/lib:${DYLD_FALLBACK_LIBRARY_PATH}"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/pytest)",
+      "Bash(.venv/bin/pytest *)",
+      "Bash(pytest *)",
+      "Bash(python -m proposal_build *)",
+      "mcp__zoho-crm__ZohoCRM_getRecordCount",
+      "mcp__zoho-crm__ZohoCRM_getFields",
+      "mcp__zoho-crm__ZohoCRM_searchRecords",
+      "mcp__zoho-crm__ZohoCRM_getDealsRecords"
+    ]
+  }
+}
