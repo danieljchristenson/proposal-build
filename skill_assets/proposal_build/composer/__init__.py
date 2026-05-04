@@ -13,7 +13,7 @@ from proposal_build.composer.ctx_builders import (
     build_terms_ctx, build_sign_off_ctx, build_about_ctx,
 )
 from proposal_build.composer.slide_plan import auto_arrange_zones, SlidePlanError
-from proposal_build.composer.pricing import build_itemized_pricing_docs, compute_partnership_savings
+from proposal_build.composer.pricing import build_itemized_pricing_docs
 from proposal_build.models import ProjectModel, SlidePlanItem, Tier
 
 
@@ -29,20 +29,17 @@ def compose(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     pricing_docs = build_itemized_pricing_docs(model)
     tier_totals = {d.tier: d.tier_total for d in pricing_docs}
     if model.pricing_format == "single":
-        # Fill in absent tiers from per-line sums for the Investment slide
-        from proposal_build.composer.pricing import build_itemized_pricing_docs as _all
-        # Synthesize all 3 tier totals using the line items
+        # Synthesize the absent tier totals from per-line sums so the Investment
+        # slide's 3-tier display still works when only one pricing PDF was emitted.
         for t in [Tier.ESSENTIAL, Tier.ENHANCED, Tier.SIGNATURE]:
             if t not in tier_totals:
                 tier_totals[t] = sum(li.line_total for li in model.line_items if t in li.tiers)
 
-    discount_pcts = _load_discount_pcts()
-    partnership_rows = compute_partnership_savings(
-        tier_total=tier_totals[model.recommended_tier],
-        discounts=model.partnership_discounts,
-        discount_pcts=discount_pcts,
-    )
     investment_range = f"${tier_totals[Tier.ESSENTIAL]/1000:.0f}K — ${tier_totals[Tier.SIGNATURE]/1000:.0f}K"
+
+    # Note: per-tier partnership savings rows (4%/6%/9% applied to tier total) are
+    # rendered on page 2 of each Itemized Pricing supplement, not on the Investment
+    # slide. That computation lives in renderer/pricing_pdf.py — not duplicated here.
 
     # Build the zone-block slide list
     zone_block = _resolve_zone_block(model)
@@ -174,5 +171,6 @@ def _load_discount_pcts() -> dict[str, float]:
 
 
 def _format_partnership_for_slide(discounts: tuple) -> list:
-    """Pass-through for now — slide expects (label, percent_str) tuples."""
+    """Pass-through. Slide expects (term, label) tuples — e.g. ('2-YEAR', '4% OFF')
+    — which is exactly the shape parser/__init__.py builds in model.partnership_discounts."""
     return list(discounts)
