@@ -49,7 +49,11 @@ zones:
     name: "Canopy & Platform Lighting"
     subtitle: "Warm-white evening glow across every covered surface — the 'always-on' atmosphere."
     hero_image: "Evening Lighting - Platform Railing.png"
-    hero_fit: "contain"
+    hero_images:
+      - "Evening Lighting - Platform Railing.png"
+      - "Evening Lighting - Brick Column Wreath.jpg"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "Warm-white string lighting on the eaves of all 16 platform canopies — 1,024 LF total"
       - "Warm-white string lighting on the two bus-stop waiting canopies — 234 LF total"
@@ -165,7 +169,7 @@ tier_highlights:
 
 slide_plan:
   - {layout: zone_solo_gallery, zones: ["Pole Banner Program"]}
-  - {layout: zone_solo, zones: ["Canopy & Platform Lighting"]}
+  - {layout: zone_solo_gallery, zones: ["Canopy & Platform Lighting"]}
   - {layout: zone_solo, zones: ["Station Entrance Wreaths"]}
   - {layout: zone_solo_gallery, zones: ["Plaza Centerpiece"]}
   - {layout: zone_solo_gallery, zones: ["Perimeter & Driveway Garlands"]}
@@ -195,6 +199,29 @@ Bell Display anchors the Signature tier as a civic-pride centerpiece.
 - Measurable increase in evening visitors to the station plaza during the program window
 - Local press and social media coverage of the activation
 - Zero MetroLink operational disruptions during install and strike
+
+## Scope Includes
+- 35-pole branded "Holiday Express" pole banner program — banners, brackets, install, removal, storage
+- 1,258 LF warm-white canopy & platform string lighting (16 platform + 2 bus-stop canopies)
+- 1,026 LF lighted evergreen garland — perimeter fence, building eave, center driveway
+- 4 lighted 5 ft entrance wreaths between brick columns
+- 10 ft oversized lighted wreath on the stair tower brick column
+- 18 ft Traditional centerpiece tree with red, green & gold ornaments
+- Warm-white walk-through ornament archway at the bus loading island
+- Creative design + client-approved renderings
+- Phased install window with field crew + bucket-truck access
+- 24/7 season on-call response + weekly on-site maintenance
+- Complete post-season teardown, removal, and off-season storage
+
+## Add-Ons
+- Lighted snowflakes (12 ea, railing-mounted): $3,540
+- Walk-through Lighted Gift Box archway with red bow: $11,543
+- Stacked Gift Box Tower at second plaza location: $11,100
+- "Happy Holidays" illuminated marquee sign: $3,200
+- Staircase tower & railing garland (undecorated, 207 LF): $6,003
+- Custom "City of Riverside" Bell Display (purchase + install + storage): $18,810
+- 21 ft Spiral LED Tree (replaces Traditional, net upgrade): $3,696
+- Decorated garland upgrades — all four sections: $53,451
 
 ## What You're Approving
 The 2026 Downtown Riverside MetroLink Holiday Program — station-wide decor, lighting,
