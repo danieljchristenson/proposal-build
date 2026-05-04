@@ -23,7 +23,7 @@ recommended_tier: "enhanced"
 design_phrase: "Holiday Express."
 pricing_format: "tiered"
 
-cover_image: "Wreath - Brick Column Night.jpg"
+cover_image: "Evening Lighting - Brick Column Wreath.jpg"
 creative_vision_hero: "Pole Banner Artwork - Holiday Express 01.jpg"
 case_study: "long_beach_transit"
 case_study_hero: "Evening Lighting - Station Awning 01.png"
@@ -48,13 +48,8 @@ zones:
   - num: "02"
     name: "Canopy & Platform Lighting"
     subtitle: "Warm-white evening glow across every covered surface — the 'always-on' atmosphere."
-    hero_image: "Evening Lighting - Curb Edge.png"
-    hero_images:
-      - "Evening Lighting - Curb Edge.png"
-      - "Evening Lighting - Platform Railing.png"
-      - "Evening Lighting - Tree Lights Street.png"
-    gallery_fit: "contain"
-    gallery_orientation: "horizontal"
+    hero_image: "Evening Lighting - Platform Railing.png"
+    hero_fit: "contain"
     bullets:
       - "Warm-white string lighting on the eaves of all 16 platform canopies — 1,024 LF total"
       - "Warm-white string lighting on the two bus-stop waiting canopies — 234 LF total"
@@ -88,7 +83,12 @@ zones:
     name: "Perimeter & Driveway Garlands"
     subtitle: "Framing the station — perimeter fence, building eave, and the center driveway."
     hero_image: "Garlands - Decorated Swag - Plaza Fence.png"
-    hero_fit: "contain"
+    hero_images:
+      - "Garlands - Decorated Swag - Plaza Fence.png"
+      - "Garland - Decorated Pathway.png"
+      - "Garland - Decorated Fence.png"
+    gallery_fit: "contain"
+    gallery_orientation: "horizontal"
     bullets:
       - "Lighted evergreen garland on the front gate and perimeter fence (621 LF)"
       - "Lighted evergreen garland on the building eave (144 LF)"
@@ -165,10 +165,10 @@ tier_highlights:
 
 slide_plan:
   - {layout: zone_solo_gallery, zones: ["Pole Banner Program"]}
-  - {layout: zone_solo_gallery, zones: ["Canopy & Platform Lighting"]}
+  - {layout: zone_solo, zones: ["Canopy & Platform Lighting"]}
   - {layout: zone_solo, zones: ["Station Entrance Wreaths"]}
   - {layout: zone_solo_gallery, zones: ["Plaza Centerpiece"]}
-  - {layout: zone_solo, zones: ["Perimeter & Driveway Garlands"]}
+  - {layout: zone_solo_gallery, zones: ["Perimeter & Driveway Garlands"]}
   - {layout: zone_solo, zones: ["Stair Tower Feature"]}
   - {layout: zone_solo_gallery, zones: ["Walk-Through Photo Moments"]}
   - {layout: zone_solo_gallery, zones: ["Signature Add-Ons"]}
