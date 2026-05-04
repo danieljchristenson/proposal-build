@@ -173,6 +173,17 @@ class ProjectModel:
 
     slide_plan_override: Tuple[dict, ...] = ()
     resolved_renderings: Mapping[str, str] = field(default_factory=dict)
+    # Customer-side primary contact — shown on Cover + Sign-off slides.
+    # Optional (defaults to empty strings) so older Briefs still parse cleanly.
+    client_contact_name: str = ""
+    client_contact_title: str = ""
+    client_contact_email: str = ""
+    client_contact_phone: str = ""
+    # Greenery / material reference images for the Creative Vision slide.
+    # AE picks a curated subset in Brief frontmatter — these appear as a
+    # thumbnail grid replacing the single hero image when non-empty.
+    # Files live in the project's `Greenery references/` folder.
+    greenery_references: Tuple[str, ...] = ()
     # Per-tier cards on the Investment slide. AE-authored in Brief frontmatter:
     #   tier_highlights:
     #     essential: { tagline: "...", items: [..., ..., ...] }

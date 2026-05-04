@@ -145,16 +145,22 @@
         </div>
         <div class="so-sig-row">
           <div class="so-sig-row-label">PRINTED NAME</div>
-          <div class="so-sig-row-line"></div>
+          <div class="so-sig-row-line">{% if client_contact_name is defined %}{{ client_contact_name }}{% endif %}</div>
         </div>
         <div class="so-sig-row">
           <div class="so-sig-row-label">TITLE</div>
-          <div class="so-sig-row-line"></div>
+          <div class="so-sig-row-line">{% if client_contact_title is defined %}{{ client_contact_title }}{% endif %}</div>
         </div>
         <div class="so-sig-row">
           <div class="so-sig-row-label">DATE</div>
           <div class="so-sig-row-line"></div>
         </div>
+        {% if client_contact_email is defined and client_contact_email %}
+        <div class="so-sig-row">
+          <div class="so-sig-row-label">CONTACT</div>
+          <div class="so-sig-row-line">{{ client_contact_email }}{% if client_contact_phone %} &nbsp;·&nbsp; {{ client_contact_phone }}{% endif %}</div>
+        </div>
+        {% endif %}
       </div>
     </div>
 

@@ -118,6 +118,11 @@ body.page-dark {
   top: var(--space-4);
   left: var(--space-6);
 }
+.page-header .brand-logo {
+  display: block;
+  height: 0.45in;
+  width: auto;
+}
 .page-header .brand-name {
   font-family: var(--font-heading);
   font-weight: 700;

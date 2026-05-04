@@ -124,6 +124,10 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         proposal_type=fm.get("proposal_type", "Holiday Proposal"),
         presenter_name=fm["presenter_name"], presenter_title=fm.get("presenter_title", ""),
         presenter_email=fm.get("presenter_email", ""), presenter_phone=fm.get("presenter_phone", ""),
+        client_contact_name=fm.get("client_contact_name", ""),
+        client_contact_title=fm.get("client_contact_title", ""),
+        client_contact_email=fm.get("client_contact_email", ""),
+        client_contact_phone=fm.get("client_contact_phone", ""),
         proposal_date=fm.get("proposal_date", ""),
         go_live=go_live, season_end=fm.get("season_end", ""),
         fabrication_lock=fab_lock, signing_deadline=sign,
@@ -144,6 +148,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         slide_plan_override=tuple(fm.get("slide_plan", ())),
         resolved_renderings={n: str(eligible[n].resolve()) for n in eligible},
         tier_highlights=fm.get("tier_highlights") or {},
+        greenery_references=_resolve_greenery_refs(project_dir, fm.get("greenery_references", [])),
     )
 
     artifacts = {
@@ -226,6 +231,22 @@ def _fill_phases(brief, voice, ph):
         {"label": p["label"], "body": substitute_placeholders(p["body"], ph)}
         for p in voice.default_phases
     )
+
+
+def _resolve_greenery_refs(project_dir: Path, filenames: list) -> tuple[str, ...]:
+    """Resolve greenery-reference filenames to absolute paths inside Greenery references/.
+    Silently drops files that don't exist (so a Brief typo doesn't crash generate)."""
+    if not filenames:
+        return ()
+    folder = project_dir / "Greenery references"
+    if not folder.exists():
+        return ()
+    out = []
+    for name in filenames:
+        p = folder / name
+        if p.exists():
+            out.append(str(p.resolve()))
+    return tuple(out)
 
 
 def _fill_scope_includes(brief, bp, ph):

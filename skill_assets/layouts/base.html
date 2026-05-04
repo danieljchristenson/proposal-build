@@ -11,8 +11,12 @@
 <body class="{% block body_class %}page-light{% endblock %}">
 
   <header class="page-header">
+    {% if logo_path is defined and logo_path %}
+    <img class="brand-logo" src="{{ logo_path }}" alt="St. Nick's Christmas Lighting & Décor">
+    {% else %}
     <div class="brand-name">ST. NICK'S</div>
     <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    {% endif %}
   </header>
 
   <div class="page-content">

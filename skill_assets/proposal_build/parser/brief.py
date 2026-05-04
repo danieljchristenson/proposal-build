@@ -22,7 +22,10 @@ PROSE_SECTIONS = (
     "Success Criteria", "What You're Approving",
 )
 # Sections that are bullet lists vs free prose. Bullet sections become tuples; prose stays a string.
-BULLET_SECTIONS = {"Customer Goals", "Customer Constraints", "Success Criteria"}
+BULLET_SECTIONS = {
+    "Customer Goals", "Customer Constraints", "Success Criteria",
+    "Scope Includes", "Add-Ons",
+}
 
 
 class BriefParseError(Exception):

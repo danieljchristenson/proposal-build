@@ -123,9 +123,19 @@
       <div class="cover-subtitle">{{ project_subtitle }}</div>
     </div>
 
+    {% if client_contact_name is defined and client_contact_name %}
+    <div class="cover-prep-block">
+      <div class="cover-prep-label">PREPARED FOR</div>
+      <div class="cover-prep-name">{{ client_contact_name }}{% if client_contact_title %}, {{ client_contact_title }}{% endif %}</div>
+      <div>{{ client_company }}</div>
+      {% if client_contact_email %}<div>{{ client_contact_email }}{% if client_contact_phone %} &nbsp;·&nbsp; {{ client_contact_phone }}{% endif %}</div>{% endif %}
+    </div>
+    {% endif %}
+
     <div class="cover-prep-block">
       <div class="cover-prep-label">PREPARED BY</div>
       <div class="cover-prep-name">{{ prepared_by_org }}</div>
+      <div>{{ presenter_name }}{% if presenter_title %}, {{ presenter_title }}{% endif %}</div>
       <div>Proposal Date: {{ proposal_date }}</div>
     </div>
   </div>

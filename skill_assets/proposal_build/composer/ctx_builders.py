@@ -8,8 +8,13 @@ are the gold standard.
 from __future__ import annotations
 
 from datetime import datetime
+from pathlib import Path
 
 from proposal_build.models import ProjectModel, Tier, Zone
+
+
+# Absolute path to the brand logo, embedded in every page header via base.html.
+_LOGO_PATH = (Path(__file__).resolve().parents[3] / "skill_assets" / "Branding" / "ST NICKS LOGO.png").as_posix()
 
 
 def _project_base(model: ProjectModel) -> dict:
@@ -25,6 +30,7 @@ def _project_base(model: ProjectModel) -> dict:
         "presenter_title": model.presenter_title,
         "presenter_org": "St. Nick's Christmas Lighting & Décor",
         "proposal_date": _date_long(model.proposal_date),
+        "logo_path": _LOGO_PATH,
     }
 
 
@@ -42,6 +48,10 @@ def build_cover_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict
         "season_label": f"{model.project_year} HOLIDAY SEASON",
         "hero_image": model.resolved_renderings.get(model.cover_image, model.cover_image),
         "prepared_by_org": "St. Nick's Christmas Lighting & Décor",
+        "client_contact_name": model.client_contact_name,
+        "client_contact_title": model.client_contact_title,
+        "client_contact_email": model.client_contact_email,
+        "client_contact_phone": model.client_contact_phone,
     }
 
 
@@ -58,8 +68,7 @@ def build_exec_summary_ctx(model: ProjectModel, page_num: int, page_total: int,
             ("ZONES", _zone_summary_short(model), False),
             ("RECOMMENDED TIER", model.recommended_tier.value, False),
             ("INVESTMENT RANGE", investment_range, False),
-            ("GO LIVE", _date_short(model.go_live), False),
-            ("FABRICATION LOCK", _date_short(model.fabrication_lock), True),
+            ("GO LIVE", _date_month(model.go_live), False),
             ("SIGNING DEADLINE", _date_short(model.signing_deadline), True),
         ],
         "pillars": list(model.pillars),
@@ -70,7 +79,8 @@ def _exec_standfirst(model: ProjectModel) -> str:
     n = len(model.zones)
     if n == 1:
         return f"Our {model.project_year} {model.proposal_type.lower()} for {model.project_name}, at a glance."
-    return f"A {_n_word(n)}-zone {model.proposal_type.lower()} for the {model.project_name}, at a glance."
+    article = "An" if _n_word(n)[0] in "aeiou" else "A"
+    return f"{article} {_n_word(n)}-zone {model.proposal_type.lower()} for the {model.project_name}, at a glance."
 
 
 def _exec_body_para_1(model: ProjectModel) -> str:
@@ -103,6 +113,14 @@ def _date_short(iso: str) -> str:
     d = datetime.fromisoformat(iso).date()
     weekday = d.strftime("%a")
     return f"{weekday}, {d.strftime('%b %-d, %Y')}"
+
+
+def _date_month(iso: str) -> str:
+    """Month + year only (e.g., 'November 2026'). Used for go-live where the
+    exact day isn't customer-relevant."""
+    if not iso:
+        return ""
+    return datetime.fromisoformat(iso).date().strftime("%B %Y")
 
 
 def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
@@ -139,6 +157,27 @@ def build_creative_vision_ctx(model: ProjectModel, page_num: int, page_total: in
         "design_direction_body": model.creative_direction,
         "phases": list(model.phases),
         "hero_image": model.resolved_renderings.get(model.creative_vision_hero, model.creative_vision_hero),
+    }
+
+
+def build_material_palette_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
+    """Greenery Mood Board — descriptive copy block + image gallery.
+    Default copy describes our build standards; AE can override via Brief
+    frontmatter `greenery_description`."""
+    default_copy = (
+        "Realistic PVC green tips form the base of every wreath, garland, and tree. "
+        "Natural warm-white LED lighting reads warm against the architecture. "
+        "Every piece is heavily decorated with red, gold, and green-gold ornament "
+        "clusters and floral accents — a consistent decorating language applied "
+        "across the property."
+    )
+    return {
+        **_project_base(model),
+        "page_num": page_num, "page_total": page_total,
+        "page_title": "Greenery Mood Board",
+        "standfirst": "What the wreaths, garlands, and trees actually look like in real materials.",
+        "copy": default_copy,
+        "items": [{"src": path} for path in model.greenery_references],
     }
 
 
@@ -309,6 +348,10 @@ def build_sign_off_ctx(model: ProjectModel, page_num: int, page_total: int) -> d
         "stnicks_party_label": "ST. NICK'S AUTHORIZED SIGNATURE",
         "digital_signing_note": ("Prefer to sign digitally? Use the Canva e-signature link in your "
                                   "email. Questions? Reply directly — we'll respond within 24 hours."),
+        "client_contact_name": model.client_contact_name,
+        "client_contact_title": model.client_contact_title,
+        "client_contact_email": model.client_contact_email,
+        "client_contact_phone": model.client_contact_phone,
     }
 
 
