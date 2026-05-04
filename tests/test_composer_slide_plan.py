@@ -91,3 +91,32 @@ def test_zone_layout_override_used():
                           layout_override="zone_solo_fullbleed")
     plan = auto_arrange_zones([z])
     assert [layout for layout, _ in plan] == ["zone_solo_fullbleed"]
+
+
+def test_invalid_layout_override_raises():
+    """Grouping layouts (zone_2up, zone_3up, zone_index) cannot be per-zone overrides."""
+    z = Zone(num="01", name="A", subtitle="", flags=(),
+             hero_image="a.jpg", bullets=(),
+             layout_override="zone_2up")
+    with pytest.raises(SlidePlanError) as exc:
+        auto_arrange_zones([z])
+    assert "zone_2up" in str(exc.value)
+
+
+def test_flagship_plus_signature_different_zones():
+    """Both flagship and signature get solos; remaining zones grouped."""
+    zones = [
+        _z("01", "Alpha", "flagship"),
+        _z("02", "Bravo"),
+        _z("03", "Charlie"),
+        _z("04", "Delta"),
+        _z("05", "Echo", "signature"),
+    ]
+    plan = auto_arrange_zones(zones)
+    layouts = [layout for layout, _ in plan]
+    # zone_index, then Alpha solo, then Echo fullbleed (declared order),
+    # then remaining 3 (Bravo+Charlie+Delta) as one zone_3up.
+    assert layouts == ["zone_index", "zone_solo", "zone_solo_fullbleed", "zone_3up"]
+    assert plan[1][1]["zone"].name == "Alpha"
+    assert plan[2][1]["zone"].name == "Echo"
+    assert [z.name for z in plan[3][1]["zones"]] == ["Bravo", "Charlie", "Delta"]

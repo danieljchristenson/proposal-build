@@ -13,15 +13,38 @@ class SlidePlanError(Exception):
     pass
 
 
+# Layouts a single zone can be rendered with. Grouping layouts (zone_2up,
+# zone_3up, zone_index) require multiple zones and aren't valid as a per-zone
+# override.
+_VALID_SOLO_OVERRIDES = ("zone_solo", "zone_solo_fullbleed")
+
+
 def auto_arrange_zones(zones: Sequence[Zone]) -> list[tuple[str, dict]]:
     """Return [(layout_name, ctx), ...] for the zone block.
 
     Honors per-zone layout_override. Validates ≤1 signature flag.
+
+    Behavior note: when N≥4, soloed zones (flagships, signature, and
+    layout-override solos) are emitted at the front of the zone block
+    immediately after the zone_index slide. The grouped zones follow in
+    declared order. AEs who want strict declared order should use the
+    Brief-level slide_plan: override (handled outside this function).
     """
     sigs = [z for z in zones if z.is_signature]
     if len(sigs) > 1:
         names = ", ".join(z.name for z in sigs)
         raise SlidePlanError(f"At most one zone may carry the 'signature' flag; found: {names}")
+
+    # Validate per-zone layout_override values up front so a typo surfaces here
+    # rather than as a Jinja KeyError deep in the renderer.
+    for z in zones:
+        if z.layout_override and z.layout_override not in _VALID_SOLO_OVERRIDES:
+            raise SlidePlanError(
+                f"Zone {z.num} ({z.name!r}): layout_override must be one of "
+                f"{list(_VALID_SOLO_OVERRIDES)}, got {z.layout_override!r}. "
+                f"Grouping layouts (zone_2up, zone_3up, zone_index) cannot be "
+                f"set per-zone — use the Brief slide_plan: override instead."
+            )
 
     if not zones:
         return []
