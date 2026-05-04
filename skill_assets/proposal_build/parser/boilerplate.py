@@ -45,6 +45,10 @@ def load_boilerplate() -> Boilerplate:
     )
 
 
+# The (?:_long|_minus_60d)? alternation is load-bearing: it captures suffixes
+# containing digits that the [a-z_]+ class cannot match by itself. Removing it
+# would silently break {fabrication_lock_minus_60d} (and similar) — they would
+# pass through unsubstituted to the rendered HTML.
 _PLACEHOLDER_RE = re.compile(r"\{([a-z_]+(?:_long|_minus_60d)?)\}")
 
 
