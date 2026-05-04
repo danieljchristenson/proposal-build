@@ -1,0 +1,12 @@
+---
+default_inclusions:
+  - "Creative design + client-approved renderings"
+  - "All materials, décor, and lighting elements"
+  - "Installation labor (phased install window)"
+  - "Testing, commissioning, and launch support"
+  - "Daily programming (dusk-to-dawn schedule)"
+  - "Weekly on-site maintenance visits during program window"
+  - "24/7 season on-call response"
+  - "Complete post-season teardown and removal"
+  - "Storage of reusable elements at our facility"
+---
