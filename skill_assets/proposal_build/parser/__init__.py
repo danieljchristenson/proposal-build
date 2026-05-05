@@ -149,6 +149,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         resolved_renderings={n: str(eligible[n].resolve()) for n in eligible},
         tier_highlights=fm.get("tier_highlights") or {},
         greenery_references=_resolve_greenery_refs(project_dir, fm.get("greenery_references", [])),
+        venue_context=fm.get("venue_context", "") or "",
     )
 
     artifacts = {
@@ -234,18 +235,26 @@ def _fill_phases(brief, voice, ph):
 
 
 def _resolve_greenery_refs(project_dir: Path, filenames: list) -> tuple[str, ...]:
-    """Resolve greenery-reference filenames to absolute paths inside Greenery references/.
-    Silently drops files that don't exist (so a Brief typo doesn't crash generate)."""
+    """Resolve greenery-reference filenames to absolute paths.
+
+    Searches Greenery references/ first, then falls back to the project's
+    rendering subfolders so the AE can pull project-specific renderings
+    (e.g. an undecorated swag shot from Base Scope) into the mood board
+    without duplicating the file. Silently drops files that don't exist."""
     if not filenames:
         return ()
-    folder = project_dir / "Greenery references"
-    if not folder.exists():
-        return ()
+    search_dirs = [
+        project_dir / "Greenery references",
+        project_dir / "02 - Renderings" / "Base Scope",
+        project_dir / "02 - Renderings" / "Enhancements",
+    ]
     out = []
     for name in filenames:
-        p = folder / name
-        if p.exists():
-            out.append(str(p.resolve()))
+        for folder in search_dirs:
+            p = folder / name
+            if p.exists():
+                out.append(str(p.resolve()))
+                break
     return tuple(out)
 
 

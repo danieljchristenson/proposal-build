@@ -192,6 +192,10 @@ class ProjectModel:
     # When absent, the Investment slide falls back to empty-tagline / empty-list
     # cards (the V1 behavior). Map keys are tier names lowercased.
     tier_highlights: Mapping[str, dict] = field(default_factory=dict)
+    # Optional Brief-authored override for the Understanding slide's
+    # VENUE & CONTEXT panel. When non-empty, replaces the auto-generated
+    # zone-summary one-liner.
+    venue_context: str = ""
 
 
 @dataclass(frozen=True)

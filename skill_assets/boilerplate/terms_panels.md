@@ -1,6 +1,6 @@
 ---
 default_payment_schedule: |
-  50% deposit on signing — required to lock the install schedule.
+  50% deposit on signing, required to lock the install schedule.
   50% balance due after installation.
 
 default_insurance_permits: |
@@ -12,7 +12,7 @@ default_insurance_permits: |
 default_change_orders: |
   Includes 2 creative revision rounds before Fabrication Lock ({fabrication_lock_long}).
   Scope or timeline changes after that date follow our standard change-order
-  workflow — written approval required, priced at materials + 35%.
+  workflow. Written approval required, priced at materials + 35%.
 
 default_validity: |
   This proposal is valid 60 days from {proposal_date_long}. Materials pricing

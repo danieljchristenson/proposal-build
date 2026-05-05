@@ -86,7 +86,7 @@ def _exec_standfirst(model: ProjectModel) -> str:
 def _exec_body_para_1(model: ProjectModel) -> str:
     n = len(model.zones)
     return (f"St. Nick's is proposing a coordinated holiday décor program across "
-            f"{_n_word(n)} {'zones' if n != 1 else 'zone'} of {model.project_name} — "
+            f"{_n_word(n)} {'zones' if n != 1 else 'zone'} of {model.project_name}, "
             f"a single visual identity that builds on what works in your space.")
 
 
@@ -128,7 +128,7 @@ def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int)
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "page_title": "Our Understanding",
-        "standfirst": "Playback of discovery — so we're all working from the same page.",
+        "standfirst": "Playback of discovery, so we're all working from the same page.",
         "panels": [
             {"title": "VENUE & CONTEXT",
              "body": _understanding_venue(model)},
@@ -143,7 +143,9 @@ def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int)
 
 
 def _understanding_venue(model: ProjectModel) -> str:
-    return (f"{model.project_name} — a {len(model.zones)}-zone program "
+    if model.venue_context:
+        return model.venue_context
+    return (f"{model.project_name}: a {len(model.zones)}-zone program "
             f"covering {_zone_summary_short(model)}.")
 
 
@@ -152,7 +154,7 @@ def build_creative_vision_ctx(model: ProjectModel, page_num: int, page_total: in
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "page_title": "Creative Vision",
-        "standfirst": f"The design direction for the {model.project_year} {model.project_short} program.",
+        "standfirst": f"The design direction for the {model.project_year} {model.project_short} program",
         "design_phrase": model.design_phrase,
         "design_direction_body": model.creative_direction,
         "phases": list(model.phases),
@@ -165,11 +167,11 @@ def build_material_palette_ctx(model: ProjectModel, page_num: int, page_total: i
     Default copy describes our build standards; AE can override via Brief
     frontmatter `greenery_description`."""
     default_copy = (
-        "Realistic PVC green tips form the base of every wreath, garland, and tree. "
-        "Natural warm-white LED lighting reads warm against the architecture. "
-        "Every piece is heavily decorated with red, gold, and green-gold ornament "
-        "clusters and floral accents — a consistent decorating language applied "
-        "across the property."
+        "Realistic PVC green tips form the base of every wreath, garland, and tree, "
+        "with warm-white LED lighting that reads warm against the architecture. "
+        "Garlands present cleanly undecorated at the base tier and step up to red, "
+        "gold, and green-gold ornament clusters and floral accents at the Signature "
+        "tier, a consistent decorating language applied across the property."
     )
     return {
         **_project_base(model),
@@ -208,6 +210,10 @@ def build_zone_solo_ctx(model: ProjectModel, page_num: int, page_total: int, zon
 
 
 def build_zone_solo_fullbleed_ctx(model: ProjectModel, page_num: int, page_total: int, zone: Zone) -> dict:
+    return build_zone_solo_ctx(model, page_num, page_total, zone)
+
+
+def build_zone_feature_ctx(model: ProjectModel, page_num: int, page_total: int, zone: Zone) -> dict:
     return build_zone_solo_ctx(model, page_num, page_total, zone)
 
 
@@ -261,8 +267,18 @@ def build_scope_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "page_title": "Scope of Work",
-        "standfirst": "What your investment includes, and what you can add on.",
+        "standfirst": "What your selected tier includes.",
         "includes": list(model.scope_includes),
+        "add_ons": list(model.add_ons),
+    }
+
+
+def build_a_la_carte_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
+    return {
+        **_project_base(model),
+        "page_num": page_num, "page_total": page_total,
+        "page_title": "À La Carte Enhancements",
+        "standfirst": "Customize beyond your selected tier with any of the options below.",
         "add_ons": list(model.add_ons),
     }
 
@@ -347,7 +363,7 @@ def build_sign_off_ctx(model: ProjectModel, page_num: int, page_total: int) -> d
         "client_party_label": f"{model.client_short} AUTHORIZATION",
         "stnicks_party_label": "ST. NICK'S AUTHORIZED SIGNATURE",
         "digital_signing_note": ("Prefer to sign digitally? Use the Canva e-signature link in your "
-                                  "email. Questions? Reply directly — we'll respond within 24 hours."),
+                                  "email. Questions? Reply directly and we'll respond within 24 hours."),
         "client_contact_name": model.client_contact_name,
         "client_contact_title": model.client_contact_title,
         "client_contact_email": model.client_contact_email,

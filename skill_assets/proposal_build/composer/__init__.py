@@ -10,8 +10,9 @@ from proposal_build.composer.ctx_builders import (
     build_creative_vision_ctx, build_material_palette_ctx,
     build_zone_index_ctx, build_zone_solo_ctx,
     build_zone_solo_fullbleed_ctx, build_zone_solo_gallery_ctx,
+    build_zone_feature_ctx,
     build_zone_2up_ctx, build_zone_3up_ctx,
-    build_scope_ctx, build_case_study_ctx, build_investment_ctx,
+    build_scope_ctx, build_a_la_carte_ctx, build_case_study_ctx, build_investment_ctx,
     build_terms_ctx, build_sign_off_ctx, build_about_ctx,
 )
 from proposal_build.composer.slide_plan import auto_arrange_zones, SlidePlanError
@@ -37,7 +38,7 @@ def compose(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
             if t not in tier_totals:
                 tier_totals[t] = sum(li.line_total for li in model.line_items if t in li.tiers)
 
-    investment_range = f"${tier_totals[Tier.ESSENTIAL]/1000:.0f}K — ${tier_totals[Tier.SIGNATURE]/1000:.0f}K"
+    investment_range = f"${tier_totals[Tier.ESSENTIAL]/1000:.0f}K – ${tier_totals[Tier.SIGNATURE]/1000:.0f}K"
 
     # Note: per-tier partnership savings rows (4%/6%/9% applied to tier total) are
     # rendered on page 2 of each Itemized Pricing supplement, not on the Investment
@@ -54,12 +55,14 @@ def compose(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     if model.greenery_references:
         slides_raw.append(("material_palette", {}))
     slides_raw.extend(zone_block)
-    slides_raw.append(("scope", {}))
     if model.case_study and model.case_study != "skip":
         cs = _load_case_study(model.case_study)
         slides_raw.append(("case_study", {"case_study_data": cs}))
     slides_raw.append(("investment", {"tier_totals": tier_totals,
                                        "partnership_discounts": _format_partnership_for_slide(model.partnership_discounts)}))
+    slides_raw.append(("scope", {}))
+    if model.add_ons:
+        slides_raw.append(("a_la_carte", {}))
     slides_raw.append(("terms", {}))
     slides_raw.append(("sign_off", {}))
     slides_raw.append(("about", {}))
@@ -82,7 +85,7 @@ def _resolve_zone_block(model: ProjectModel) -> list[tuple[str, dict]]:
         for entry in model.slide_plan_override:
             layout = entry["layout"]
             zone_names = entry["zones"]
-            if layout in ("zone_solo", "zone_solo_fullbleed", "zone_solo_gallery"):
+            if layout in ("zone_solo", "zone_solo_fullbleed", "zone_solo_gallery", "zone_feature"):
                 if len(zone_names) != 1:
                     raise SlidePlanError(f"{layout} requires exactly 1 zone, got {len(zone_names)}")
                 result.append((layout, {"zone": zone_by_name[zone_names[0]]}))
@@ -117,12 +120,16 @@ def _build_ctx(model: ProjectModel, layout: str, page_num: int, page_total: int,
         return build_zone_solo_fullbleed_ctx(model, page_num, page_total, hint["zone"])
     if layout == "zone_solo_gallery":
         return build_zone_solo_gallery_ctx(model, page_num, page_total, hint["zone"])
+    if layout == "zone_feature":
+        return build_zone_feature_ctx(model, page_num, page_total, hint["zone"])
     if layout == "zone_2up":
         return build_zone_2up_ctx(model, page_num, page_total, hint["zones"])
     if layout == "zone_3up":
         return build_zone_3up_ctx(model, page_num, page_total, hint["zones"])
     if layout == "scope":
         return build_scope_ctx(model, page_num, page_total)
+    if layout == "a_la_carte":
+        return build_a_la_carte_ctx(model, page_num, page_total)
     if layout == "case_study":
         return build_case_study_ctx(model, page_num, page_total, hint["case_study_data"])
     if layout == "investment":

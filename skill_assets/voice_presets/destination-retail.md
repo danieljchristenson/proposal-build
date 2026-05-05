@@ -5,7 +5,7 @@ default_case_study: oregon_zoo
 
 default_pillars:
   - title: "Turnkey Delivery"
-    body: "Concept through teardown — one partner, zero seams."
+    body: "Concept through teardown. One partner, zero seams."
   - title: "Destination Scale"
     body: "Built for venues hosting millions of guests per season."
   - title: "25 Years at It"
@@ -22,7 +22,7 @@ default_after_approval_steps:
   - "Renderings final {fabrication_lock_minus_60d}"
 
 default_sign_off_recap_pattern: |
-  The {project_year} {project_name} {proposal_type} — {zone_summary}, live
+  The {project_year} {project_name} {proposal_type}: {zone_summary}, live
   {go_live_long} through {season_end_long}, at the tier and add-ons you select
   on the Investment page.
 ---

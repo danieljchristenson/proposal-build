@@ -8,7 +8,7 @@ standfirst: "A multi-station civic holiday program at scale, delivered in a sing
 ---
 
 ## Challenge
-Roll out a coordinated holiday décor program across 14 transit stations on a tight budget and an even tighter install window — all installs had to land within a 21-day overnight window without disrupting revenue service.
+Roll out a coordinated holiday décor program across 14 transit stations on a tight budget and an even tighter install window. All installs had to land within a 21-day overnight window without disrupting revenue service.
 
 ## Approach
 Standardized fabrication kits per station tier (flagship / standard / outpost). Pre-staged shipments at the operations yard. Crew rotated through stations on a strict overnight schedule with QC walks at sunrise.

@@ -11,7 +11,7 @@ venues_served: "200+ commercial venues across North America"
 
 # Default about-page bullet list (used by About slide if Brief doesn't override)
 default_bullets:
-  - "Founded 1998 (dba St. Nick's) — T&G Global, LLC"
+  - "Founded 1998 (dba St. Nick's, T&G Global, LLC)"
   - "14 full-time team · 30–45 seasonal staff"
   - "B-General Building Contractor #990427"
   - "Certified Small Business Supplier #1626660"

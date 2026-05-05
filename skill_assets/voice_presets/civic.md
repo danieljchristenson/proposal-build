@@ -12,9 +12,9 @@ default_pillars:
     body: "Decor designed for multi-season reuse; {project_year} builds the base for {next_year} and beyond."
 
 default_phases:
-  - {label: "WELCOME", body: "Wreaths and garlands at every entrance — the holiday begins at the curb."}
+  - {label: "WELCOME", body: "Wreaths and garlands at every entrance. The holiday begins at the curb."}
   - {label: "JOURNEY", body: "Pole banners and lighting carry the design language through the program."}
-  - {label: "ARRIVAL", body: "Walk-through and lit displays at end-of-line — a destination, not a transfer."}
+  - {label: "ARRIVAL", body: "Walk-through and lit displays at end-of-line, a destination not a transfer."}
 
 default_after_approval_steps:
   - "Kickoff call within 48 hrs"
@@ -22,7 +22,7 @@ default_after_approval_steps:
   - "Renderings final {fabrication_lock_minus_60d}"
 
 default_sign_off_recap_pattern: |
-  The {project_year} {project_name} {proposal_type} — {zone_summary}, live
+  The {project_year} {project_name} {proposal_type}: {zone_summary}, live
   {go_live_long} through {season_end_long}, at the tier and add-ons you select
   on the Investment page.
 ---

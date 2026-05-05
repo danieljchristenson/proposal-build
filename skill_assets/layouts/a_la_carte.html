@@ -1,0 +1,110 @@
+<!-- layout-version: 2026-05-04-r3 -->
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-04-r3 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* À-La-Carte — light page, footer present.
+     Top: page title + standfirst.
+     Body: full-width table of Enhancement description + price.
+     Used to spell out optional add-ons in detail, replacing the smaller
+     OPTIONAL ADD-ONS card on the Scope of Work slide. */
+
+  .alc-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .alc-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-3);
+  }
+  /* Shrink the title block so the table sits higher on the page. */
+  .alc-title-area .page-title { font-size: 32pt; }
+  .alc-title-area .standfirst { font-size: 12pt; margin-top: var(--space-1); }
+
+  /* ── Table ── */
+  .alc-body {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .alc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  /* Header row — small caps, red-on-light */
+  .alc-table thead th {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-red);
+    text-align: left;
+    padding: 0 0 var(--space-2) 0;
+    border-bottom: 2pt solid var(--color-red);
+  }
+  .alc-table thead th.alc-th-price {
+    text-align: right;
+    width: 1.6in;
+  }
+
+  /* Body rows — modest spacing, subtle row separator */
+  .alc-table tbody td {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: var(--color-charcoal);
+    padding: 9pt 0;
+    border-bottom: 0.5pt solid rgba(0, 0, 0, 0.08);
+    vertical-align: top;
+  }
+  .alc-table tbody tr:last-child td { border-bottom: 0; }
+
+  .alc-table td.alc-td-price {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 12pt;
+    color: var(--color-red);
+    text-align: right;
+    white-space: nowrap;
+    padding-left: var(--space-4);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="alc-outer">
+
+  <div class="alc-title-area">
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <div class="alc-body">
+    <table class="alc-table">
+      <thead>
+        <tr>
+          <th>Enhancement</th>
+          <th class="alc-th-price">Add-On Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for desc, price in add_ons %}
+        <tr>
+          <td>{{ desc }}</td>
+          <td class="alc-td-price">{{ price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
