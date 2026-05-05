@@ -6,7 +6,7 @@ This file is always-on context for Claude when working on any St. Nicks task. Ke
 
 ## Who we are
 
-St. Nicks has been in business since **1998** — 28 years of commercial holiday and seasonal lighting. Two distinct brands operate under the company:
+St. Nicks has been in business since **1998** — 29 years of commercial holiday and seasonal lighting. Two distinct brands operate under the company:
 
 ### Brand 1: St. Nicks Service Installation
 - **Website:** st-nicks.com
@@ -96,7 +96,7 @@ Implications:
 
 Detailed roster in `org_chart.md`. Summary:
 
-- **Sales (5):** Daniel Christenson (Director of Sales / Owner), Jonathan Yang, Jovany Villela, Tyler Norwood, Abigail Lacson (Sales Ops / VA)
+- **Sales (4):** Daniel Christenson (Director of Sales / Owner), Jonathan Yang, Jovany Villela, Abigail Lacson (Sales Ops / VA)
 - **Operations (4):** Brenda Sheridan (Operations Director), Nick Hisamoto (Project Manager), Eric Salgado (Project Coordinator), Enid Zaragoza (Inventory Specialist)
 - **Creative / Marketing (2):** Stephanie Escobar (Creative Director), Diana Vila Isidro (Marketing / Website)
 - **Warehouse staff:** several — to be documented in `org_chart.md` later

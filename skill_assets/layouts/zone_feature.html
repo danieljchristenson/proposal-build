@@ -1,14 +1,14 @@
-<!-- layout-version: 2026-05-04-r2 -->
+<!-- layout-version: 2026-05-05 -->
 {% extends "base.html" %}
 {% block body_class %}page-dark{% endblock %}
 {% block footer %}{% endblock %}
-{% block layout_version %}<!-- layout-version: 2026-05-04-r2 -->{% endblock %}
+{% block layout_version %}<!-- layout-version: 2026-05-05 -->{% endblock %}
 {% block title %}{{ project_short }} — Zone {{ zone_num }}: {{ zone_name }}{% endblock %}
 {% block extra_head %}
 <style>
   /* Zone Feature — single feature zone, image fills the whole page,
-     text overlaid bottom-left with a subtle dark gradient scrim only behind
-     the text region (no full-width black banner).
+     text presented in a clean white panel anchored bottom-left so the
+     image reads cleanly without a dark scrim blending into the photo.
 
      Use for Signature feature zones where the image IS the message
      (e.g. Bell Display, Gift Box Tower). */
@@ -35,60 +35,47 @@
     display: block;
   }
 
-  /* Soft scrim sized to the text region only — diagonal gradient anchored
-     top-left so the rest of the image stays clean. */
-  .zfe-scrim {
-    position: absolute;
-    left: 0; top: 0;
-    width: 60%; height: 38%;
-    background: linear-gradient(
-      to bottom right,
-      rgba(0, 0, 0, 0.62) 0%,
-      rgba(0, 0, 0, 0.40) 35%,
-      rgba(0, 0, 0, 0.0) 85%
-    );
-    pointer-events: none;
-  }
-
-  /* Text container — top-left, padded, sits over scrim */
+  /* White text panel — bottom-left, contained card with black text */
   .zfe-text {
     position: absolute;
-    left: 0.55in;
-    top: 0.50in;
-    max-width: 7.0in;
-    color: #ffffff;
+    left: 0.40in;
+    bottom: 0.40in;
+    max-width: 4.2in;
+    background: #ffffff;
+    color: var(--color-charcoal);
+    padding: 0.20in 0.26in 0.20in;
+    box-shadow: 0 2pt 6pt rgba(0, 0, 0, 0.18);
   }
 
   .zfe-eyebrow {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 9pt;
+    font-size: 8pt;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.72);
-    margin: 0 0 var(--space-1) 0;
+    color: var(--color-red);
+    margin: 0 0 4pt 0;
   }
 
   .zfe-zone-name {
     font-family: var(--font-display);
     font-weight: 900;
-    font-size: 24pt;
+    font-size: 17pt;
     line-height: 1.05;
     letter-spacing: -0.01em;
-    color: #ffffff;
-    margin: 0 0 var(--space-1) 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    color: var(--color-charcoal);
+    margin: 0 0 4pt 0;
   }
 
   .zfe-subtitle {
     font-family: var(--font-body);
     font-weight: 300;
     font-style: italic;
-    font-size: 11pt;
-    line-height: 1.4;
-    color: rgba(255, 255, 255, 0.88);
-    margin: 0 0 var(--space-2) 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    font-size: 9.5pt;
+    line-height: 1.35;
+    color: var(--color-charcoal);
+    opacity: 0.72;
+    margin: 0 0 6pt 0;
   }
 
   /* Compact bullet list — small, subtle, max 3 lines */
@@ -101,25 +88,24 @@
   .zfe-bullets li {
     font-family: var(--font-body);
     font-weight: 400;
-    font-size: 10pt;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.92);
+    font-size: 8.5pt;
+    line-height: 1.35;
+    color: var(--color-charcoal);
     margin-bottom: 1pt;
-    padding-left: 12pt;
+    padding-left: 10pt;
     position: relative;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   .zfe-bullets li::before {
     content: "•";
     color: var(--color-red);
-    font-size: 11pt;
+    font-size: 10pt;
     position: absolute;
     left: 0;
     top: -1pt;
   }
 
-  /* Page number — top-right, overlaid */
+  /* Page number — top-right, overlaid on image */
   .zfe-page-num {
     position: absolute;
     top: 0.22in;
@@ -128,7 +114,7 @@
     font-weight: 400;
     font-size: 9pt;
     letter-spacing: 0.04em;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.85);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     z-index: 10;
   }
@@ -154,8 +140,6 @@
   {% else %}
   <div class="zfe-placeholder">[FULL-BLEED — {{ zone_name }} feature installation]</div>
   {% endif %}
-
-  <div class="zfe-scrim"></div>
 
   <div class="zfe-text">
     <div class="zfe-eyebrow">ZONE {{ zone_num }}</div>

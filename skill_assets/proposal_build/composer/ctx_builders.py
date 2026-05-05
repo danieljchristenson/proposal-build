@@ -375,9 +375,7 @@ def build_about_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict
     return {
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
-        "page_title": "About St. Nick's",
-        "standfirst": "25 years of large-scale holiday design, installation, and service.",
+        "page_title": "Company Profile",
         "company_facts": list(model.company_facts),
         "team": list(model.team),
-        "contact_strip": model.contact_strip,
     }
