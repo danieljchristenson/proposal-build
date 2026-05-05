@@ -71,6 +71,17 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
                 referenced_filenames.append(name)
             except RenderingsResolutionError as e:
                 raise ProjectLoadError(f"zone {z['name']!r} hero_image: {e}") from e
+        for gallery_name in z.get("hero_images") or ():
+            try:
+                resolve_filename(gallery_name, eligible)
+                referenced_filenames.append(gallery_name)
+            except RenderingsResolutionError as e:
+                raise ProjectLoadError(f"zone {z['name']!r} hero_images: {e}") from e
+    # greenery_references may resolve outside Base Scope/Enhancements; add the
+    # raw filenames so W1 doesn't flag the ones that DO live in eligible folders.
+    for greenery_name in fm.get("greenery_references") or ():
+        if greenery_name:
+            referenced_filenames.append(greenery_name)
 
     # 5. Auto-derive blank dates
     go_live = fm["go_live"]
@@ -150,6 +161,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         tier_highlights=fm.get("tier_highlights") or {},
         greenery_references=_resolve_greenery_refs(project_dir, fm.get("greenery_references", [])),
         venue_context=fm.get("venue_context", "") or "",
+        greenery_description=fm.get("greenery_description", "") or "",
     )
 
     artifacts = {

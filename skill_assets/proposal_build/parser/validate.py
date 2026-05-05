@@ -103,12 +103,14 @@ def check_tier_scenarios_drift(per_line_sums: dict, scenarios: tuple | None) -> 
     if not scenarios:
         return []
 
-    # Match scenarios by string-prefix to tier names
+    # Match scenarios by string-prefix to tier names. Substring match would
+    # alias "SIGNATURE — Enhanced + ..." onto the ENHANCED tier; prefix match
+    # locks each scenario to the tier its label leads with.
     warnings = []
     for label, scenario_total in scenarios:
-        upper = label.upper()
+        upper = label.upper().lstrip()
         for tier_name, line_total in per_line_sums.items():
-            if tier_name.value.upper() in upper:
+            if upper.startswith(tier_name.value.upper()):
                 drift = scenario_total - line_total
                 if drift == 0:
                     continue
@@ -118,6 +120,65 @@ def check_tier_scenarios_drift(per_line_sums: dict, scenarios: tuple | None) -> 
                     f"{tier_name.value} per-line sum ${line_total:,.0f} vs scenario block "
                     f"${scenario_total:,.0f} — {pct:.1f}% drift ({level})."))
                 break
+    return warnings
+
+
+def check_em_dashes(model: ProjectModel) -> list[tuple[str, str]]:
+    """W8: any customer-facing string containing — (em dash).
+
+    Em dashes read as AI-generated and are banned in customer-facing copy
+    (memory rule: feedback_no_em_dashes). En dashes (–) are allowed for
+    numeric ranges. This check walks every field that ends up on a slide,
+    in the Brief, in scope/add-on text, in zone bullets, and in the
+    worksheet's Customer-Facing Description column.
+    """
+    warnings: list[tuple[str, str]] = []
+
+    def _scan(label: str, text: str) -> None:
+        if isinstance(text, str) and "—" in text:
+            preview = text.replace("\n", " ")
+            if len(preview) > 80:
+                preview = preview[:77] + "..."
+            warnings.append(("W8",
+                f"{label} contains em dash (—): {preview!r} — replace with "
+                f"comma, period, parens, or restructure."))
+
+    # Brief frontmatter / top-level strings
+    _scan("design_phrase", model.design_phrase)
+    _scan("project_subtitle", model.project_subtitle)
+    _scan("venue_context", model.venue_context)
+    _scan("creative_direction", model.creative_direction)
+    _scan("what_youre_approving", model.what_youre_approving)
+
+    for i, s in enumerate(model.customer_goals, 1):
+        _scan(f"customer_goals[{i}]", s)
+    for i, s in enumerate(model.customer_constraints, 1):
+        _scan(f"customer_constraints[{i}]", s)
+    for i, s in enumerate(model.success_criteria, 1):
+        _scan(f"success_criteria[{i}]", s)
+    for i, s in enumerate(model.scope_includes, 1):
+        _scan(f"scope_includes[{i}]", s)
+    for i, (text, _price) in enumerate(model.add_ons, 1):
+        _scan(f"add_ons[{i}]", text)
+
+    for z in model.zones:
+        _scan(f"zone {z.name!r} subtitle", z.subtitle)
+        for j, b in enumerate(z.bullets, 1):
+            _scan(f"zone {z.name!r} bullet[{j}]", b)
+
+    for li in model.line_items:
+        _scan(f"Row #{li.line_num} customer_facing", li.customer_facing)
+
+    for p in model.pillars:
+        _scan(f"pillar {p.get('title','')!r}", p.get("body", ""))
+    for p in model.phases:
+        _scan(f"phase {p.get('label','')!r}", p.get("body", ""))
+
+    for tier_key, card in (model.tier_highlights or {}).items():
+        _scan(f"tier_highlights[{tier_key}].tagline", card.get("tagline", ""))
+        for j, item in enumerate(card.get("items", []) or [], 1):
+            _scan(f"tier_highlights[{tier_key}].items[{j}]", item)
+
     return warnings
 
 
@@ -133,5 +194,6 @@ def run_validation(model: ProjectModel, eligible_renderings: dict, referenced_fi
     ))
     warnings.extend(check_unused_renderings(eligible_renderings, referenced_filenames))
     warnings.extend(check_tier_scenarios_drift(per_line_sums, scenarios))
+    warnings.extend(check_em_dashes(model))
 
     return ValidationResult(blockers=[], warnings=warnings)

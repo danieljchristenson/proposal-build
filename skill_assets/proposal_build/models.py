@@ -196,6 +196,11 @@ class ProjectModel:
     # VENUE & CONTEXT panel. When non-empty, replaces the auto-generated
     # zone-summary one-liner.
     venue_context: str = ""
+    # Optional Brief-authored override for the Greenery Mood Board copy
+    # block. When non-empty, replaces the default tier-progression copy
+    # in build_material_palette_ctx — useful for single-tier projects
+    # where the base→Signature progression line doesn't apply.
+    greenery_description: str = ""
 
 
 @dataclass(frozen=True)
