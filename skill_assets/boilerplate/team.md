@@ -1,7 +1,7 @@
 ---
 roster:
   - name: "Nicholas Adams"
-    role: "Founder"
+    role: "Founder and Legal Compliance"
   - name: "Wade Francis"
     role: "Chief Financial Officer"
   - name: "Brenda Sheridan"
@@ -10,6 +10,8 @@ roster:
     role: "Director of Sales"
   - name: "Stephanie Escobar"
     role: "Creative Director"
-  - name: "Carlos Vasquez & Alonso Salazar"
-    role: "Senior Installers / Project Managers"
+  - name: "Carlos Vasquez"
+    role: "Sr. Installer & Project Manager"
+  - name: "Alonso Salazar"
+    role: "Sr. Installer & Project Manager"
 ---

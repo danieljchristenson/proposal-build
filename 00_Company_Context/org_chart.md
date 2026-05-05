@@ -22,7 +22,6 @@ Main office line: **(562) 438-0017**
 | Daniel Christenson | Director of Sales | daniel@st-nicks.com | (425) 877-3262 | Owner; key accounts, strategic deals |
 | Jonathan Yang | Sales | jonathan@st-nicks.com | — | Commercial proposals (e.g., City of Rancho Mirage, Sphere Tree quotes) |
 | Jovany Villela | Sales | jovany@st-nicks.com | (562) 348-8256 cell | Project decks and pricing (e.g., JFK Term 1, LED Angels) |
-| Tyler Norwood | Sales | tyler@st-nicks.com | — | |
 | Abigail Lacson | Sales Operations / Estimates (VA, Philippines) | abigail@st-nicks.com | — | Drafts and manages estimates in Zoho CRM |
 
 ---

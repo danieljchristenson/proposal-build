@@ -1,42 +1,160 @@
-<!-- layout-version: 2026-05-12 -->
+<!-- layout-version: 2026-05-05 -->
 {% extends "base.html" %}
-{% block title %}Itemized Cost Breakdown — {{ project_name }}{% endblock %}
+{% block title %}Proposal Pricing — {{ project_name }}{% endblock %}
 
 {% block extra_head %}
 <style>
-  /* US Letter portrait — pricing supplements use a different page size from
-     the 16:9 proposal deck (13.333in x 7.5in) because they're standalone
-     supporting documents and benefit from more vertical room for line items. */
+  /* Letter portrait. Pricing supplements use a different page size from the
+     16:9 proposal deck because they're standalone supporting documents. */
   @page { size: 8.5in 11in; margin: 0; }
-  /* Override base.html's fixed-dimension absolutely-positioned .page-content so
-     WeasyPrint can break this layout across multiple physical pages. */
+  /* Override base.html's fixed-dimension absolutely-positioned .page-content
+     so WeasyPrint can break this layout across multiple physical pages. */
   html, body { width: 8.5in; height: auto; }
   .page-content { position: static; top: auto; bottom: auto; }
-  .pricing-page { padding: var(--space-5) var(--space-6); }
+  /* Page 1 has its own compact head; page 2 has its own dark band. Hide
+     base.html's floating header/footer so they don't overlap. */
+  .page-header, .page-footer { display: none; }
+
+  .pricing-page { padding: 0.4in 0.5in 0.35in; }
+
+  /* ---------- Page 1: Proposal Pricing ---------- */
+
+  .pricing-head {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: flex-start; gap: var(--space-5);
+    margin-bottom: 6pt;
+  }
+  .pricing-head .brand { display: flex; gap: 12pt; align-items: flex-start; }
+  .pricing-head .brand img { width: 50pt; height: auto; flex-shrink: 0; }
+  .pricing-head .brand-text {
+    font-family: var(--font-body); font-size: 9pt; color: var(--color-charcoal);
+    line-height: 1.45;
+  }
+  .pricing-head .brand-text .name {
+    font-family: var(--font-heading); font-weight: 700; font-size: 10pt;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-charcoal);
+    margin-bottom: 3pt;
+  }
+  .pricing-head .doc-label { text-align: right; }
+  .pricing-head .doc-label .doc-type {
+    font-family: var(--font-display); font-weight: 900; font-size: 26pt;
+    color: var(--color-charcoal); letter-spacing: 0.02em;
+    text-transform: uppercase; line-height: 1;
+  }
+  .pricing-head .doc-label .tier-label {
+    font-family: var(--font-heading); font-weight: 700; font-size: 12pt;
+    color: var(--color-red); letter-spacing: 0.10em; text-transform: uppercase;
+    margin-top: 6pt;
+  }
+
+  .meta-strip {
+    display: grid; grid-template-columns: 1fr 230pt;
+    gap: 18pt; margin-bottom: 6pt;
+    padding-top: 6pt; padding-bottom: 6pt;
+    border-top: 0.5pt solid #d4d4d4; border-bottom: 0.5pt solid #d4d4d4;
+  }
+  .meta-strip .col {
+    font-family: var(--font-body); font-size: 9.5pt; color: var(--color-charcoal);
+    line-height: 1.5;
+  }
+  .meta-strip .col .label {
+    color: var(--color-gray); font-family: var(--font-heading);
+    font-weight: 700; font-size: 8.5pt; letter-spacing: 0.10em;
+    text-transform: uppercase; margin-bottom: 4pt;
+  }
+  .meta-strip .col .name { font-weight: 700; font-size: 10.5pt; }
+  .meta-strip .right { text-align: right; }
+  .meta-strip .right .row {
+    display: flex; gap: 10pt; justify-content: flex-end;
+    align-items: baseline; margin-bottom: 3pt;
+    white-space: nowrap;
+  }
+  .meta-strip .right .row .k {
+    color: var(--color-gray); font-family: var(--font-heading);
+    font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .meta-strip .right .row .v {
+    font-weight: 700; font-size: 10pt; color: var(--color-charcoal);
+    text-align: right; white-space: nowrap;
+  }
+
+  table.pricing-table {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--font-body); font-size: 8pt;
+  }
+  table.pricing-table th {
+    background: var(--color-charcoal); color: var(--color-light);
+    font-family: var(--font-heading); font-weight: 700; font-size: 8pt;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6pt 6pt; text-align: left;
+  }
+  table.pricing-table th.num { text-align: center; width: 20pt; }
+  table.pricing-table th.qty { width: 32pt; text-align: right; }
+  table.pricing-table th.unit { width: 28pt; text-align: center; }
+  table.pricing-table th.rate { width: 56pt; text-align: right; }
+  table.pricing-table th.amount { width: 66pt; text-align: right; }
+
+  table.pricing-table td {
+    padding: 2.5pt 6pt; vertical-align: top; color: var(--color-charcoal);
+    border-bottom: 0.5pt solid #e8e8e8; line-height: 1.2;
+  }
+  table.pricing-table td.num { text-align: center; color: var(--color-gray); }
+  table.pricing-table td.qty { text-align: right; font-variant-numeric: tabular-nums; }
+  table.pricing-table td.unit { text-align: center; color: var(--color-gray); }
+  table.pricing-table td.rate, table.pricing-table td.amount {
+    text-align: right; font-variant-numeric: tabular-nums;
+  }
+
+  table.pricing-table tr.group-header td {
+    background: white; color: var(--color-charcoal);
+    font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding-top: 6pt; padding-bottom: 3pt;
+    border-bottom: 1pt solid var(--color-charcoal);
+  }
+
+  .grand-total {
+    display: flex; justify-content: flex-end; align-items: baseline;
+    gap: 16pt; margin-top: 8pt;
+    padding: 8pt 8pt 0;
+    border-top: 1.5pt solid var(--color-charcoal);
+  }
+  .grand-total .label {
+    font-family: var(--font-heading); font-weight: 700; font-size: 13pt;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--color-charcoal);
+  }
+  .grand-total .value {
+    font-family: var(--font-display); font-weight: 900; font-size: 24pt;
+    color: var(--color-charcoal); font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  /* ---------- Page 2: Payment Terms & Savings (kept as is) ---------- */
+
   .pricing-header-band {
     background: var(--color-charcoal); color: var(--color-light);
-    padding: var(--space-4) var(--space-6); margin: calc(-1 * var(--space-5)) calc(-1 * var(--space-6)) var(--space-5);
+    padding: var(--space-4) var(--space-6);
+    margin: calc(-1 * var(--space-5)) calc(-1 * var(--space-6)) var(--space-5);
   }
   .pricing-header-band .eyebrow {
     color: var(--color-red); font-family: var(--font-heading);
     font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; font-size: 11pt;
   }
   .pricing-header-band h1 {
-    font-family: var(--font-display); font-weight: 900; font-size: 36pt;
+    font-family: var(--font-display); font-weight: 900; font-size: 32pt;
     color: var(--color-light); margin: 0.2em 0 0.05em;
   }
   .pricing-header-band .standfirst {
     font-family: var(--font-body); font-weight: 300; font-style: italic;
-    color: var(--color-gray); font-size: 13pt; margin: 0;
-  }
-  .pricing-header-band .page-num {
-    position: absolute; top: var(--space-4); right: var(--space-6);
-    color: var(--color-red); font-weight: 700; letter-spacing: 0.10em; font-size: 10pt;
+    color: var(--color-gray); font-size: 12pt; margin: 0;
   }
   .pricing-meta-panel {
-    background: var(--color-panel); padding: var(--space-4) var(--space-5);
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3) var(--space-5);
-    margin-bottom: var(--space-4);
+    background: var(--color-panel); padding: var(--space-3) var(--space-5);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: var(--space-3) var(--space-5);
+    margin-bottom: var(--space-3);
+    align-items: center;
   }
   .pricing-meta-panel .label {
     color: var(--color-gray); font-family: var(--font-heading);
@@ -44,117 +162,127 @@
   }
   .pricing-meta-panel .value {
     font-family: var(--font-body); font-weight: 700; font-size: 12pt; color: var(--color-charcoal);
-    margin-top: 2pt;
   }
-  table.pricing-table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-3); }
-  table.pricing-table th {
-    background: var(--color-charcoal); color: var(--color-red);
-    font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
-    letter-spacing: 0.06em; text-transform: uppercase; padding: 8pt 12pt; text-align: left;
-  }
-  table.pricing-table th.qty, table.pricing-table th.unit, table.pricing-table th.amount { text-align: center; }
-  table.pricing-table th.amount { text-align: right; }
-  table.pricing-table td { padding: 6pt 12pt; font-family: var(--font-body); font-size: 10pt; color: var(--color-charcoal); border-bottom: 0.5pt solid #e0e0e0; }
-  table.pricing-table td.qty, table.pricing-table td.unit { text-align: center; }
-  table.pricing-table td.amount { text-align: right; font-variant-numeric: tabular-nums; }
-  table.pricing-table tr.group-header td {
-    background: white; color: var(--color-red);
-    font-family: var(--font-heading); font-weight: 700; font-size: 11pt;
-    letter-spacing: 0.04em; text-transform: uppercase; padding-top: 12pt;
-    border-bottom: 1pt solid var(--color-red);
-  }
-  .total-band {
-    background: var(--color-charcoal); color: var(--color-light);
-    padding: var(--space-3) var(--space-5); display: flex;
-    justify-content: space-between; align-items: center;
-    margin: var(--space-3) calc(-1 * var(--space-6)) 0;
-  }
-  .total-band .label { color: var(--color-red); font-family: var(--font-heading); font-weight: 700; font-size: 16pt; letter-spacing: 0.06em; }
-  .total-band .total { color: var(--color-light); font-family: var(--font-display); font-weight: 900; font-size: 28pt; }
-  .pricing-footer {
-    color: var(--color-red); font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
-    letter-spacing: 0.04em; padding: var(--space-3) var(--space-6);
-    border-top: 0.5pt solid #e0e0e0; margin-top: var(--space-4);
-  }
-  /* Page 2 specific */
   .terms-card {
     background: var(--color-charcoal); color: var(--color-light);
-    padding: var(--space-3) var(--space-4); margin-bottom: var(--space-3);
+    padding: 8pt var(--space-4); margin-bottom: var(--space-2);
   }
   .terms-card h3 {
     color: var(--color-red); font-family: var(--font-heading);
     font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 11pt;
-    margin: 0 0 var(--space-2);
+    margin: 0;
   }
   .payment-row {
-    display: grid; grid-template-columns: 1fr 80pt 120pt;
-    align-items: center; padding: var(--space-3) var(--space-4); background: var(--color-panel);
-    border-bottom: 0.5pt solid #e0e0e0;
+    display: grid; grid-template-columns: 1fr;
+    align-items: center; padding: 8pt var(--space-4); background: var(--color-panel);
+    border-bottom: 0.5pt solid #e0e0e0; font-size: 10.5pt;
   }
-  .payment-row .pct { color: var(--color-red); font-weight: 700; text-align: center; }
-  .payment-row .amt { font-family: var(--font-body); font-weight: 700; font-size: 14pt; text-align: right; }
-  table.savings { width: 100%; margin: var(--space-3) 0; border-collapse: collapse; }
-  table.savings th, table.savings td { padding: 8pt 12pt; font-family: var(--font-body); font-size: 11pt; }
-  table.savings th { background: var(--color-panel); color: var(--color-charcoal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10pt; }
+  table.savings { width: 100%; margin: var(--space-2) 0; border-collapse: collapse; }
+  table.savings th, table.savings td {
+    padding: 6pt 12pt; font-family: var(--font-body); font-size: 10.5pt;
+  }
+  table.savings th {
+    background: var(--color-panel); color: var(--color-charcoal); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 9.5pt;
+  }
+  .terms-bullets {
+    font-family: var(--font-body); font-size: 9.5pt; color: var(--color-charcoal);
+    padding-left: var(--space-4); margin: 6pt 0 0;
+  }
+  .terms-bullets li { margin-bottom: 3pt; }
+  .renewal-note {
+    font-style: italic; color: var(--color-gray); font-size: 9.5pt;
+    margin: 4pt 0 var(--space-3);
+  }
+  .pricing-footer {
+    color: var(--color-red); font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
+    letter-spacing: 0.04em; padding: var(--space-2) 0 0;
+    border-top: 0.5pt solid #e0e0e0; margin-top: var(--space-3);
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- PAGE 1 — Itemized Cost Breakdown -->
+<!-- PAGE 1 — Proposal Pricing -->
 <div class="pricing-page">
-  <div class="pricing-header-band">
-    <div class="eyebrow">ST. NICK'S CHRISTMAS LIGHTING &amp; DÉCOR</div>
-    <h1>Itemized Cost Breakdown</h1>
-    <div class="standfirst">Supplemental to the {{ project_year }} {{ proposal_type }}</div>
-    <div class="page-num">PAGE 1 / 2</div>
-  </div>
+  <header class="pricing-head">
+    <div class="brand">
+      <img src="{{ logo_path }}" alt="St. Nick's">
+      <div class="brand-text">
+        <div class="name">St. Nick's Christmas Lighting &amp; Décor</div>
+        6861 Walker St<br>
+        La Palma, CA 90623<br>
+        ST-NICKS.COM &nbsp;·&nbsp; (562) 438-0017
+      </div>
+    </div>
+    <div class="doc-label">
+      <div class="doc-type">Proposal Pricing</div>
+      <div class="tier-label">{{ tier_name }} Tier</div>
+    </div>
+  </header>
 
-  <div class="pricing-meta-panel">
-    <div><div class="label">CLIENT</div><div class="value">{{ client_company }}</div></div>
-    <div><div class="label">PROJECT</div><div class="value">{{ project_year }} {{ proposal_type }}</div></div>
-    <div><div class="label">TIER</div><div class="value">{{ tier_name }}</div></div>
-    <div><div class="label">TOTAL</div><div class="value">${{ "{:,.0f}".format(tier_total) }} all-in, tax excluded</div></div>
-    <div><div class="label">DATE</div><div class="value">{{ proposal_date_long }}</div></div>
-    <div><div class="label">VALID</div><div class="value">30 days from proposal date</div></div>
+  <div class="meta-strip">
+    <div class="col">
+      <div class="label">Bill To</div>
+      <div class="name">{{ client_company }}</div>
+      {% if client_contact_name %}<div>{{ client_contact_name }}{% if client_contact_title %}, {{ client_contact_title }}{% endif %}</div>{% endif %}
+      {% if client_contact_email %}<div>{{ client_contact_email }}</div>{% endif %}
+      {% if client_contact_phone %}<div>{{ client_contact_phone }}</div>{% endif %}
+    </div>
+    <div class="right">
+      <div class="row"><div class="k">Quote Date</div><div class="v">{{ proposal_date_long }}</div></div>
+      <div class="row"><div class="k">Project</div><div class="v">{{ project_year }} {{ proposal_type }}</div></div>
+      <div class="row"><div class="k">Valid</div><div class="v">60 days from quote date</div></div>
+    </div>
   </div>
 
   <table class="pricing-table">
     <thead>
-      <tr><th>ITEM</th><th class="qty">QTY</th><th class="unit">UNIT</th><th class="amount">AMOUNT</th></tr>
+      <tr>
+        <th class="num">#</th>
+        <th>Item &amp; Description</th>
+        <th class="qty">Qty</th>
+        <th class="unit">Unit</th>
+        <th class="rate">Rate</th>
+        <th class="amount">Amount</th>
+      </tr>
     </thead>
     <tbody>
+      {% set ln = namespace(n=0) %}
       {% if base_scope_lines %}
-      <tr class="group-header"><td colspan="3">BASE SCOPE</td><td class="amount">${{ "{:,.0f}".format(base_subtotal) }}</td></tr>
+      <tr class="group-header"><td colspan="6">Base Scope</td></tr>
       {% for li in base_scope_lines %}
+      {% set ln.n = ln.n + 1 %}
       <tr>
+        <td class="num">{{ ln.n }}</td>
         <td>{{ li.customer_facing }}</td>
         <td class="qty">{{ li.qty | int if li.qty == li.qty|int else li.qty }}</td>
         <td class="unit">{{ li.unit }}</td>
-        <td class="amount">${{ "{:,.0f}".format(li.line_total) }}</td>
+        <td class="rate">{{ "{:,.2f}".format(li.price_per_unit) }}</td>
+        <td class="amount">{{ "{:,.2f}".format(li.line_total) }}</td>
       </tr>
       {% endfor %}
       {% endif %}
       {% if enhancement_lines %}
-      <tr class="group-header"><td colspan="3">OPTIONAL ENHANCEMENTS</td><td class="amount">${{ "{:,.0f}".format(enh_subtotal) }}</td></tr>
+      <tr class="group-header"><td colspan="6">Optional Enhancements</td></tr>
       {% for li in enhancement_lines %}
+      {% set ln.n = ln.n + 1 %}
       <tr>
+        <td class="num">{{ ln.n }}</td>
         <td>{{ li.customer_facing }}</td>
         <td class="qty">{{ li.qty | int if li.qty == li.qty|int else li.qty }}</td>
         <td class="unit">{{ li.unit }}</td>
-        <td class="amount">${{ "{:,.0f}".format(li.line_total) }}</td>
+        <td class="rate">{{ "{:,.2f}".format(li.price_per_unit) }}</td>
+        <td class="amount">{{ "{:,.2f}".format(li.line_total) }}</td>
       </tr>
       {% endfor %}
       {% endif %}
     </tbody>
   </table>
 
-  <div class="total-band">
-    <div class="label">TOTAL — {{ tier_name | upper }} TIER</div>
-    <div class="total">${{ "{:,.0f}".format(tier_total) }}</div>
-  </div>
-
-  <div class="pricing-footer">
-    Page 1 of 2 · ST-NICKS.COM · (562) 438-0017 · Payment terms on page 2
+  <div class="grand-total">
+    <div class="label">Total</div>
+    <div class="value">${{ "{:,.0f}".format(tier_total) }}</div>
   </div>
 </div>
 
@@ -163,19 +291,18 @@
   <div class="pricing-header-band">
     <div class="eyebrow">ST. NICK'S CHRISTMAS LIGHTING &amp; DÉCOR</div>
     <h1>Payment Terms &amp; Savings</h1>
-    <div class="standfirst">{{ client_short }} · {{ project_year }} {{ proposal_type }} · {{ tier_name }} Tier</div>
-    <div class="page-num">PAGE 2 / 2</div>
+    <div class="standfirst">{{ client_short }} &nbsp;·&nbsp; {{ project_year }} {{ proposal_type }} &nbsp;·&nbsp; {{ tier_name }} Tier</div>
   </div>
 
-  <div class="pricing-meta-panel" style="grid-template-columns: 1fr 1fr;">
+  <div class="pricing-meta-panel">
     <div><div class="label">TOTAL — {{ tier_name | upper }} TIER</div></div>
-    <div><div class="value" style="text-align:right; color: var(--color-red); font-size: 18pt;">${{ "{:,.0f}".format(tier_total) }}</div></div>
+    <div style="text-align:right;"><div class="value" style="color: var(--color-red); font-size: 18pt;">${{ "{:,.0f}".format(tier_total) }}</div></div>
   </div>
 
   <div class="terms-card"><h3>Payment Schedule</h3></div>
   {{ payment_schedule_md_html | safe }}
 
-  <div class="terms-card"><h3>Multi-Year Partnership Savings</h3></div>
+  <div class="terms-card" style="margin-top: var(--space-3);"><h3>Multi-Year Partnership Savings</h3></div>
   <table class="savings">
     <thead><tr><th>TERM</th><th>DISCOUNT</th><th>SAVINGS</th><th>YEAR 1 PRICE</th></tr></thead>
     <tbody>
@@ -183,27 +310,25 @@
       <tr>
         <td><strong>{{ row.term | lower | replace('-year', '-year lock') }}</strong></td>
         <td style="color: var(--color-red); font-weight: 700;">{{ row.discount_label }}</td>
-        <td style="color: var(--color-charcoal);">${{ "{:,.0f}".format(row.savings) }}</td>
+        <td>${{ "{:,.0f}".format(row.savings) }}</td>
         <td style="font-weight: 700;">${{ "{:,.0f}".format(row.year_1_price) }}</td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
-  <p style="font-style: italic; color: var(--color-gray); font-size: 10pt;">
-    {{ non_multi_year_renewal_note }}
-  </p>
+  <p class="renewal-note">{{ non_multi_year_renewal_note }}</p>
 
   <div class="terms-card"><h3>Terms Summary</h3></div>
-  <ul style="font-family: var(--font-body); font-size: 10pt; color: var(--color-charcoal); padding-left: var(--space-4);">
+  <ul class="terms-bullets">
     <li>{{ term_panels.validity }}</li>
     <li>{{ term_panels.change_orders }}</li>
     <li>{{ term_panels.insurance_permits }}</li>
   </ul>
 
   <div class="pricing-footer">
-    This document is a supplement to the {{ project_year }} {{ proposal_type }}.
-    Contract terms prevail.<br>
-    ST. NICK'S CHRISTMAS LIGHTING &amp; DÉCOR · ST-NICKS.COM · (562) 438-0017
+    This document is a supplement to the {{ project_year }} {{ proposal_type }}. Contract terms prevail.
+    &nbsp;·&nbsp; <span style="white-space: nowrap;">ST-NICKS.COM</span>
+    &nbsp;·&nbsp; <span style="white-space: nowrap;">(562)&nbsp;438-0017</span>
   </div>
 </div>
 {% endblock %}

@@ -7,6 +7,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from weasyprint import HTML
 
+from proposal_build.composer.ctx_builders import _LOGO_PATH
 from proposal_build.composer.pricing import compute_partnership_savings
 from proposal_build.parser.boilerplate import load_boilerplate, substitute_placeholders
 
@@ -42,7 +43,12 @@ def render_pricing_pdf(doc, out_path: Path) -> Path:
     )
 
     ctx = {
+        "logo_path": _LOGO_PATH,
         "client_company": model.client_company, "client_short": model.client_short,
+        "client_contact_name": model.client_contact_name,
+        "client_contact_title": model.client_contact_title,
+        "client_contact_email": model.client_contact_email,
+        "client_contact_phone": model.client_contact_phone,
         "project_name": model.project_name, "project_year": model.project_year,
         "proposal_type": model.proposal_type,
         "proposal_date_long": _date_long(model.proposal_date),
