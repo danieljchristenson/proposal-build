@@ -2,11 +2,13 @@
 from proposal_build.inspector.folder import check
 
 
+# Mirrors folder.py:REQUIRED_SUBDIRS — keep in sync.
 REQUIRED_SUBDIRS = (
     "01 - RFP",
     "02 - Renderings",
     "02 - Renderings/Base Scope",
     "02 - Renderings/Enhancements",
+    "02 - Renderings/Unused Renderings",
     "02 - Renderings/_inbox",
     "03 - Scope & Pricing",
     "04 - Process & Notes",

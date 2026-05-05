@@ -9,9 +9,11 @@ from proposal_build.inspector.brief import BRIEF_RELPATH
 from proposal_build.inspector.report import Finding
 
 
-# Folder names mirror inspector.folder.REQUIRED_SUBDIRS. Keep in sync.
+# Folder names mirror the canonical project layout under `02 - Renderings/`.
+# Greenery references live at the PROJECT ROOT, not under renderings — they
+# are resolved by the Brief parser's `_resolve_greenery_refs`, not here.
 RENDERINGS_DIR = "02 - Renderings"
-SEARCH_SUBDIRS = ("Base Scope", "Enhancements", "Greenery references")
+SEARCH_SUBDIRS = ("Base Scope", "Enhancements")
 INBOX_SUBDIR = "_inbox"
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
 
@@ -41,8 +43,8 @@ def check(project_path: Path) -> list[Finding]:
         findings.append(Finding(
             severity="warning", category="renderings",
             issue="no-renderings-present",
-            detail=("No renderings found in `Base Scope/`, `Enhancements/`,"
-                    " or `Greenery references/`."),
+            detail=("No renderings found in `Base Scope/` or "
+                    "`Enhancements/`."),
             fix=("Drop renderings into the appropriate subfolder under "
                  f"`{RENDERINGS_DIR}/`."),
         ))
@@ -55,8 +57,7 @@ def check(project_path: Path) -> list[Finding]:
             detail=f"{len(inbox_files)} file(s) sitting in `_inbox/` "
                    "unsorted.",
             fix=("Move each into the appropriate subfolder "
-                 "(`Base Scope/`, `Enhancements/`, or "
-                 "`Greenery references/`)."),
+                 "(`Base Scope/` or `Enhancements/`)."),
         ))
 
     # Resolve hero_image references from the Brief
