@@ -1,8 +1,6 @@
 """Tests for the Renderings inspector."""
 from __future__ import annotations
 
-from pathlib import Path
-
 from proposal_build.inspector.renderings import check
 
 
@@ -57,3 +55,17 @@ def test_hero_image_resolved_no_finding(tmp_path):
     })
     findings = check(proj)
     assert not any(f.issue == "hero-image-unresolved" for f in findings)
+
+
+def test_hero_images_plural_unresolved_reports_blocker(tmp_path):
+    proj = tmp_path / "P"
+    _setup_renderings(proj)
+    _write_brief(proj, {
+        "zones": [{
+            "num": 1, "name": "Z1",
+            "hero_images": ["a.png", "b.png"],
+        }]
+    })
+    findings = check(proj)
+    unresolved = [f for f in findings if f.issue == "hero-image-unresolved"]
+    assert len(unresolved) == 2

@@ -73,10 +73,12 @@ def check(project_path: Path) -> list[Finding]:
                 continue
             zone_name = z.get("name") or f"zone {z.get('num', '?')}"
             refs: list[str] = []
-            if z.get("hero_image"):
-                refs.append(z["hero_image"])
+            hero = z.get("hero_image")
+            if isinstance(hero, str) and hero:
+                refs.append(hero)
             for hi in z.get("hero_images") or []:
-                refs.append(hi)
+                if isinstance(hi, str):
+                    refs.append(hi)
             for ref in refs:
                 if ref not in available:
                     findings.append(Finding(
