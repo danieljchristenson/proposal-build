@@ -1,8 +1,4 @@
 """Tests for the folder-structure inspector."""
-from pathlib import Path
-
-import pytest
-
 from proposal_build.inspector.folder import check
 
 
