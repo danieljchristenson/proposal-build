@@ -10,6 +10,7 @@ from proposal_build.inspector.report import Finding
 
 SCOPE_DIR = "03 - Scope & Pricing"
 WORKSHEET_SUFFIX = " - Scope Worksheet.xlsx"
+# Required column names mirror parser.worksheet.REQUIRED_HEADERS. Keep in sync.
 
 
 def _find_worksheet(scope_dir: Path) -> Path | None:
@@ -51,6 +52,7 @@ def check(project_path: Path) -> list[Finding]:
         ))
         return findings
 
+    wb = None
     try:
         wb = load_workbook(ws_path, data_only=True, read_only=True)
         ws = wb.active
@@ -63,6 +65,9 @@ def check(project_path: Path) -> list[Finding]:
             fix="Open the worksheet in Excel and check for corruption.",
         ))
         return findings
+    finally:
+        if wb is not None:
+            wb.close()
 
     if not rows:
         findings.append(Finding(

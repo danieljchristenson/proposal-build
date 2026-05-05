@@ -1,5 +1,5 @@
 """Tests for the Worksheet inspector."""
-from pathlib import Path
+from __future__ import annotations
 
 from openpyxl import Workbook
 
