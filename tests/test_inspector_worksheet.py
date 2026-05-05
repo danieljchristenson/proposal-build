@@ -1,8 +1,6 @@
 """Tests for the Worksheet inspector."""
 from __future__ import annotations
 
-from pathlib import Path
-
 from openpyxl import Workbook
 
 from proposal_build.inspector.worksheet import check
