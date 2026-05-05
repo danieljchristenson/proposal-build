@@ -3,11 +3,10 @@ from proposal_build.inspector.folder import check
 
 
 REQUIRED_SUBDIRS = (
-    "01 - Project Background",
+    "01 - RFP",
     "02 - Renderings",
     "02 - Renderings/Base Scope",
     "02 - Renderings/Enhancements",
-    "02 - Renderings/Greenery references",
     "02 - Renderings/_inbox",
     "03 - Scope & Pricing",
     "04 - Process & Notes",
@@ -34,8 +33,8 @@ def test_check_reports_missing_project_folder(tmp_path):
 def test_check_reports_each_missing_subdir(tmp_path):
     proj = tmp_path / "Half Project"
     proj.mkdir()
-    (proj / "01 - Project Background").mkdir()
-    # Only one subdir present; expect findings for all the other 7
+    (proj / "01 - RFP").mkdir()
+    # Only one subdir present; expect findings for all the others
     findings = check(proj)
     assert len(findings) == len(REQUIRED_SUBDIRS) - 1
     for f in findings:

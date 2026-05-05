@@ -1,6 +1,8 @@
 """Tests for the Worksheet inspector."""
 from __future__ import annotations
 
+from pathlib import Path
+
 from openpyxl import Workbook
 
 from proposal_build.inspector.worksheet import check
@@ -38,7 +40,7 @@ def test_locked_worksheet_reports_error(tmp_path):
     _write_worksheet(sd, "Test Project",
                      header_row=["Line #", "Customer-Facing Description",
                                  "Tiers"],
-                     data_rows=[["B01", "X", "Essential, Enhanced"]])
+                     data_rows=[["1", "X", "Essential, Enhanced"]])
     # macOS LibreOffice lock file
     (sd / ".~lock.Test Project - Scope Worksheet.xlsx#").write_text("locked")
     findings = check(proj)
@@ -53,8 +55,8 @@ def test_blank_customer_facing_reports_blocker(tmp_path):
                      header_row=["Line #", "Customer-Facing Description",
                                  "Tiers"],
                      data_rows=[
-                         ["B01", "", "Essential, Enhanced"],
-                         ["B02", "Some copy", "Essential"],
+                         ["1", "", "Essential, Enhanced"],
+                         ["2", "Some copy", "Essential"],
                      ])
     findings = check(proj)
     assert any(f.issue == "blank-customer-facing"
@@ -68,8 +70,8 @@ def test_no_tier_columns_reports_blocker(tmp_path):
                      header_row=["Line #", "Customer-Facing Description",
                                  "Tiers"],
                      data_rows=[
-                         ["B01", "X", ""],
-                         ["B02", "Y", ""],
+                         ["1", "X", ""],
+                         ["2", "Y", ""],
                      ])
     findings = check(proj)
     assert any(f.issue == "no-tiers-on-line"

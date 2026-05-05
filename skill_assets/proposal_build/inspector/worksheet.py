@@ -1,11 +1,19 @@
 """Worksheet-readiness checks."""
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from openpyxl import load_workbook
 
 from proposal_build.inspector.report import Finding
+
+
+# Mirrors parser.worksheet._LINE_NUM_RE — a data row's first cell looks
+# like "1", "12", or "E6" (Enhancement). Anything else (blank, summary
+# row, sub-header) is skipped by the inspector to avoid false-positive
+# blockers on rows that aren't supposed to carry line-item data.
+_LINE_NUM_RE = re.compile(r"^(?:\d+|E\d+)$")
 
 
 SCOPE_DIR = "03 - Scope & Pricing"
@@ -78,7 +86,34 @@ def check(project_path: Path) -> list[Finding]:
         ))
         return findings
 
-    header = [str(c) if c is not None else "" for c in rows[0]]
+    # The header row isn't necessarily row 0 — Riverside-style worksheets
+    # have a title block + pricing summary first. Search for the first row
+    # containing both required column names, mirroring the parser's
+    # _find_header_row strategy.
+    header_row_idx = None
+    for i, row in enumerate(rows):
+        cells = [str(c).strip() if c is not None else "" for c in row]
+        if "Customer-Facing Description" in cells and "Tiers" in cells:
+            header_row_idx = i
+            break
+
+    if header_row_idx is None:
+        # Neither column exists anywhere — flag both as missing.
+        findings.append(Finding(
+            severity="blocker", category="worksheet",
+            issue="missing-customer-facing-column",
+            detail="Worksheet has no `Customer-Facing Description` column.",
+            fix="Restore the column from the template.",
+        ))
+        findings.append(Finding(
+            severity="blocker", category="worksheet",
+            issue="missing-tiers-column",
+            detail="Worksheet has no `Tiers` column.",
+            fix="Restore the column from the template.",
+        ))
+        return findings
+
+    header = [str(c).strip() if c is not None else "" for c in rows[header_row_idx]]
     try:
         cf_col = header.index("Customer-Facing Description")
     except ValueError:
@@ -106,8 +141,14 @@ def check(project_path: Path) -> list[Finding]:
     if cf_col is None or tiers_col is None:
         return findings
 
-    for i, row in enumerate(rows[1:], start=2):
-        line_num = str(row[0]) if row[0] is not None else f"row {i}"
+    for i, row in enumerate(rows[header_row_idx + 1:], start=header_row_idx + 2):
+        # Only check rows that look like data rows (line number "1" or "E6").
+        # Skips blank rows, sub-section headers ("OPTIONAL ENHANCEMENTS"), and
+        # summary rows that follow the data block.
+        first_cell = str(row[0]).strip() if row and row[0] is not None else ""
+        if not _LINE_NUM_RE.match(first_cell):
+            continue
+        line_num = first_cell
         cf_val = row[cf_col] if cf_col < len(row) else None
         tiers_val = row[tiers_col] if tiers_col < len(row) else None
 
