@@ -65,3 +65,22 @@ def test_malformed_yaml_reports_error_finding(tmp_path):
     errors = [f for f in findings if f.severity == "error"
                                      and f.issue == "brief-yaml-parse-error"]
     assert len(errors) == 1
+
+
+def test_missing_required_section_reports_blocker(tmp_path):
+    """Brief missing required prose sections should emit one blocker per missing section."""
+    from proposal_build.inspector.brief import (
+        REQUIRED_BULLET_SECTIONS, REQUIRED_PROSE_SECTIONS,
+    )
+    proj = tmp_path / "P"
+    brief = proj / "04 - Process & Notes" / "Project Brief.md"
+    _write_brief(brief, frontmatter={
+        "client_company": "X", "project_name": "Y", "project_year": 2026,
+        "presenter_name": "P", "voice": "civic", "recommended_tier": "Enhanced",
+        "pricing_format": "tiered", "cover_image": "cover.png",
+        "zones": [{"num": 1, "name": "Z1", "hero_image": "img.png"}],
+    })  # body intentionally empty — no section headers
+    findings = check(proj)
+    blockers = [f for f in findings if f.issue == "missing-section"]
+    expected = len(REQUIRED_BULLET_SECTIONS) + len(REQUIRED_PROSE_SECTIONS)
+    assert len(blockers) == expected
