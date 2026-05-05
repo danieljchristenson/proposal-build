@@ -178,7 +178,7 @@ def build_material_palette_ctx(model: ProjectModel, page_num: int, page_total: i
         "page_num": page_num, "page_total": page_total,
         "page_title": "Greenery Mood Board",
         "standfirst": "What the wreaths, garlands, and trees actually look like in real materials.",
-        "copy": default_copy,
+        "copy": model.greenery_description or default_copy,
         "items": [{"src": path} for path in model.greenery_references],
     }
 

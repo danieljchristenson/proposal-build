@@ -120,3 +120,36 @@ def test_flagship_plus_signature_different_zones():
     assert plan[1][1]["zone"].name == "Alpha"
     assert plan[2][1]["zone"].name == "Echo"
     assert [z.name for z in plan[3][1]["zones"]] == ["Bravo", "Charlie", "Delta"]
+
+
+def _stub_model(**overrides):
+    from proposal_build.models import ProjectModel, Tier
+    base = dict(
+        client_company="Acme", client_short="Acme", project_name="X", project_short="X",
+        project_year=2026, project_subtitle="", proposal_type="Holiday Proposal",
+        presenter_name="P", presenter_title="", presenter_email="", presenter_phone="",
+        proposal_date="", go_live="", season_end="", fabrication_lock="", signing_deadline="",
+        voice="civic", recommended_tier=Tier.ENHANCED, design_phrase="", pricing_format="tiered",
+        cover_image="", creative_vision_hero="", case_study="skip", case_study_hero="",
+        zones=(), line_items=(), creative_direction="", customer_goals=(),
+        customer_constraints=(), success_criteria=(), what_youre_approving="",
+        pillars=(), phases=(), scope_includes=(), add_ons=(), term_panels={},
+        after_approval_steps=(), company_facts=(), team=(), contact_strip="",
+        partnership_discounts=(),
+    )
+    base.update(overrides)
+    return ProjectModel(**base)
+
+
+def test_material_palette_uses_default_when_no_override():
+    from proposal_build.composer.ctx_builders import build_material_palette_ctx
+    model = _stub_model()
+    ctx = build_material_palette_ctx(model, page_num=5, page_total=21)
+    assert "Realistic PVC green tips" in ctx["copy"]
+
+
+def test_material_palette_brief_override_replaces_default():
+    from proposal_build.composer.ctx_builders import build_material_palette_ctx
+    model = _stub_model(greenery_description="A custom one-tier description for this venue.")
+    ctx = build_material_palette_ctx(model, page_num=5, page_total=21)
+    assert ctx["copy"] == "A custom one-tier description for this venue."

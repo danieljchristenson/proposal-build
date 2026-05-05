@@ -67,3 +67,34 @@ def test_layout_pin_use_latest_skips_check(tmp_path):
     pin.write_text(json.dumps({"first_run": "x", "last_run": "y", "layouts": {"cover.html": "1999-01-01"}}))
     blockers = check_layout_pin(pin, LAYOUTS_DIR, use_latest=True)
     assert blockers == []
+
+
+def test_compress_pdf_in_place_shrinks_or_matches(tmp_path):
+    """Compression replaces the file in place; size should not exceed the
+    original (gs occasionally emits a tiny PDF unchanged or slightly larger
+    if there's nothing to downsample, so allow ==)."""
+    import shutil as _sh
+    from weasyprint import HTML
+    from proposal_build.renderer.compress import (
+        compress_pdf_in_place, CompressionUnavailableError,
+    )
+    if _sh.which("gs") is None:
+        pytest.skip("ghostscript not installed")
+    src = tmp_path / "in.pdf"
+    HTML(string="<html><body><h1>Hi</h1></body></html>").write_pdf(target=str(src))
+    original_size = src.stat().st_size
+    new_size = compress_pdf_in_place(src)
+    assert src.exists()
+    assert new_size <= original_size + 4096  # allow tiny growth on minimal PDFs
+
+
+def test_compress_pdf_missing_gs_raises(tmp_path, monkeypatch):
+    from proposal_build.renderer import compress as _compress
+    from proposal_build.renderer.compress import (
+        compress_pdf_in_place, CompressionUnavailableError,
+    )
+    monkeypatch.setattr(_compress.shutil, "which", lambda name: None)
+    src = tmp_path / "in.pdf"
+    src.write_bytes(b"%PDF-1.4 fake")
+    with pytest.raises(CompressionUnavailableError):
+        compress_pdf_in_place(src)

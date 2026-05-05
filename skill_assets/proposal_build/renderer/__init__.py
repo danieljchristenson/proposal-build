@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 from proposal_build.models import ProjectModel, ValidationResult
+from proposal_build.renderer.compress import compress_pdf_in_place
 from proposal_build.renderer.pdf import render_proposal_pdf
 from proposal_build.renderer.pricing_pdf import render_pricing_pdf
 from proposal_build.renderer.report import (
@@ -24,6 +25,7 @@ def render(
     artifacts: dict,
     result: ValidationResult,
     use_latest_layouts: bool = False,
+    compress: bool = False,
 ) -> dict:
     """Top-level: writes all outputs, returns paths dict."""
     project_dir = Path(project_dir)
@@ -63,9 +65,19 @@ def render(
 
     # Copy run outputs to 03 - Scope & Pricing/ (latest)
     pricing_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy(proposal_run, pricing_dir / proposal_filename)
+    final_proposal = pricing_dir / proposal_filename
+    shutil.copy(proposal_run, final_proposal)
+    final_pricing = []
     for prun in pricing_runs:
-        shutil.copy(prun, pricing_dir / prun.name)
+        dst = pricing_dir / prun.name
+        shutil.copy(prun, dst)
+        final_pricing.append(dst)
+
+    if compress:
+        # Compress only the customer-facing copies in 03 - Scope & Pricing/.
+        # Keep run/ uncompressed for archival fidelity.
+        for p in [final_proposal] + final_pricing:
+            compress_pdf_in_place(p)
 
     # Write/update layout pin
     write_layout_pin(pin_path, LAYOUTS_DIR)

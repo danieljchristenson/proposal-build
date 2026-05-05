@@ -19,15 +19,17 @@ def main(argv: list[str] | None = None) -> int:
     gen.add_argument("project_dir", help="Path to the project folder")
     gen.add_argument("--use-latest-layouts", action="store_true",
                      help="Refresh the layout_pin.json to current versions")
+    gen.add_argument("--compress", action="store_true",
+                     help="Run ghostscript /ebook on output PDFs (smaller send-size).")
 
     args = parser.parse_args(argv)
 
     if args.command == "generate":
-        return _do_generate(Path(args.project_dir), args.use_latest_layouts)
+        return _do_generate(Path(args.project_dir), args.use_latest_layouts, args.compress)
     return 1
 
 
-def _do_generate(project_dir: Path, use_latest: bool) -> int:
+def _do_generate(project_dir: Path, use_latest: bool, compress: bool) -> int:
     try:
         model, artifacts = build_project_model(project_dir)
     except ProjectLoadError as e:
@@ -51,7 +53,8 @@ def _do_generate(project_dir: Path, use_latest: bool) -> int:
     slides, pricing_docs = compose(model)
 
     # Render
-    outcome = render(project_dir, model, slides, pricing_docs, artifacts, result, use_latest)
+    outcome = render(project_dir, model, slides, pricing_docs, artifacts, result,
+                     use_latest, compress=compress)
 
     if outcome["status"] == "blocked":
         print(f"❌ BLOCKED. See: {outcome['report']}", file=sys.stderr)
