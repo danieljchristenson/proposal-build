@@ -114,7 +114,8 @@ renderings (PNG / JPG files from Stephanie or your design source) into:
 Projects/<project name>/02 - Renderings/Base Scope/
 ```
 
-Use `Enhancements/` and `Greenery references/` for those tiers.
+Use the sibling `02 - Renderings/Enhancements/` folder for enhancement-tier
+images. Greenery reference photos go in `Projects/<project name>/Greenery references/` (at the project root, NOT under `02 - Renderings/`).
 
 If you have unsorted renderings, drop them into `_inbox/` first and
 sort them later.
@@ -169,25 +170,26 @@ the rest of the team.
 
 ### Brief frontmatter — what each field means
 
-The Brief is the YAML at the top of `Project Brief.md`. Required
-fields:
+The Brief is the YAML at the top of `Project Brief.md`. Fields marked
+**bold** are required (the inspector blocks generation if they're
+empty); the rest are recommended but optional.
 
 | Field | What it means |
 |---|---|
-| `client_company` | Full legal client name (e.g. "Riverside County Transportation Commission (RCTC)"). |
+| **`client_company`** | Full legal client name (e.g. "Riverside County Transportation Commission (RCTC)"). |
 | `client_short` | Short version for headers (e.g. "RCTC"). |
-| `project_name` | Full project name (e.g. "Downtown Riverside Metro Link"). |
+| **`project_name`** | Full project name (e.g. "Downtown Riverside Metro Link"). |
 | `project_short` | Short version (e.g. "Riverside MetroLink"). |
-| `project_year` | The decoration year (e.g. 2026). |
+| **`project_year`** | The decoration year (e.g. 2026). |
 | `proposal_type` | Usually "Holiday Proposal". |
-| `presenter_name` / `presenter_title` / `presenter_email` / `presenter_phone` | The AE on the project (probably you). |
+| **`presenter_name`** / `presenter_title` / `presenter_email` / `presenter_phone` | The AE on the project (probably you). Only `presenter_name` is required; the other three are strongly recommended. |
 | `proposal_date` | Today, in YYYY-MM-DD. |
 | `go_live` | Decoration go-live date (YYYY-MM-DD). |
-| `voice` | One of `civic`, `destination-retail`, `hospitality`. |
-| `recommended_tier` | Your tier recommendation (`Essential`, `Enhanced`, or `Signature`). |
+| **`voice`** | One of `civic`, `destination-retail`, `hospitality`. |
+| **`recommended_tier`** | Your tier recommendation (`Essential`, `Enhanced`, or `Signature`). |
 | `design_phrase` | Short evocative phrase for the Creative Vision slide (e.g. "Holiday Express"). |
-| `pricing_format` | `tiered` for 3-tier proposals, `single` for one-tier. |
-| `cover_image` | Filename of the cover hero (must exist in `02 - Renderings/Base Scope/`). |
+| **`pricing_format`** | `tiered` for 3-tier proposals, `single` for one-tier. |
+| **`cover_image`** | Filename of the cover hero (must exist in `02 - Renderings/Base Scope/`). |
 
 ### Common errors and what they mean
 
