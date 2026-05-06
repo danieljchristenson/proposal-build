@@ -157,7 +157,7 @@ body.page-dark  .page-header { color: var(--color-light); }
   text-transform: uppercase;
 }
 body.page-light .page-footer { color: var(--color-gray); }
-body.page-dark  .page-footer { color: var(--color-light); opacity: 0.65; }
+body.page-dark  .page-footer { color: rgba(236, 239, 241, 0.65); }
 
 .page-content {
   position: absolute;
@@ -242,7 +242,7 @@ img {
 body.page-light .page-title { color: var(--color-charcoal); }
 body.page-dark  .page-title { color: var(--color-light); }
 body.page-light .standfirst { color: var(--color-gray); }
-body.page-dark  .standfirst { color: var(--color-light); opacity: 0.7; }
+body.page-dark  .standfirst { color: rgba(236, 239, 241, 0.7); }
 
 /* Card pattern — used by Understanding, Scope, Terms, Sign-off */
 .card {
