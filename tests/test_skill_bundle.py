@@ -25,7 +25,7 @@ def test_skill_md_exists_and_parses():
 
 
 def test_skill_md_body_has_required_steps():
-    body = (SKILL_BUNDLE / "skill.md").read_text()
+    body = frontmatter.load(str(SKILL_BUNDLE / "skill.md")).content
     for header in ("## Step 1", "## Step 2", "## Step 3", "## Step 4",
                    "## Step 5", "## Step 6", "## Beta safety rail"):
         assert header in body, f"skill.md body missing section: {header}"
