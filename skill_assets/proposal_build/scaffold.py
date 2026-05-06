@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 
+# parents[2] == repo root (skill_assets/proposal_build/scaffold.py → ../../..)
 _DEFAULT_SOURCE = Path(__file__).resolve().parents[2] / "Projects" / "_template_project"
 
 

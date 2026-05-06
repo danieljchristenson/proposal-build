@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from proposal_build.inspector.folder import REQUIRED_SUBDIRS
 from proposal_build.scaffold import scaffold_project
 
 
@@ -26,11 +27,8 @@ def template_clone(tmp_path):
 def test_scaffold_creates_full_tree(tmp_path, template_clone):
     target = tmp_path / "Projects" / "New Test Project"
     scaffold_project(target, source=template_clone)
-    assert (target / "01 - RFP").is_dir()
-    assert (target / "02 - Renderings" / "Base Scope").is_dir()
-    assert (target / "02 - Renderings" / "_inbox").is_dir()
-    assert (target / "03 - Scope & Pricing").is_dir()
-    assert (target / "04 - Process & Notes").is_dir()
+    for sub in REQUIRED_SUBDIRS:
+        assert (target / sub).is_dir(), f"Missing: {sub}"
 
 
 def test_scaffold_refuses_overwrite(tmp_path, template_clone):
