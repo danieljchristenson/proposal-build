@@ -12,6 +12,69 @@ Nick's project, follow this flow exactly. The user is a sales-team AE
 language conversational, never show raw stack traces or JSON, and never
 make destructive changes without confirmation.
 
+## CRITICAL — read before doing anything
+
+This skill is an **orchestrator**, not a designer. The `proposal_build`
+Python module owns ALL visual output: colors, fonts, layouts, logo
+placement, page chrome, pagination. Your job is to fill the Brief,
+run the bash commands below, and surface results — nothing else.
+
+**You MUST:**
+- Run `python -m proposal_build inspect` (Step 3) before claiming the
+  project is ready.
+- Run `python -m proposal_build generate` (Step 5) to produce the deck
+  and pricing PDFs. The renderer is the only sanctioned visual output.
+- Show every bash command in a fenced block before executing it.
+
+**You MUST NOT:**
+- Design slides yourself, in any form. Not as HTML, not as CSS, not
+  as Markdown, not as Python that calls a slide library.
+- Call `python-pptx`, `pptx`, `reportlab`, `weasyprint`, `pillow`,
+  or any other rendering library directly. The skill's renderer wraps
+  WeasyPrint with the locked brand stylesheet — never bypass it.
+- Produce `.pptx`, `.key`, `.pages`, or loose slide images. The
+  deliverables are PDFs from `python -m proposal_build generate`.
+  Nothing else.
+- Improvise a palette, typography, or layout based on the customer's
+  brand (e.g. navy/gold for a Sheraton property, dark green for civic
+  agencies). The proposal is a **St. Nick's** deliverable. The
+  renderer enforces St. Nick's brand on every page regardless of
+  customer.
+
+**If you cannot run the bash commands** (Bash tool denied, module not
+importable, Pango/Cairo missing, repo not accessible, etc.), STOP.
+Report the exact error to the user verbatim. Do NOT improvise a
+substitute. Do NOT export slides as JPGs and assemble them. The user
+will fix the environment and retry.
+
+If you find yourself thinking *"this customer has a different aesthetic,
+let me match theirs"* or *"the renderer is broken, I'll just build the
+deck myself"* — stop. That's the renderer's decision, not yours, and
+the answer is no. Surface the problem to the user.
+
+## Brand reference (context only — never design from this)
+
+The renderer applies these automatically. They're listed here so you
+can answer the AE's questions about output, never as a spec to design
+custom slides from:
+
+- **Brand red** — `#B31315`. Used for headlines, eyebrows, accents,
+  date callouts, the recommended-tier ribbon, footer crumb dividers.
+- **Charcoal** — `#1C1C1C`. Body text on light pages; full-bleed dark
+  page background.
+- **Light** — `#ECEFF1`. Body text on dark pages.
+- **Panel** — `#F2F2F2`. Card backgrounds.
+- **Headings** — Roboto, weights 400/700/900.
+- **Body** — Poppins, weights 300/400/600.
+- **Logo** — `ST NICKS LOGO.png`, top-left of every standard page;
+  large bottom-right on the about/Company Profile page; prominent on
+  the cover. Intentionally absent on full-bleed feature slides
+  (zone_feature, zone_solo_fullbleed).
+
+The locked source-of-truth stylesheet is `skill_assets/layouts/brand.css`.
+If a question requires more detail than the bullets above, read that
+file — never invent a value.
+
 ## Step 1 — Resolve the project
 
 Look under `Projects/` (relative to the repo root) for a folder whose
@@ -100,15 +163,17 @@ same finding persists after 2 attempted fixes, hit the safety rail
 
 ## Step 5 — Generate
 
-Run:
+Run this exact command. Do not substitute any other approach (see
+the CRITICAL section above):
 
 ```bash
 python -m proposal_build generate "Projects/<name>" --use-latest-layouts --compress
 ```
 
 If the command exits 0, surface the output PDFs to the user with
-their full paths. If non-zero, parse stderr against the
-"Common errors and friendly translations" table below.
+their full paths. If non-zero, parse stderr against the "Common
+errors and friendly translations" table below — and report it to the
+user. Never replace the renderer with a custom build.
 
 ## Step 6 — Surface output and offer git
 
