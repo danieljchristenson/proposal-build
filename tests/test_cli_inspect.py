@@ -18,6 +18,7 @@ def _run(args: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, "-m", "proposal_build"] + args,
         capture_output=True, text=True, cwd=REPO_ROOT,
+        timeout=60,
     )
 
 
@@ -34,7 +35,7 @@ def test_inspect_blockers_returns_exit_1():
     if not TEMPLATE.is_dir():
         pytest.skip("Template not present.")
     r = _run(["inspect", str(TEMPLATE)])
-    assert r.returncode == 1
+    assert r.returncode == 1, f"exit={r.returncode}; stdout={r.stdout!r}; stderr={r.stderr!r}"
     payload = json.loads(r.stdout)
     assert payload["ready_to_generate"] is False
     assert len(payload["findings"]) >= 5
