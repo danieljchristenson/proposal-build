@@ -40,7 +40,7 @@ def test_scaffold_refuses_overwrite(tmp_path, template_clone):
         scaffold_project(target, source=template_clone)
 
 
-def test_cli_scaffold_creates_folder(tmp_path, monkeypatch, template_clone):
+def test_cli_scaffold_creates_folder(tmp_path, template_clone):
     """The CLI subcommand should create the project under Projects/."""
     # Layout a tmp repo: Projects/_template_project/ + Projects/ for output
     fake_repo = tmp_path / "fake_repo"
