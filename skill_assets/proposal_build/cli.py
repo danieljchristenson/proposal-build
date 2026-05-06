@@ -30,12 +30,17 @@ def main(argv: list[str] | None = None) -> int:
     insp.add_argument("--format", choices=("json", "human"), default="json",
                       help="Output format (default: json)")
 
+    sca = sub.add_parser("scaffold", help="Create a new project folder from the template.")
+    sca.add_argument("project_name", help="Name of the new project (folder under Projects/)")
+
     args = parser.parse_args(argv)
 
     if args.command == "generate":
         return _do_generate(Path(args.project_dir), args.use_latest_layouts, args.compress)
     if args.command == "inspect":
         return _do_inspect(Path(args.project_dir), args.format)
+    if args.command == "scaffold":
+        return _do_scaffold(args.project_name)
     return 1
 
 
@@ -99,6 +104,21 @@ def _do_inspect(project_dir: Path, fmt: str) -> int:
         return 2
     if not report.ready_to_generate:
         return 1
+    return 0
+
+
+def _do_scaffold(project_name: str) -> int:
+    from proposal_build.scaffold import scaffold_project
+    target = Path.cwd() / "Projects" / project_name
+    try:
+        out = scaffold_project(target)
+    except FileExistsError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
+    except FileNotFoundError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
+    print(f"✅ Created {out}")
     return 0
 
 
