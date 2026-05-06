@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 
 from proposal_build.parser import build_project_model, ProjectLoadError
@@ -10,6 +12,7 @@ from proposal_build.parser.validate import run_validation
 from proposal_build.composer import compose
 from proposal_build.renderer import render
 from proposal_build.models import ValidationResult
+from proposal_build.inspector import inspect_project
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -22,10 +25,17 @@ def main(argv: list[str] | None = None) -> int:
     gen.add_argument("--compress", action="store_true",
                      help="Run ghostscript /ebook on output PDFs (smaller send-size).")
 
+    insp = sub.add_parser("inspect", help="Report project readiness as JSON.")
+    insp.add_argument("project_dir", help="Path to the project folder")
+    insp.add_argument("--format", choices=("json", "human"), default="json",
+                      help="Output format (default: json)")
+
     args = parser.parse_args(argv)
 
     if args.command == "generate":
         return _do_generate(Path(args.project_dir), args.use_latest_layouts, args.compress)
+    if args.command == "inspect":
+        return _do_inspect(Path(args.project_dir), args.format)
     return 1
 
 
@@ -65,6 +75,30 @@ def _do_generate(project_dir: Path, use_latest: bool, compress: bool) -> int:
     print("   Outputs:")
     for p in outcome["pdfs"]:
         print(f"     • {p.name}")
+    return 0
+
+
+def _do_inspect(project_dir: Path, fmt: str) -> int:
+    report = inspect_project(project_dir)
+    if fmt == "json":
+        # Convert dataclass to dict, then dumps; Path → str.
+        payload = {
+            "project_path": str(report.project_path),
+            "ready_to_generate": report.ready_to_generate,
+            "summary": report.summary,
+            "findings": [asdict(f) for f in report.findings],
+        }
+        print(json.dumps(payload, indent=2))
+    else:
+        print(report.summary)
+        for f in report.findings:
+            print(f"  [{f.severity}] {f.category}/{f.issue}: {f.detail}")
+            if f.fix:
+                print(f"    fix: {f.fix}")
+    if any(f.severity == "error" for f in report.findings):
+        return 2
+    if not report.ready_to_generate:
+        return 1
     return 0
 
 
