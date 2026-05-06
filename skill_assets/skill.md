@@ -44,8 +44,13 @@ Parse the JSON `stdout`. The report has `ready_to_generate: bool`, a
 `severity` (`blocker`, `warning`, `info`, `error`), `category`, `issue`,
 `detail`, optional `fix`, optional `field`, optional `zone`.
 
-If `ready_to_generate` is `true` and no findings have severity `error`,
-skip to Step 5.
+If `ready_to_generate` is `true` and there are zero `warning`-severity
+findings, skip to Step 5. If `ready_to_generate` is `true` but warnings
+remain, walk the user through them in Step 4 first — warnings include
+`brief / no-hero-image` (the AE must pick a hero image, never
+auto-defaulted) and `renderings / no-renderings-present`. After the
+warnings are addressed (or the user explicitly says "ship anyway"),
+proceed to Step 5.
 
 ## Step 4 — Resolve blockers conversationally
 
@@ -122,7 +127,7 @@ If `git push` is rejected, see the git error translations.
 | `yaml.scanner.ScannerError`, `yaml.parser.ParserError` | "There's a syntax issue in the Brief — let me look." | Read the Brief, find the line, fix the YAML, re-run. |
 | `cannot load library 'libgobject` | "The proposal renderer can't find a font/library — usually a setup issue. Check the SOP setup-troubleshooting section." | No. |
 | `referenced rendering not found` (W1) | "Brief references `<file>` but it's not in the renderings folder." | Ask: update reference or add file? |
-| `formula cache is stale` / `tier totals don't match` | "The Worksheet's tier totals look stale — let me re-cache." | Run `python skill_assets/proposal_build/scripts/migrate_riverside_worksheet.py "Projects/<name>"` (or generic equivalent) and re-run generate. |
+| `formula cache is stale` / `tier totals don't match` | "The Worksheet's tier totals look stale — open it in Excel, recalculate (Cmd-=), save, then send it back so I can re-run generate." | No (manual). |
 | Anything else / unrecognized | Don't auto-fix. Surface a brief summary, ask the user to send the output to Daniel. | No. |
 
 ## Git error translations
