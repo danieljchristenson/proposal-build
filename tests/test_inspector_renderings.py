@@ -26,7 +26,7 @@ def test_no_renderings_reports_warning(tmp_path):
                for f in findings)
 
 
-def test_files_in_inbox_reports_info(tmp_path):
+def test_files_in_inbox_reports_warning(tmp_path):
     proj = tmp_path / "P"
     rd = _setup_renderings(proj)
     (rd / "_inbox" / "unsorted.png").write_bytes(b"x")

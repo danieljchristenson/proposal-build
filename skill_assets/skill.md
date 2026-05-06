@@ -86,6 +86,12 @@ time, never dumping all findings at once. For each finding:
   or are you adding the file?"*
 - **`validator / W*`** — wrapped W1-W8 validators from the parser.
   Translate the message into plain English using the table below.
+- **Any finding not listed above** (e.g., `brief / missing-brief`,
+  `worksheet / missing-worksheet`, `worksheet / empty-worksheet`,
+  `folder / missing-subdir`, or any `error`-severity finding like
+  `*-crashed`) — read the `detail` and `fix` fields directly from
+  the JSON and relay them to the user verbatim. If `fix` is null or
+  not actionable by the AE, hit the beta safety rail.
 
 After fixing a batch of findings, re-run `inspect` and continue from
 Step 3 with the new report. Do not loop more than 5 times — if the

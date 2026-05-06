@@ -1,4 +1,6 @@
 """Tests for the folder-structure inspector."""
+from __future__ import annotations
+
 from proposal_build.inspector.folder import check
 
 

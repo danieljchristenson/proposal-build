@@ -1,4 +1,6 @@
 """Tests for the Brief inspector."""
+from __future__ import annotations
+
 from pathlib import Path
 
 from proposal_build.inspector.brief import check

@@ -1,4 +1,6 @@
 """Tests for the Finding + InspectionReport dataclasses."""
+from __future__ import annotations
+
 from pathlib import Path
 
 from proposal_build.inspector.report import Finding, InspectionReport

@@ -55,8 +55,8 @@ def check(project_path: Path) -> list[Finding]:
         findings.append(Finding(
             severity="error", category="worksheet",
             issue="worksheet-locked",
-            detail=f"Worksheet appears to be open in Excel: {ws_path.name}",
-            fix="Close the file in Excel and re-run inspect.",
+            detail=f"Worksheet appears to be open in Excel or LibreOffice: {ws_path.name}",
+            fix="Close the file in Excel (or any other app that has it open) and re-run inspect.",
         ))
         return findings
 
