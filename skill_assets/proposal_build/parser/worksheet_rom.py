@@ -62,7 +62,7 @@ def parse_rom_worksheet(path: Path) -> ROMWorksheetData:
         if _is_section_divider(row):
             continue
         if not _is_data_row(row, col):
-            # End of data table: first all-empty row after items
+            # Skip non-data rows (blank lines, trailing summary/footer text, etc.)
             continue
         items.append(_parse_row(row, col))
 
