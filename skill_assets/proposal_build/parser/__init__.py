@@ -351,3 +351,53 @@ def _fill_company_facts(brief, bp, ph):
 
 def _fill_team(brief, bp, ph):
     return tuple(bp.team_roster)
+
+
+def parse_project(project_dir):
+    """Top-level entry: route to tiered or menu pipeline based on Brief's mode.
+
+    Returns just the model (ProjectModel for tiered, MenuProjectModel for menu).
+    Use build_project_model() if you need the artifacts dict alongside the model.
+    """
+    project_dir = Path(project_dir)
+    brief_path = project_dir / "04 - Process & Notes" / "Project Brief.md"
+    try:
+        brief = parse_brief(brief_path)
+    except BriefParseError as e:
+        raise ProjectLoadError(f"Brief: {e}") from e
+
+    mode = brief.frontmatter.get("mode", "tiered")
+    if mode == "menu":
+        from proposal_build.parser.worksheet_rom import parse_rom_worksheet, ROMWorksheetParseError
+        from proposal_build.parser.menu_resolver import resolve_menu_project
+        worksheet_path = _find_menu_worksheet(project_dir, brief.frontmatter)
+        try:
+            ws = parse_rom_worksheet(worksheet_path)
+        except ROMWorksheetParseError as e:
+            raise ProjectLoadError(f"ROM Worksheet: {e}") from e
+        return resolve_menu_project(brief, ws)
+
+    # Tiered path — re-use the existing orchestrator and drop the artifacts.
+    model, _artifacts = build_project_model(project_dir)
+    return model
+
+
+def _find_menu_worksheet(project_dir: Path, fm: dict) -> Path:
+    """Locate the ROM worksheet for a menu-mode project.
+
+    Try `{project_short} - Scope Worksheet.xlsx` first; fall back to a single
+    *.xlsx in `03 - Scope & Pricing/` if the exact path doesn't exist.
+    """
+    scope_dir = project_dir / "03 - Scope & Pricing"
+    short = fm.get("project_short") or fm["project_name"]
+    candidate = scope_dir / f"{short} - Scope Worksheet.xlsx"
+    if candidate.exists():
+        return candidate
+    xlsx = list(scope_dir.glob("*.xlsx"))
+    if len(xlsx) == 1:
+        return xlsx[0]
+    if not xlsx:
+        raise ProjectLoadError(f"No ROM worksheet found in {scope_dir}")
+    raise ProjectLoadError(
+        f"Multiple worksheets in {scope_dir}; can't pick one: {[p.name for p in xlsx]}"
+    )
