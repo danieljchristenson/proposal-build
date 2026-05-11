@@ -40,7 +40,7 @@ def resolve_menu_project(
 
     return MenuProjectModel(
         client_company=fm["client_company"],
-        client_short=fm.get("project_short", fm["client_company"]),
+        client_short=fm.get("client_short") or fm.get("client_company", ""),
         project_name=fm["project_name"],
         project_short=fm.get("project_short", fm["project_name"]),
         project_year=int(fm["project_year"]),

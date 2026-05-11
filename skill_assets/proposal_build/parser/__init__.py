@@ -386,18 +386,21 @@ def _find_menu_worksheet(project_dir: Path, fm: dict) -> Path:
     """Locate the ROM worksheet for a menu-mode project.
 
     Try `{project_short} - Scope Worksheet.xlsx` first; fall back to a single
-    *.xlsx in `03 - Scope & Pricing/` if the exact path doesn't exist.
+    `*Scope Worksheet*.xlsx` in `03 - Scope & Pricing/`, then to a single
+    `*.xlsx` if no name convention matched.
     """
     scope_dir = project_dir / "03 - Scope & Pricing"
     short = fm.get("project_short") or fm["project_name"]
     candidate = scope_dir / f"{short} - Scope Worksheet.xlsx"
     if candidate.exists():
         return candidate
-    xlsx = list(scope_dir.glob("*.xlsx"))
-    if len(xlsx) == 1:
-        return xlsx[0]
-    if not xlsx:
+    matches = list(scope_dir.glob("*Scope Worksheet*.xlsx"))
+    if not matches:
+        matches = list(scope_dir.glob("*.xlsx"))
+    if len(matches) == 1:
+        return matches[0]
+    if not matches:
         raise ProjectLoadError(f"No ROM worksheet found in {scope_dir}")
     raise ProjectLoadError(
-        f"Multiple worksheets in {scope_dir}; can't pick one: {[p.name for p in xlsx]}"
+        f"Multiple worksheets in {scope_dir}; can't pick one: {[p.name for p in matches]}"
     )
