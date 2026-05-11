@@ -98,6 +98,13 @@
     display: block;
   }
 
+  /* Opt-in: caller can set hero_fit='contain' to show the entire image
+     (with letterbox bars on a dark page) rather than crop-to-fill. */
+  .cv-hero-img--contain {
+    object-fit: contain;
+    background: transparent;
+  }
+
   .hero-placeholder {
     font-family: var(--font-body);
     font-style: italic;
@@ -202,7 +209,7 @@
 
     <div class="cv-right">
       {% if hero_image %}
-        <img class="cv-hero-img" src="{{ hero_image }}" alt="{{ project_name }}">
+        <img class="cv-hero-img {% if hero_fit is defined and hero_fit == 'contain' %}cv-hero-img--contain{% endif %}" src="{{ hero_image }}" alt="{{ project_name }}">
       {% else %}
         <div class="hero-placeholder">[ {{ project_name }} hero image — Plan 3 supplies real photo ]</div>
       {% endif %}

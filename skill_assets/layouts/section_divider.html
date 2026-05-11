@@ -1,0 +1,102 @@
+<!-- layout-version: 2026-05-09 -->
+{% extends "base.html" %}
+{% block body_class %}page-dark{% endblock %}
+{% block footer %}{% endblock %}
+{% block layout_version %}<!-- layout-version: 2026-05-09 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ section_label }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Section Divider — dark full-bleed transition page used between major
+     deck sections. Background can be a hero image (subtly dimmed) or solid
+     charcoal. Foreground: small section eyebrow ("SECTION TWO") + large
+     section name + optional one-line standfirst.
+     Used in creative-menu / multi-section proposals like FIGat7th to give
+     each section a clear visual entry point. */
+
+  body.page-dark .page-header { display: none; }
+
+  body.page-dark .page-content {
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 0;
+    background: var(--color-charcoal);
+  }
+
+  .sd-wrap {
+    width: 13.333in;
+    height: 7.5in;
+    position: relative;
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+
+  .sd-bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.45;
+  }
+
+  .sd-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20,20,20,0.55) 0%, rgba(20,20,20,0.85) 100%);
+  }
+
+  .sd-content {
+    position: absolute;
+    left: 0.85in;
+    right: 0.85in;
+    bottom: 1.0in;
+    color: var(--color-light);
+  }
+
+  .sd-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 10pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin-bottom: var(--space-3);
+  }
+
+  .sd-section-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 60pt;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: white;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .sd-standfirst {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 14pt;
+    line-height: 1.4;
+    color: rgba(236, 239, 241, 0.85);
+    max-width: 9in;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sd-wrap">
+  {% if hero_image %}
+  <img class="sd-bg-image" src="{{ hero_image }}" alt="">
+  <div class="sd-overlay"></div>
+  {% endif %}
+  <div class="sd-content">
+    <div class="sd-eyebrow">{{ section_label }}</div>
+    <h1 class="sd-section-name">{{ section_name }}</h1>
+    {% if section_standfirst %}
+    <p class="sd-standfirst">{{ section_standfirst }}</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

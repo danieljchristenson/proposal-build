@@ -40,6 +40,25 @@ def _date_long(iso: str) -> str:
     return datetime.fromisoformat(iso).date().strftime("%B %d, %Y")
 
 
+def _zone_tier_coverage(model: ProjectModel, zone: Zone) -> str:
+    """Tier-coverage label for a zone, e.g. 'ESSENTIAL + ENHANCED' or 'ENHANCED ONLY'.
+
+    Returns an empty string when no priced line items reference this zone (and
+    no wildcard rows apply), so the layout can omit the badge.
+    """
+    tiers: set[Tier] = set()
+    for li in model.line_items:
+        if li.zone == zone.name or li.zone == "*":
+            tiers.update(li.tiers)
+    if not tiers:
+        return ""
+    ordered = [t for t in (Tier.ESSENTIAL, Tier.ENHANCED, Tier.SIGNATURE) if t in tiers]
+    names = [t.value.upper() for t in ordered]
+    if len(names) == 1:
+        return f"{names[0]} ONLY"
+    return " + ".join(names)
+
+
 def build_cover_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
     return {
         **_project_base(model),
@@ -203,6 +222,7 @@ def build_zone_solo_ctx(model: ProjectModel, page_num: int, page_total: int, zon
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "zone_num": zone.num, "zone_name": zone.name, "zone_subtitle": zone.subtitle,
+        "tier_coverage": _zone_tier_coverage(model, zone),
         "included_elements": list(zone.bullets),
         "hero_image": model.resolved_renderings.get(zone.hero_image, zone.hero_image),
         "hero_fit": zone.hero_fit,
@@ -223,6 +243,7 @@ def build_zone_solo_gallery_ctx(model: ProjectModel, page_num: int, page_total: 
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "zone_num": zone.num, "zone_name": zone.name, "zone_subtitle": zone.subtitle,
+        "tier_coverage": _zone_tier_coverage(model, zone),
         "included_elements": list(zone.bullets),
         "hero_images": [
             model.resolved_renderings.get(img, img)
@@ -301,20 +322,28 @@ def build_case_study_ctx(model: ProjectModel, page_num: int, page_total: int,
 def build_investment_ctx(model: ProjectModel, page_num: int, page_total: int,
                          tier_totals: dict, partnership_discounts: list) -> dict:
     th = model.tier_highlights or {}
-    tiers = [
-        _tier_card("ESSENTIAL", "gray", tier_totals[Tier.ESSENTIAL],
-                   model.recommended_tier == Tier.ESSENTIAL, th.get("essential", {})),
-        _tier_card("ENHANCED", "red", tier_totals[Tier.ENHANCED],
-                   model.recommended_tier == Tier.ENHANCED, th.get("enhanced", {})),
-        _tier_card("SIGNATURE", "navy", tier_totals[Tier.SIGNATURE],
-                   model.recommended_tier == Tier.SIGNATURE, th.get("signature", {})),
+    _card_specs = [
+        (Tier.ESSENTIAL, "ESSENTIAL", "gray", "essential"),
+        (Tier.ENHANCED, "ENHANCED", "red", "enhanced"),
+        (Tier.SIGNATURE, "SIGNATURE", "navy", "signature"),
     ]
+    tiers = [
+        _tier_card(name, color, tier_totals[t],
+                   model.recommended_tier == t, th.get(key, {}))
+        for t, name, color, key in _card_specs if t in tier_totals
+    ]
+    standfirst_by_count = {
+        1: "One program, fully scoped. Pick the add-ons that fit your season.",
+        2: "Two levels of program. Pick what fits your season.",
+        3: "Three levels of program. Pick what fits your season.",
+    }
     return {
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "page_title": "Investment",
-        "standfirst": "Three levels of program. Pick what fits your season.",
+        "standfirst": standfirst_by_count.get(len(tiers), "Pick the program that fits your season."),
         "tiers": tiers,
+        "tier_count": len(tiers),
         "partnership_discounts": partnership_discounts,
         "footer_note": (f"Pricing valid 30 days from proposal date. Fabrication must be locked "
                         f"by {_date_long(model.fabrication_lock)}."),

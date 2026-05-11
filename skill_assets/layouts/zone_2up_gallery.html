@@ -1,0 +1,205 @@
+<!-- layout-version: 2026-05-11 -->
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-11 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Zone 2-up Gallery — two image-forward cells side by side.
+     Companion to zone_4up but with much more vertical room per cell;
+     used when each rendering deserves prominent featuring (e.g. plaza
+     arch alternates, plaza standalone moments split across multiple
+     slides).
+
+     Each cell: hero image (top) + caption strip (eyebrow + name) below.
+     Image area is white-backed so contain-fit dark renderings read as
+     discrete framed pictures rather than dark wings.
+  */
+
+  /* Optional section lead header (multi-section deck pattern) */
+  .z2g-section-header {
+    padding-bottom: 4pt;
+    margin-bottom: var(--space-2);
+    border-bottom: 1pt solid var(--color-red);
+  }
+  .z2g-section-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin-bottom: 2pt;
+  }
+  .z2g-section-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 18pt;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+
+  /* ── Top: page title + standfirst (compact to maximize image room) ── */
+  .z2g-title-area {
+    margin-bottom: var(--space-2);
+  }
+
+  .z2g-title-area .page-title {
+    font-size: 24pt;
+    margin-bottom: 2pt;
+  }
+
+  .z2g-title-area .standfirst {
+    font-size: 9pt;
+    margin: 0;
+  }
+
+  /* Optional alternate-group banner */
+  .z2g-alt-banner {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 3pt 10pt;
+    background: var(--color-red);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 2pt;
+  }
+
+  /* ── Body: single row of 2 cells ── */
+  .z2g-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  /* ── Per-cell ──
+     Geometry (fits inside 6.1in content area, accounting for optional
+     section header which adds ~0.55in when present):
+       Cell = 4.5in (image 4.0in + caption 0.5in)
+       Section header (optional) ≈ 0.55in
+       Title + banner area ≈ 1.0in
+       Total ≈ 6.05in (with 0.05in safety margin)
+       Continuation slides without section header have 0.55in extra bottom margin.
+  */
+  .z2g-cell {
+    height: 4.5in;
+    background: white;
+    border: 1pt solid #E0E0E0;
+    border-radius: 3pt;
+    overflow: hidden;
+  }
+
+  .z2g-cell-image {
+    height: 4.0in;
+    position: relative;
+    background: white;
+    overflow: hidden;
+  }
+
+  .z2g-cell-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .z2g-cell-image .z2g-cell-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.35);
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 10pt;
+  }
+
+  .z2g-cell-body {
+    padding: 8pt var(--space-4) 0 var(--space-4);
+    height: calc(4.5in - 4.0in);
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--space-3);
+    border-top: 0.5pt solid #EEEEEE;
+  }
+
+  .z2g-cell-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin: 0;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .z2g-cell-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 16pt;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+{% if section_label is defined and section_label %}
+<!-- Section lead header (multi-section deck pattern) -->
+<div class="z2g-section-header">
+  <div class="z2g-section-eyebrow">{{ section_label }}</div>
+  <h1 class="z2g-section-name">{{ section_name }}</h1>
+</div>
+{% endif %}
+
+<!-- Page title + standfirst + optional alternate-pick banner -->
+<div class="z2g-title-area">
+  <h1 class="page-title">{{ page_title }}</h1>
+  {% if standfirst %}
+  <p class="standfirst">{{ standfirst }}</p>
+  {% endif %}
+  {% if alternate_banner %}
+  <div class="z2g-alt-banner">{{ alternate_banner }}</div>
+  {% endif %}
+</div>
+
+<!-- Single row of 2 cells -->
+<div class="z2g-row">
+  {% for cell in cells %}
+  <div class="z2g-cell">
+    <div class="z2g-cell-image">
+      {% if cell.hero_image %}
+      <img src="{{ cell.hero_image }}" alt="{{ cell.name }}">
+      {% else %}
+      <div class="z2g-cell-placeholder">[ {{ cell.name }} — rendering pending ]</div>
+      {% endif %}
+    </div>
+    <div class="z2g-cell-body">
+      {% if cell.eyebrow %}
+      <div class="z2g-cell-eyebrow">{{ cell.eyebrow }}</div>
+      {% endif %}
+      <h2 class="z2g-cell-name">{{ cell.name }}</h2>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

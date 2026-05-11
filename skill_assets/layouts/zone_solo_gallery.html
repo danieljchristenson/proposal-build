@@ -41,6 +41,26 @@
     margin: 0;
   }
 
+  /* Tier coverage chip — small caps, sits below subtitle. */
+  .zsg-tier-badge {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 3pt 8pt;
+    background: rgba(0, 0, 0, 0.04);
+    border-left: 2pt solid var(--color-red);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+  }
+  .zsg-tier-badge-lead {
+    color: var(--color-gray);
+    font-weight: 400;
+    margin-right: 4pt;
+  }
+
   /* Gallery occupies the bulk of the slide — horizontal row of 1-4 images,
      each as wide as needed to share the full content width equally. */
   .zsg-gallery {
@@ -131,6 +151,9 @@
     <div class="eyebrow">ZONE {{ zone_num }}</div>
     <div class="zsg-zone-name">{{ zone_name }}</div>
     <div class="zsg-subtitle">{{ zone_subtitle }}</div>
+    {% if tier_coverage is defined and tier_coverage %}
+    <div class="zsg-tier-badge"><span class="zsg-tier-badge-lead">Included in</span>{{ tier_coverage }}</div>
+    {% endif %}
   </div>
 
   <div class="zsg-gallery">

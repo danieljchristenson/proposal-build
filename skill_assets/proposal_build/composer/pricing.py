@@ -5,11 +5,18 @@ from proposal_build.models import ItemizedPricingDoc, Tier
 
 
 def build_itemized_pricing_docs(model) -> list[ItemizedPricingDoc]:
-    """Returns 1 or 3 ItemizedPricingDoc instances depending on pricing_format."""
+    """Returns 1, 2, or 3 ItemizedPricingDoc instances.
+
+    pricing_format=="single": one doc for the recommended tier.
+    pricing_format=="tiered": one doc per *active* tier (a tier is active if at
+    least one line item lists it). Empty tiers are skipped — this is what
+    powers 2-tier proposals like Sheraton.
+    """
     if model.pricing_format == "single":
         tiers_to_emit = [model.recommended_tier]
     else:
-        tiers_to_emit = [Tier.ESSENTIAL, Tier.ENHANCED, Tier.SIGNATURE]
+        tiers_to_emit = [t for t in (Tier.ESSENTIAL, Tier.ENHANCED, Tier.SIGNATURE)
+                         if any(t in li.tiers for li in model.line_items)]
 
     docs = []
     for tier in tiers_to_emit:

@@ -1,0 +1,51 @@
+<!-- layout-version: 2026-05-09 -->
+{% extends "base.html" %}
+{% block body_class %}page-dark{% endblock %}
+{% block footer %}{% endblock %}
+{% block layout_version %}<!-- layout-version: 2026-05-09 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title|default('Cover') }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Full-bleed single-image page. Used for AE-supplied cover slides,
+     palette boards, brand boards — anything that arrives already designed
+     as a full-page PNG and shouldn't be re-templated.
+     No header, no footer, no padding. The image fills the page edge-to-edge
+     with object-fit: cover by default, contain when fit="contain". */
+
+  body.page-dark .page-header { display: none; }
+
+  body.page-dark .page-content {
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 0;
+    background: #000;
+  }
+
+  .imgfb-wrap {
+    width: 13.333in;
+    height: 7.5in;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .imgfb-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .imgfb-img.contain {
+    object-fit: contain;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="imgfb-wrap">
+  {% if hero_image %}
+  <img class="imgfb-img {% if fit is defined and fit == 'contain' %}contain{% endif %}" src="{{ hero_image }}" alt="{% if alt_text is defined %}{{ alt_text }}{% endif %}">
+  {% endif %}
+</div>
+{% endblock %}

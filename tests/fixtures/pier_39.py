@@ -260,6 +260,7 @@ investment_ctx = {
             "is_recommended": False,
         },
     ],
+    "tier_count": 3,
     "partnership_discounts": [
         ("2-YEAR", "4% OFF"),
         ("3-YEAR", "6% OFF"),

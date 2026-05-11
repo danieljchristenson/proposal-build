@@ -94,7 +94,27 @@
     font-size: 13pt;
     line-height: 1.35;
     color: #a0a0a0;
-    margin: 0 0 var(--space-4) 0;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  /* Tier coverage chip on the dark panel — light pill on dark background. */
+  .zf-tier-badge {
+    display: inline-block;
+    margin-bottom: var(--space-3);
+    padding: 3pt 8pt;
+    background: rgba(255, 255, 255, 0.08);
+    border-left: 2pt solid var(--color-red);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-light);
+  }
+  .zf-tier-badge-lead {
+    color: rgba(236, 239, 241, 0.55);
+    font-weight: 400;
+    margin-right: 4pt;
   }
 
   /* 2-column bullet grid */
@@ -165,6 +185,9 @@
     <div class="eyebrow">ZONE {{ zone_num }}</div>
     <div class="zf-zone-name">{{ zone_name }}</div>
     <div class="zf-subtitle">{{ zone_subtitle }}</div>
+    {% if tier_coverage is defined and tier_coverage %}
+    <div class="zf-tier-badge"><span class="zf-tier-badge-lead">Included in</span>{{ tier_coverage }}</div>
+    {% endif %}
 
     <!-- 2-column bullets: first half left, second half right -->
     <div class="zf-bullets">

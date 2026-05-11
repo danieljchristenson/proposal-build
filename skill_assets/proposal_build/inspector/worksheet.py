@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import frontmatter
 from openpyxl import load_workbook
 
 from proposal_build.inspector.report import Finding
@@ -18,14 +19,46 @@ _LINE_NUM_RE = re.compile(r"^(?:\d+|E\d+)$")
 
 SCOPE_DIR = "03 - Scope & Pricing"
 WORKSHEET_SUFFIX = " - Scope Worksheet.xlsx"
+BRIEF_RELPATH = "04 - Process & Notes/Project Brief.md"
 # Required column names mirror parser.worksheet.REQUIRED_HEADERS. Keep in sync.
 
 
-def _find_worksheet(scope_dir: Path) -> Path | None:
+def _read_project_name(project_path: Path) -> str | None:
+    """Best-effort read of project_name from the Brief frontmatter.
+
+    Returns None if the Brief is missing or unparseable — those problems
+    are flagged separately by inspector/brief.py, so this helper just
+    skips the name-mismatch check rather than duplicating the finding.
+    """
+    brief_path = project_path / BRIEF_RELPATH
+    if not brief_path.is_file():
+        return None
+    try:
+        post = frontmatter.load(str(brief_path))
+        name = (post.metadata or {}).get("project_name")
+        return str(name) if name else None
+    except Exception:
+        return None
+
+
+def _find_worksheet(scope_dir: Path, expected_name: str | None = None) -> tuple[Path | None, Path | None]:
+    """Locate the worksheet to inspect, plus the path the parser will look for.
+
+    Returns (path_used, path_expected). When expected_name is given and that
+    exact file exists, both are the same. When the expected file is missing
+    but a glob-matching file exists, returns (glob_match, expected_path) so
+    the caller can flag the name mismatch. If no expected_name is supplied
+    (Brief unavailable), falls back to the original glob-match behavior.
+    """
+    expected_path = (scope_dir / f"{expected_name}{WORKSHEET_SUFFIX}") if expected_name else None
+    if expected_path is not None and expected_path.is_file():
+        return expected_path, expected_path
+    glob_match: Path | None = None
     for p in scope_dir.glob(f"*{WORKSHEET_SUFFIX}"):
         if not p.name.startswith(".~lock."):
-            return p
-    return None
+            glob_match = p
+            break
+    return glob_match, expected_path
 
 
 def _is_locked(worksheet_path: Path) -> bool:
@@ -40,7 +73,8 @@ def check(project_path: Path) -> list[Finding]:
         # folder.py already reports this; don't duplicate.
         return []
 
-    ws_path = _find_worksheet(scope_dir)
+    expected_name = _read_project_name(project_path)
+    ws_path, expected_path = _find_worksheet(scope_dir, expected_name)
     if ws_path is None:
         findings.append(Finding(
             severity="blocker", category="worksheet",
@@ -48,6 +82,21 @@ def check(project_path: Path) -> list[Finding]:
             detail=f"No `*{WORKSHEET_SUFFIX}` file found in {SCOPE_DIR}/",
             fix=("Scaffold the project (or copy the template Worksheet "
                  f"into `{SCOPE_DIR}/<Project Name>{WORKSHEET_SUFFIX}`)."),
+        ))
+        return findings
+
+    # When the Brief tells us what filename to expect (project_name + suffix)
+    # but on-disk has a differently-named worksheet, the generator parser will
+    # fail to load it. Block at inspect time so the mismatch surfaces here,
+    # not three commands later.
+    if expected_path is not None and ws_path != expected_path:
+        findings.append(Finding(
+            severity="blocker", category="worksheet",
+            issue="worksheet-name-mismatch",
+            detail=(f"Worksheet on disk is `{ws_path.name}` but the generator "
+                    f"will look for `{expected_path.name}` (derived from "
+                    f"`project_name` in the Brief). Generation would fail."),
+            fix=f"Rename the worksheet file to `{expected_path.name}`.",
         ))
         return findings
 

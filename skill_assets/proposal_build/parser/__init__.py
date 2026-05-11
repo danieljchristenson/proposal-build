@@ -5,6 +5,7 @@ resolved ProjectModel. Blocking errors raise; warnings are returned alongside.
 """
 from __future__ import annotations
 
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -276,7 +277,21 @@ def _fill_scope_includes(brief, bp, ph):
     return tuple(bp.scope_inclusions_default)
 
 
+_ADD_ON_PRICE_RE = re.compile(r"\$\s?[\d][\d,]*(?:\.\d{2})?")
+
+
 def _fill_add_ons(brief, ph):
+    """Parse the Add-Ons section into ((description, price), ...) tuples.
+
+    Each line looks like 'Description (qualifier): $1,234' OR
+    'Description: $1,234 (qualifier)'. The price is whatever matches
+    `$N,NNN` — not 'everything after the last colon'. The à-la-carte
+    layout's Price column has nowrap and a fixed 1.6in width, so a stray
+    parenthetical mistakenly captured into the price column overflows
+    and gets visually truncated. (See the twinkle line bug, fixed
+    2026-05-06: '$17,324 (net of snowflake removal)' lost the
+    parenthetical at render time.)
+    """
     add_ons_raw = brief.sections.get("Add-Ons", [])
     if not add_ons_raw:
         return ()
@@ -284,9 +299,29 @@ def _fill_add_ons(brief, ph):
         add_ons_raw = add_ons_raw.splitlines()
     out = []
     for line in add_ons_raw:
-        if isinstance(line, str) and ":" in line:
-            text, price = line.rsplit(":", 1)
-            out.append((text.strip(), price.strip()))
+        if not isinstance(line, str):
+            continue
+        price_match = _ADD_ON_PRICE_RE.search(line)
+        if price_match is None:
+            # Fall back to legacy rsplit behavior so an oddly-formatted line
+            # still parses without dropping silently. Trade-off: rare lines
+            # without a $ pattern get the old behavior.
+            if ":" in line:
+                text, price = line.rsplit(":", 1)
+                out.append((text.strip(), price.strip()))
+            continue
+        price = price_match.group(0).strip()
+        # Strip the price match out of the line, plus the trailing colon
+        # before it (`Description: $1,234` → `Description`). Anything
+        # remaining (e.g. a parenthetical after the price) is folded back
+        # into the description in source order.
+        before = line[:price_match.start()].rstrip().rstrip(":").rstrip()
+        after = line[price_match.end():].strip()
+        if after:
+            description = f"{before} {after}".strip()
+        else:
+            description = before
+        out.append((description, price))
     return tuple(out)
 
 

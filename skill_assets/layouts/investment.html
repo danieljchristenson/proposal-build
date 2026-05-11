@@ -40,10 +40,12 @@
   .inv-tiers-wrapper {
     flex: 1 1 0;            /* expands to fill freed vertical space */
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
     gap: var(--space-4);
     align-items: stretch;   /* columns stretch to match the tallest one */
   }
+  .inv-tiers-wrapper.tiers-1 { grid-template-columns: minmax(0, 60%); justify-content: center; }
+  .inv-tiers-wrapper.tiers-2 { grid-template-columns: 1fr 1fr; }
+  .inv-tiers-wrapper.tiers-3 { grid-template-columns: 1fr 1fr 1fr; }
 
   .inv-card { overflow: visible; }   /* don't clip the tallest card's bottom */
 
@@ -284,8 +286,8 @@
     {% endif %}
   </div>
 
-  <!-- 3 tier columns -->
-  <div class="inv-tiers-wrapper">
+  <!-- Tier columns (1, 2, or 3 based on active tiers) -->
+  <div class="inv-tiers-wrapper tiers-{{ tier_count }}">
     {% for tier in tiers %}
     <div class="inv-tier-col">
 

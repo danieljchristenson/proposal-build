@@ -20,6 +20,34 @@
     height: 100%;
   }
 
+  /* Optional section header strip (used when this slide leads a section
+     in a multi-section deck like FIGat7th). Renders only when ctx
+     supplies section_label + section_name. Sits above the zone title. */
+  .zs-section-header {
+    flex: 0 0 auto;
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
+    border-bottom: 1pt solid var(--color-red);
+  }
+  .zs-section-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin-bottom: 2pt;
+  }
+  .zs-section-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 18pt;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+
   /* ── Top: eyebrow + zone name + subtitle ── */
   .zs-title-area {
     flex: 0 0 auto;
@@ -48,6 +76,26 @@
     line-height: 1.35;
     color: var(--color-gray);
     margin: 0;
+  }
+
+  /* Tier coverage chip — sits below subtitle, small caps, charcoal-on-light. */
+  .zs-tier-badge {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 3pt 8pt;
+    background: rgba(0, 0, 0, 0.04);
+    border-left: 2pt solid var(--color-red);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8.5pt;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+  }
+  .zs-tier-badge-lead {
+    color: var(--color-gray);
+    font-weight: 400;
+    margin-right: 4pt;
   }
 
   /* ── Body: 2-column grid ── */
@@ -151,11 +199,22 @@
 {% block content %}
 <div class="zs-outer">
 
+  {% if section_label is defined and section_label %}
+  <!-- Section lead header (multi-section deck pattern) -->
+  <div class="zs-section-header">
+    <div class="zs-section-eyebrow">{{ section_label }}</div>
+    <h1 class="zs-section-name">{{ section_name }}</h1>
+  </div>
+  {% endif %}
+
   <!-- Eyebrow + zone name + subtitle -->
   <div class="zs-title-area">
     <div class="eyebrow">ZONE {{ zone_num }}</div>
     <div class="zs-zone-name">{{ zone_name }}</div>
     <div class="zs-subtitle">{{ zone_subtitle }}</div>
+    {% if tier_coverage is defined and tier_coverage %}
+    <div class="zs-tier-badge"><span class="zs-tier-badge-lead">Included in</span>{{ tier_coverage }}</div>
+    {% endif %}
   </div>
 
   <!-- 2-column body: bullets left, image right -->

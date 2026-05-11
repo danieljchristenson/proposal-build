@@ -77,6 +77,26 @@
     margin: 0 0 6pt 0;
   }
 
+  /* Tier coverage chip inside the white panel — compact, small caps. */
+  .zfe-tier-badge {
+    display: inline-block;
+    margin: 0 0 6pt 0;
+    padding: 2pt 6pt;
+    background: rgba(0, 0, 0, 0.05);
+    border-left: 2pt solid var(--color-red);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 7.5pt;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+  }
+  .zfe-tier-badge-lead {
+    color: rgba(28, 28, 28, 0.55);
+    font-weight: 400;
+    margin-right: 4pt;
+  }
+
   /* Compact bullet list — small, subtle, max 3 lines */
   .zfe-bullets {
     list-style: none;
@@ -145,6 +165,9 @@
     <div class="zfe-zone-name">{{ zone_name }}</div>
     {% if zone_subtitle %}
     <div class="zfe-subtitle">{{ zone_subtitle }}</div>
+    {% endif %}
+    {% if tier_coverage is defined and tier_coverage %}
+    <div class="zfe-tier-badge"><span class="zfe-tier-badge-lead">Included in</span>{{ tier_coverage }}</div>
     {% endif %}
     {% if included_elements %}
     <ul class="zfe-bullets">

@@ -79,6 +79,20 @@ def test_substitution_excludes_replaced_item():
     assert "Traditional Tree" not in sig_names
 
 
+def test_tiered_with_only_two_active_tiers_emits_two_docs():
+    """2-tier proposals (Sheraton-style): only Essential + Enhanced have line items;
+    Signature should be skipped, not emit an empty $0 doc."""
+    items = [
+        _li("1", "Bow", 2, 1000, (Tier.ESSENTIAL, Tier.ENHANCED)),
+        _li("E1", "Curtain", 1, 500, (Tier.ENHANCED,)),
+    ]
+    model = _Model(items, "tiered")
+    docs = build_itemized_pricing_docs(model)
+    tiers_emitted = {d.tier for d in docs}
+    assert tiers_emitted == {Tier.ESSENTIAL, Tier.ENHANCED}
+    assert Tier.SIGNATURE not in tiers_emitted
+
+
 def test_partnership_savings_computation():
     discounts = (("2-YEAR", "4% OFF"), ("3-YEAR", "6% OFF"), ("5-YEAR", "9% OFF"))
     rows = compute_partnership_savings(tier_total=345000, discounts=discounts,

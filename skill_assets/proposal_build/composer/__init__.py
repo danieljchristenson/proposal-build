@@ -32,13 +32,22 @@ def compose(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     pricing_docs = build_itemized_pricing_docs(model)
     tier_totals = {d.tier: d.tier_total for d in pricing_docs}
     if model.pricing_format == "single":
-        # Synthesize the absent tier totals from per-line sums so the Investment
-        # slide's 3-tier display still works when only one pricing PDF was emitted.
+        # Synthesize per-line sums for any tier not emitted as a pricing doc, so
+        # the Investment slide's tier-card display still works when only one
+        # pricing PDF was emitted. Tiers with zero line items are still skipped.
         for t in [Tier.ESSENTIAL, Tier.ENHANCED, Tier.SIGNATURE]:
             if t not in tier_totals:
-                tier_totals[t] = sum(li.line_total for li in model.line_items if t in li.tiers)
+                synthetic = sum(li.line_total for li in model.line_items if t in li.tiers)
+                if synthetic > 0:
+                    tier_totals[t] = synthetic
 
-    investment_range = f"${tier_totals[Tier.ESSENTIAL]/1000:.0f}K – ${tier_totals[Tier.SIGNATURE]/1000:.0f}K"
+    # Headline range spans the active (non-empty) tiers in canonical order.
+    _ordered_active = [t for t in (Tier.ESSENTIAL, Tier.ENHANCED, Tier.SIGNATURE) if t in tier_totals]
+    if len(_ordered_active) >= 2:
+        investment_range = (f"${tier_totals[_ordered_active[0]]/1000:.0f}K – "
+                            f"${tier_totals[_ordered_active[-1]]/1000:.0f}K")
+    else:
+        investment_range = f"${tier_totals[_ordered_active[0]]/1000:.0f}K"
 
     # Note: per-tier partnership savings rows (4%/6%/9% applied to tier total) are
     # rendered on page 2 of each Itemized Pricing supplement, not on the Investment
