@@ -211,3 +211,115 @@ class ItemizedPricingDoc:
     base_scope_lines: Tuple[LineItem, ...]
     enhancement_lines: Tuple[LineItem, ...]
     tier_total: float
+
+
+class ProposalMode(str, Enum):
+    """Selects which compose path the pipeline runs.
+
+    TIERED: existing Essential/Enhanced/Signature path (Riverside, Sheraton, Pier 39).
+    MENU:   creative-menu / ROM pricing path (FIGat7th).
+    """
+    TIERED = "tiered"
+    MENU = "menu"
+
+
+@dataclass(frozen=True)
+class ROMLineItem:
+    """Line item for ROM (Rough Order of Magnitude) pricing.
+
+    Each item carries six numbers: rental low/high (all-inclusive annual fee),
+    purchase one-time low/high, and purchase annual service low/high (install +
+    removal + storage bundled).
+
+    Point estimates (no range) are stored as low==high.
+
+    Alternate groups: items sharing an `alternate_group` value are mutually
+    exclusive options (customer picks one). Totals across the group are
+    bookended by min(low) and max(high) of group members.
+    """
+    code: str            # e.g. "20", "10-enh", "30"
+    section: str         # human-readable section key, e.g. "Arches"
+    name: str
+    description: str
+    alternate_group: str
+    rental_low: int
+    rental_high: int
+    purchase_ot_low: int
+    purchase_ot_high: int
+    purchase_svc_low: int
+    purchase_svc_high: int
+    customer_facing: str
+    materials: str
+    notes: str
+    rendering_ref: str
+
+    @property
+    def is_alternate(self) -> bool:
+        return bool(self.alternate_group)
+
+    @property
+    def is_point_estimate(self) -> bool:
+        return (self.rental_low == self.rental_high
+                and self.purchase_ot_low == self.purchase_ot_high
+                and self.purchase_svc_low == self.purchase_svc_high)
+
+
+@dataclass(frozen=True)
+class Section:
+    """A grouping of ROMLineItems on the proposal.
+
+    key:      stable identifier ("1", "2", "3a", "3b" — used to order sections)
+    label:    full table-row label ("Section 3a — Plaza Arches (customer picks one)")
+    name:     short title for the section header strip on the lead slide
+    is_lead:  if True, this section's first slide carries a section header block
+    items:    tuple of ROMLineItems in display order
+    """
+    key: str
+    label: str
+    name: str
+    is_lead: bool
+    items: Tuple[ROMLineItem, ...]
+
+    @property
+    def has_alternates(self) -> bool:
+        return any(it.is_alternate for it in self.items)
+
+
+@dataclass(frozen=True)
+class MenuProjectModel:
+    """Fully-resolved project state for the creative-menu proposal mode.
+
+    Parallel to ProjectModel, but with sections + ROMLineItems instead of
+    zones + LineItems with tiers. The composer picks the right model based
+    on Brief frontmatter `mode`.
+    """
+    client_company: str
+    client_short: str
+    project_name: str
+    project_short: str
+    project_year: int
+    project_subtitle: str
+
+    presenter_name: str
+    presenter_title: str
+    presenter_org: str
+    proposal_date: str
+
+    client_contact_name: str
+    client_contact_title: str
+    client_contact_email: str
+    client_contact_phone: str
+
+    design_phrase: str
+    voice: str
+
+    creative_direction: str
+    customer_goals: Tuple[str, ...]
+    creative_phases: Tuple[dict, ...]   # [{"label": "ARRIVE", "body": "..."}]
+
+    prebuilt_cover_image: str           # filename in Base Scope/
+    prebuilt_palette_image: str         # filename in Base Scope/ (or "" if no palette slide)
+    creative_vision_hero: str           # filename for the creative-vision page hero
+
+    sections: Tuple[Section, ...]
+    what_youre_approving: str
