@@ -27,10 +27,10 @@ _SECTION_WORDS = {
 _RESOLVED_PROJECT_DIR: Path | None = None
 
 
-def set_resolved_project_dir(p: Path) -> None:
+def set_resolved_project_dir(p: Path | None) -> None:
     """Set the active project directory used to resolve rendering filenames
     into absolute file URIs. Called by menu_compose.compose_menu before
-    building ctxs; reset to None when compose completes."""
+    building ctxs; pass None to reset when compose completes."""
     global _RESOLVED_PROJECT_DIR
     _RESOLVED_PROJECT_DIR = p
 
@@ -134,9 +134,10 @@ def _bullets_for_item(item: ROMLineItem, *, extras: Iterable[ROMLineItem] = ()) 
 
 
 def _two_digit_code(code: str) -> str:
-    """Drop suffixes like '-enh' so the eyebrow reads ZONE 01 / ZONE 10."""
+    """Drop suffixes like '-enh' so the eyebrow reads ZONE 01 / ZONE 10.
+    3-digit codes (ZONE 100+) pass through with their natural width."""
     base = code.split("-")[0]
-    if base.isdigit() and len(base) <= 2:
+    if base.isdigit():
         return base.zfill(2)
     return code
 
@@ -155,7 +156,10 @@ def build_menu_zone_2up_gallery_ctx(
     use_moment_labels = "All" in alternate_banner and "Included" in alternate_banner
     if use_moment_labels:
         base = 1 if is_first_slide_of_section else 3
-        eyebrow_offsets = {0: f"MOMENT 0{base}", 1: f"MOMENT 0{base+1}"}
+        eyebrow_offsets = {
+            0: f"MOMENT {str(base).zfill(2)}",
+            1: f"MOMENT {str(base + 1).zfill(2)}",
+        }
 
     cells = []
     for i, item in enumerate(items):
@@ -195,9 +199,7 @@ def build_menu_rom_investment_ctx(
     model: MenuProjectModel, page_num: int, page_total: int, *, page_part: int
 ) -> dict:
     """page_part: 1 = sections 1+2+3a (no totals/footnote); 2 = section 3b + totals + footnote."""
-    from proposal_build.composer.rom_pricing import (
-        rows_for_sections, compute_rom_totals, format_money_range
-    )
+    from proposal_build.composer.rom_pricing import compute_rom_totals, format_money_range
 
     if page_part == 1:
         sections_data = _investment_sections(model, keys=("1", "2", "3a"))

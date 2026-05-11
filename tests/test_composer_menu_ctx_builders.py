@@ -27,7 +27,7 @@ def _set_dir():
     # is communicated via module-level state in menu_ctx_builders.
     set_resolved_project_dir(FIGAT7TH)
     yield
-    set_resolved_project_dir(Path("."))
+    set_resolved_project_dir(None)
 
 
 @pytest.fixture(scope="module")
