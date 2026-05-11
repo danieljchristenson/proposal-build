@@ -30,7 +30,13 @@ _RESOLVED_PROJECT_DIR: Path | None = None
 def set_resolved_project_dir(p: Path | None) -> None:
     """Set the active project directory used to resolve rendering filenames
     into absolute file URIs. Called by menu_compose.compose_menu before
-    building ctxs; pass None to reset when compose completes."""
+    building ctxs; pass None to reset when compose completes.
+
+    NOT thread-safe: this is a module-level global. Concurrent compose_menu
+    calls would clobber each other's state mid-build, silently producing
+    relative file URIs. Serialise compose calls if a multi-threaded caller
+    is ever introduced (or refactor to thread project_dir through every
+    builder signature)."""
     global _RESOLVED_PROJECT_DIR
     _RESOLVED_PROJECT_DIR = p
 
