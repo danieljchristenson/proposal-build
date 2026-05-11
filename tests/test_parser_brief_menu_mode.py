@@ -132,3 +132,35 @@ def test_tiered_mode_unchanged(tmp_path):
     brief = parse_brief(path)
     # mode field absent → tiered default behavior is preserved
     assert brief.frontmatter.get("mode", "tiered") == "tiered"
+
+
+def test_menu_brief_sample_work_absent_defaults_to_empty_tuple():
+    """A menu Brief without sample_work: yields MenuProjectModel.sample_work == ()."""
+    from proposal_build.parser import parse_project
+    project_dir = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    model = parse_project(project_dir)
+    assert model.sample_work == ()
+
+
+def test_menu_brief_sample_work_present_is_parsed_as_tuple(tmp_path):
+    """A menu Brief with sample_work: [a, b] yields a tuple of 2 strings."""
+    import shutil
+    from proposal_build.parser import parse_project
+    src = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_menu_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    assert len(parts) >= 3
+    parts[1] = parts[1].rstrip() + "\nsample_work:\n  - fixture_a\n  - fixture_b\n"
+    brief.write_text("---".join(parts))
+
+    model = parse_project(dst)
+    assert model.sample_work == ("fixture_a", "fixture_b")

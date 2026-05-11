@@ -63,6 +63,7 @@ def resolve_menu_project(
         creative_vision_hero=fm["creative_vision_hero"],
         sections=tuple(sections),
         what_youre_approving=fm.get("what_youre_approving", ""),
+        sample_work=tuple(fm.get("sample_work") or ()),
     )
 
 
