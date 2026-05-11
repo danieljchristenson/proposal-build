@@ -80,10 +80,12 @@
   /* ── Per-cell ──
      Geometry (fits inside 6.1in content area, accounting for optional
      section header which adds ~0.55in when present):
-       Cell = 4.5in (image 4.0in + caption 0.5in)
+       Cell = 4.5in (image 3.7in + caption 0.8in)
        Section header (optional) ≈ 0.55in
        Title + banner area ≈ 1.0in
        Total ≈ 6.05in (with 0.05in safety margin)
+       Caption is 0.8in so 2-line item names (e.g. quoted neon wreath
+       variants) wrap cleanly instead of clipping at the bottom edge.
        Continuation slides without section header have 0.55in extra bottom margin.
   */
   .z2g-cell {
@@ -95,7 +97,7 @@
   }
 
   .z2g-cell-image {
-    height: 4.0in;
+    height: 3.7in;
     position: relative;
     background: white;
     overflow: hidden;
@@ -125,7 +127,7 @@
 
   .z2g-cell-body {
     padding: 8pt var(--space-4) 0 var(--space-4);
-    height: calc(4.5in - 4.0in);
+    height: calc(4.5in - 3.7in);
     box-sizing: border-box;
     overflow: hidden;
     display: flex;
