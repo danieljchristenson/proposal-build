@@ -73,6 +73,18 @@ def check(project_path: Path) -> list[Finding]:
         # folder.py already reports this; don't duplicate.
         return []
 
+    # If the Brief is menu-mode, skip the tiered-shape worksheet checks
+    # and run the ROM equivalents.
+    brief_path = project_path / BRIEF_RELPATH
+    mode = "tiered"
+    if brief_path.is_file():
+        try:
+            mode = frontmatter.load(str(brief_path)).metadata.get("mode", "tiered")
+        except Exception:
+            pass
+    if mode == "menu":
+        return _check_menu_worksheet(project_path)
+
     expected_name = _read_project_name(project_path)
     ws_path, expected_path = _find_worksheet(scope_dir, expected_name)
     if ws_path is None:
@@ -216,5 +228,97 @@ def check(project_path: Path) -> list[Finding]:
                 fix=(f"Add a comma-separated tier list for line {line_num} "
                      "(Essential, Enhanced, Signature)."),
             ))
+
+    return findings
+
+
+def _read_project_short(project_path: Path) -> str | None:
+    brief_path = project_path / BRIEF_RELPATH
+    if not brief_path.is_file():
+        return None
+    try:
+        post = frontmatter.load(str(brief_path))
+        short = (post.metadata or {}).get("project_short")
+        return str(short) if short else None
+    except Exception:
+        return None
+
+
+def _check_menu_worksheet(project_path: Path) -> list[Finding]:
+    """ROM worksheet readiness for menu-mode projects."""
+    from proposal_build.parser.worksheet_rom import (
+        parse_rom_worksheet, ROMWorksheetParseError,
+    )
+    from proposal_build.parser.brief import parse_brief, BriefParseError
+
+    findings: list[Finding] = []
+    scope_dir = project_path / SCOPE_DIR
+    if not scope_dir.is_dir():
+        findings.append(Finding(
+            severity="blocker", category="worksheet", issue="no-scope-dir",
+            detail=f"Missing `{SCOPE_DIR}/` folder.",
+            fix=f"Create `{SCOPE_DIR}/` and place the ROM worksheet there.",
+        ))
+        return findings
+
+    # Locate the worksheet (mirror the parser's _find_menu_worksheet logic).
+    project_short = _read_project_short(project_path) or _read_project_name(project_path) or ""
+    candidate = scope_dir / f"{project_short}{WORKSHEET_SUFFIX}"
+    if candidate.is_file():
+        worksheet_path = candidate
+    else:
+        matches = list(scope_dir.glob("*Scope Worksheet*.xlsx"))
+        if not matches:
+            matches = [p for p in scope_dir.glob("*.xlsx") if not p.name.startswith(".~lock.")]
+        if len(matches) == 1:
+            worksheet_path = matches[0]
+        elif not matches:
+            findings.append(Finding(
+                severity="blocker", category="worksheet", issue="missing-worksheet",
+                detail=f"No `.xlsx` worksheet found in `{SCOPE_DIR}/`.",
+                fix=f"Place the ROM Scope Worksheet in `{SCOPE_DIR}/`.",
+            ))
+            return findings
+        else:
+            findings.append(Finding(
+                severity="blocker", category="worksheet", issue="ambiguous-worksheet",
+                detail=f"Multiple worksheets in `{SCOPE_DIR}/`: {[p.name for p in matches]}",
+                fix="Keep only one ROM worksheet in the scope directory.",
+            ))
+            return findings
+
+    # Try to parse the ROM worksheet — surfaces header/shape errors clearly.
+    try:
+        rom = parse_rom_worksheet(worksheet_path)
+    except ROMWorksheetParseError as exc:
+        findings.append(Finding(
+            severity="blocker", category="worksheet", issue="rom-worksheet-parse-error",
+            detail=f"Could not parse ROM worksheet {worksheet_path.name}: {exc}",
+            fix="Verify the ROM worksheet has the expected 15-column header row.",
+        ))
+        return findings
+
+    # Cross-reference: every item code in the Brief's sections must exist
+    # in the ROM worksheet.
+    brief_path = project_path / BRIEF_RELPATH
+    if brief_path.is_file():
+        try:
+            brief = parse_brief(brief_path)
+            ws_codes = {it.code for it in rom.line_items}
+            for s in brief.frontmatter.get("sections", []) or []:
+                for code in s.get("item_codes", []):
+                    if code not in ws_codes:
+                        findings.append(Finding(
+                            severity="blocker", category="worksheet",
+                            issue="brief-references-missing-item-code",
+                            detail=(
+                                f"Section {s.get('key', '?')!r} references "
+                                f"item code {code!r}, which is not in the ROM worksheet."
+                            ),
+                            fix=(f"Add item `{code}` to the worksheet or remove it "
+                                 "from the Brief's item_codes."),
+                        ))
+        except BriefParseError:
+            pass  # brief inspector already reported this
 
     return findings

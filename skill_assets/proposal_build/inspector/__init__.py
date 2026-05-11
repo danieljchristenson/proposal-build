@@ -72,9 +72,20 @@ def _safe_check(fn, project_path: Path, category: str) -> list[Finding]:
 
 
 def _run_validator_pass(project_path: Path) -> list[Finding]:
-    """Try to parse the project and run W1-W8 validators. If parsing
-    fails, the brief/worksheet inspectors already reported the cause —
-    we just skip the validator pass silently."""
+    """Try to parse the project and run W1-W8 validators. For menu-mode
+    projects the tier-specific validators don't apply; return [] without
+    crashing. If tiered parsing fails, the brief/worksheet inspectors
+    already reported the cause."""
+    import frontmatter
+    brief_path = project_path / "04 - Process & Notes" / "Project Brief.md"
+    if brief_path.is_file():
+        try:
+            mode = frontmatter.load(str(brief_path)).metadata.get("mode", "tiered")
+        except Exception:
+            mode = "tiered"
+        if mode == "menu":
+            return []  # W1-W8 don't apply to menu mode (yet)
+
     from proposal_build.parser import build_project_model, ProjectLoadError
     from proposal_build.parser.validate import run_validation
 
