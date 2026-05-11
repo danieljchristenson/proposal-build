@@ -1,34 +1,42 @@
 ---
-# ===========================================================================
-# PROJECT BRIEF — Phase 1 (Sales fills this; Stephanie won't start until status: ready)
-# ===========================================================================
-# Phase 2 fields (presenter, full schedule, voice, cover_image, case_study,
-# slide-control flags, sample_work, Customer Success Criteria, Constraints)
-# get appended later by the Proposal Builder. Don't fill those now.
-# ---------------------------------------------------------------------------
+status: ready
+mode: menu
 
-# Status flag — set to "ready" when this Brief is complete and Stephanie can start
-status: ready   # draft | ready
-
-# Client
 client_company: "FIGat7th"
 client_decision_maker: "Alexandra Castro"
-client_decision_maker_title: "Property Manager, Athena Property Management"   # TBD — confirm exact title with Daniel
+client_decision_maker_title: "Property Manager, Athena Property Management"
 client_decision_maker_email: "acastro@athenapm.com"
 
-# Project
 project_name: "FIGat7th DTLA — 2026 Holiday Program"
 project_short: "FIGat7th DTLA"
 project_year: 2026
+project_subtitle: "First-Pass Creative Menu"
 
-# Tier picked at Form intake — recommended pricing tier to anchor the proposal
-# NOTE: This proposal is a first-pass creative menu, not a tiered proposal.
-# Single itemized pricing sheet at the end. "essential" is set here as the baseline
-# label only; the builder pipeline may need a no-tier mode for this format.
-recommended_tier: "essential"
+presenter_name: "Daniel Christenson"
+presenter_title: "Director of Sales"
+presenter_org: "St. Nick's Christmas Lighting & Décor"
+proposal_date: "May 9, 2026"
 
-# One short phrase that anchors the creative (e.g. "Holiday Express")
 design_phrase: "Modern Magic"
+voice: "destination-retail"
+
+prebuilt_cover_image: "01_cover-slide-cityscape.png"
+prebuilt_palette_image: "02_palette-board-mood.png"
+creative_vision_hero: "10_tree-A-studio-blackbg.png"
+creative_vision_hero_fit: "contain"
+
+what_youre_approving: "This first-pass creative menu and rough-order-of-magnitude pricing as the basis for site walk and final scope refinement. Approval here authorizes St. Nick's to schedule the on-site walk-through with Athena Property Management and prepare a finalized scope and committed pricing for execution."
+
+creative_phases:
+  - { label: "ARRIVE",  body: "An ornament canopy turns the FIGat7th courtyard ceiling into a winter night sky." }
+  - { label: "GATHER",  body: "The centerpiece tree anchors the plaza as the moment every shopper poses with." }
+  - { label: "EXPLORE", body: "A menu of arches, frames, and selfie moments scattered through the plaza." }
+
+sections:
+  - { key: "1",  label: "Section 1 — Main Entrance Overhead",        name: "Main Entrance Overhead", is_lead: true,  item_codes: ["20"] }
+  - { key: "2",  label: "Section 2 — Holiday Tree + Photo Op",       name: "The FIGat7th Tree",      is_lead: true,  item_codes: ["10", "10-enh"] }
+  - { key: "3a", label: "Section 3a — Plaza Arches (customer picks one)", name: "Plaza Photo-Ops",   is_lead: true,  item_codes: ["33", "32", "30", "31"] }
+  - { key: "3b", label: "Section 3b — Plaza Photo-Ops (all included)",    name: "Plaza Photo-Ops",   is_lead: false, item_codes: ["40", "41", "42", "43"] }
 ---
 
 ## Creative Direction
@@ -46,15 +54,3 @@ FIGat7th becomes Downtown LA's most photographed holiday destination, where a mo
 1. **Main Entrance Overhead** — An ornament canopy that turns the courtyard ceiling into a winter night sky.
 2. **The FIGat7th Tree** — The centerpiece every shopper poses with, framed in the property's signature glow.
 3. **Plaza Photo-Ops** — A menu of arches, frames, and selfie moments scattered through the plaza.
-
----
-<!--
-PHASE 2 FIELDS BELOW — appended by Proposal Builder later. Don't fill these manually.
-- presenter_name, presenter_email, presenter_phone
-- go_live, season_end, fabrication_lock, signing_deadline
-- voice (civic | destination-retail | corporate | hospitality)
-- cover_image, case_study, sample_work
-- include_case_study, include_add_ons, pricing_format, mode
-- Customer Success Criteria
-- Constraints
--->
