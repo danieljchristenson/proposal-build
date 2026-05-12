@@ -86,3 +86,38 @@ def test_missing_required_section_reports_blocker(tmp_path):
     blockers = [f for f in findings if f.issue == "missing-section"]
     expected = len(REQUIRED_BULLET_SECTIONS) + len(REQUIRED_PROSE_SECTIONS)
     assert len(blockers) == expected
+
+
+def test_inspector_flags_sample_work_with_wrong_count(tmp_path):
+    """sample_work: with 5 IDs → sample_work_wrong_count blocker."""
+    import shutil
+    from proposal_build.inspector.brief import check
+    src = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + "\nsample_work:\n  - fixture_a\n  - fixture_b\n  - fixture_c\n  - fixture_d\n  - fixture_e\n"
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = {f.issue for f in findings}
+    assert "sample_work_wrong_count" in issues, (
+        f"Expected sample_work_wrong_count; got {issues}"
+    )
+
+
+def test_inspector_accepts_sample_work_absent():
+    """No sample_work: → no sample_work_* findings (slide just gets skipped)."""
+    from proposal_build.inspector.brief import check
+    project_dir = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    findings = check(project_dir)
+    sw_issues = {f.issue for f in findings if f.issue.startswith("sample_work_")}
+    assert sw_issues == set()

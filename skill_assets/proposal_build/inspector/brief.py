@@ -22,6 +22,7 @@ REQUIRED_PROSE_SECTIONS = (
     "Creative Direction",
 )
 BRIEF_RELPATH = "04 - Process & Notes/Project Brief.md"
+PAST_WORK_LIBRARY_RELPATH = "skill_assets/past_work_library"
 
 
 def check(project_path: Path) -> list[Finding]:
@@ -103,6 +104,7 @@ def check(project_path: Path) -> list[Finding]:
                 field=section,
             ))
 
+    findings.extend(_check_sample_work(project_path, fm))
     return findings
 
 
@@ -162,4 +164,30 @@ def _check_menu_mode(project_path: Path, fm: dict, body: str) -> list[Finding]:
                 field=name,
             ))
 
+    findings.extend(_check_sample_work(project_path, fm))
+    return findings
+
+
+def _check_sample_work(project_path: Path, fm: dict) -> list[Finding]:
+    """Findings on the sample_work: field. Empty/absent → no findings."""
+    findings: list[Finding] = []
+    sample_work = fm.get("sample_work") or []
+    if not sample_work:
+        return findings
+
+    if len(sample_work) != 6:
+        findings.append(Finding(
+            severity="blocker", category="brief",
+            issue="sample_work_wrong_count",
+            detail=(
+                f"sample_work: lists {len(sample_work)} IDs; the past-work "
+                "slide requires exactly 6."
+            ),
+            fix=(
+                "Edit the Brief so `sample_work:` has exactly 6 project IDs "
+                "from skill_assets/past_work_library/, or remove the field "
+                "entirely to skip the slide."
+            ),
+            field="sample_work",
+        ))
     return findings
