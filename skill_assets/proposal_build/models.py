@@ -330,3 +330,8 @@ class MenuProjectModel:
     # AE-supplied list of past_work_library project IDs. Same semantics as
     # ProjectModel.sample_work.
     sample_work: Tuple[str, ...] = ()
+    # AE-supplied tree-comparison block. When non-empty:
+    #   {"trees": ["tree_30", "tree_40", "tree_50"], "recommended": "tree_50"}
+    # → composer emits an Alternate Tree Options slide before sign_off.
+    # Empty dict (default) → slide skipped silently.
+    tree_comparison: Mapping[str, object] = field(default_factory=dict)
