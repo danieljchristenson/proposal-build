@@ -319,6 +319,33 @@ def build_case_study_ctx(model: ProjectModel, page_num: int, page_total: int,
     }
 
 
+def build_sample_of_work_ctx(model: ProjectModel, page_num: int, page_total: int,
+                             past_work_entries: list[dict]) -> dict:
+    """Build context for the sample_of_work slide.
+
+    past_work_entries is the resolved output of _load_past_work_entries —
+    a list of dicts with id/name/location/year/image keys.
+
+    The template wants `tiles` shaped as {name, location_year, image}, where
+    location_year is the pre-formatted "City, ST · YYYY" string the bottom-
+    left overlay renders. Building that string here keeps Jinja simple.
+    """
+    return {
+        **_project_base(model),
+        "page_num": page_num, "page_total": page_total,
+        "page_eyebrow": "Sample of Our Work",
+        "page_title": "Recent installations",
+        "tiles": [
+            {
+                "name": e["name"],
+                "location_year": f"{e['location']} · {e['year']}",
+                "image": e["image"],
+            }
+            for e in past_work_entries
+        ],
+    }
+
+
 def build_investment_ctx(model: ProjectModel, page_num: int, page_total: int,
                          tier_totals: dict, partnership_discounts: list) -> dict:
     th = model.tier_highlights or {}
