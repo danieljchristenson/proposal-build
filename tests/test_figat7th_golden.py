@@ -36,6 +36,6 @@ def test_pricing_totals_in_investment_p2():
     layout, ctx = inv_p2
     assert layout == "rom_investment"
     assert ctx["show_totals"] is True
-    assert ctx["total_rental"] == "$227,150 – $234,650"
-    assert ctx["total_purchase_ot"] == "$280,000 – $289,600"
-    assert ctx["total_purchase_svc"] == "$117,000 – $120,900"
+    assert ctx["total_rental"] == "$227,150 – $261,650"
+    assert ctx["total_purchase_ot"] == "$280,000 – $317,000"
+    assert ctx["total_purchase_svc"] == "$117,000 – $127,100"

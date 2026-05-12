@@ -159,11 +159,11 @@ def _section_slides(section: Section) -> list[tuple[str, dict]]:
 
 
 def _alt_banner_for(section: Section) -> str:
-    if section.has_alternates:
-        return "Customer Choice — Pick One"
-    if len(section.items) == 4:
-        return "All Four Included"
-    return ""  # 2-item include section can omit banner
+    # Banner intentionally suppressed: per-section "Customer Choice — Pick One"
+    # / "All Four Included" framing was confusing — sections are menus of
+    # options, not forced picks or forced bundles. Empty string keeps the
+    # template's existing `{% if alternate_banner %}` guard inert.
+    return ""
 
 
 def _build_ctx(model: MenuProjectModel, logical: str, page_num: int, page_total: int, hint: dict):

@@ -265,9 +265,9 @@ def _rom_footnote() -> str:
     return (
         "<strong>Rental</strong> is an annual all-inclusive fee covering item, install, removal, and storage. "
         "<strong>Purchase</strong> is a one-time price plus a separate annual service fee for install, removal, and storage. "
-        "Plaza arches are mutually exclusive — Program ROM Total is bookended by the cheapest-pick (low) and "
-        "most-expensive-pick (high) configurations. All figures are rough order of magnitude for first-pass scoping; "
-        "final numbers will follow site walk and scope refinement."
+        "Each section is a menu of options — Program ROM Total spans the lowest single pick across all sections "
+        "(low) and the full menu taken together (high). All figures are rough order of magnitude for first-pass "
+        "scoping; final numbers will follow site walk and scope refinement."
     )
 
 

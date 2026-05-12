@@ -60,6 +60,8 @@ def test_arches_continuation_slide_has_no_section_header(slides):
     assert "section_label" not in arches_b.context
 
 
-def test_moments_alt_banner_is_all_included(slides):
+def test_moments_slide_has_no_alt_banner(slides):
+    """Section slides used to carry 'Customer Choice — Pick One' / 'All Four Included'
+    banners; both were dropped because sections are menus (customer picks any subset)."""
     moments_a = slides[7]
-    assert moments_a.context["alternate_banner"] == "All Four Included"
+    assert moments_a.context["alternate_banner"] == ""

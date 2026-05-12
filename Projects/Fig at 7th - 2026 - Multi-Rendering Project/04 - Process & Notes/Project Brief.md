@@ -35,8 +35,8 @@ creative_phases:
 sections:
   - { key: "1",  label: "Section 1 — Main Entrance Overhead",        name: "Main Entrance Overhead", is_lead: true,  item_codes: ["20"] }
   - { key: "2",  label: "Section 2 — Holiday Tree + Photo Op",       name: "The FIGat7th Tree",      is_lead: true,  item_codes: ["10", "10-enh"] }
-  - { key: "3a", label: "Section 3a — Plaza Arches (customer picks one)", name: "Plaza Photo-Ops",   is_lead: true,  item_codes: ["33", "32", "30", "31"] }
-  - { key: "3b", label: "Section 3b — Plaza Photo-Ops (all included)",    name: "Plaza Photo-Ops",   is_lead: false, item_codes: ["40", "41", "42", "43"] }
+  - { key: "3a", label: "Section 3a — Plaza Arches",                      name: "Plaza Photo-Ops",   is_lead: true,  item_codes: ["33", "32", "30", "31"] }
+  - { key: "3b", label: "Section 3b — Plaza Photo-Ops & Standalones",      name: "Plaza Photo-Ops",   is_lead: false, item_codes: ["40", "41", "42", "43"] }
 ---
 
 ## Creative Direction

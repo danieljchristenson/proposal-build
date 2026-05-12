@@ -1,4 +1,13 @@
-"""ROM pricing math: per-section row formatting + totals with alternate-group bookending."""
+"""ROM pricing math: per-section row formatting + totals with menu-style alternate-group handling.
+
+Items sharing an `alternate_group` value are treated as a customer-pick-any-subset
+menu (not mutually exclusive). For each money axis, the group contributes:
+  - low  = min(item.low for item in group)   — cheapest single pick
+  - high = sum(item.high for item in group)  — customer takes the whole menu
+
+This replaces the original "bookended min/max" math (which assumed pick-exactly-one)
+because in practice the customer can pick zero, one, or several items per section.
+"""
 from __future__ import annotations
 
 from typing import Iterable
@@ -17,8 +26,9 @@ def format_money_range(low: int, high: int) -> str:
 
 
 def compute_rom_totals(sections: Iterable[Section]) -> dict:
-    """Sum across all sections. Within each alternate_group, take min(low) /
-    max(high) instead of summing — only one alternate is in scope at a time."""
+    """Sum across all sections. Within each alternate_group, treat the items
+    as a customer-pick-any-subset menu: low = cheapest single, high = sum of
+    all. See module docstring for rationale."""
     rental_low = rental_high = 0
     po_low = po_high = 0
     psv_low = psv_high = 0
@@ -43,11 +53,11 @@ def compute_rom_totals(sections: Iterable[Section]) -> dict:
 
     for items in groups.values():
         rental_low += min(it.rental_low for it in items)
-        rental_high += max(it.rental_high for it in items)
+        rental_high += sum(it.rental_high for it in items)
         po_low += min(it.purchase_ot_low for it in items)
-        po_high += max(it.purchase_ot_high for it in items)
+        po_high += sum(it.purchase_ot_high for it in items)
         psv_low += min(it.purchase_svc_low for it in items)
-        psv_high += max(it.purchase_svc_high for it in items)
+        psv_high += sum(it.purchase_svc_high for it in items)
 
     return {
         "rental_low": rental_low, "rental_high": rental_high,
