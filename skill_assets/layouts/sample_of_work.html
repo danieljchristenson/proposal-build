@@ -1,0 +1,114 @@
+<!-- layout-version: 2026-05-11 -->
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-11 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_eyebrow }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Sample of Our Work — light page, footer present.
+     Spec ref: docs/superpowers/specs/2026-05-11-past-work-slide-design.md §3.
+
+     Top: eyebrow (red caps "SAMPLE OF OUR WORK") + page title
+          ("Recent installations" — Poppins Black 50pt).
+     Body: 3 × 2 equal grid of tiles. Each tile is a full-bleed photo
+           with a dark gradient scrim and bottom-left name + location/year. */
+
+  .sw-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .sw-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .sw-title-area .eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .sw-title-area .page-title {
+    margin-bottom: 0;
+  }
+
+  .sw-grid {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .sw-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3pt;
+    background: #2A2A2A;  /* dark placeholder behind images */
+  }
+
+  .sw-tile img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .sw-tile-scrim {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 50%;
+    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+  }
+
+  .sw-tile-caption {
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: var(--space-3);
+    color: #FFFFFF;
+    font-family: var(--font-body);
+  }
+
+  .sw-tile-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    line-height: 1.15;
+    margin-bottom: 1pt;
+  }
+
+  .sw-tile-meta {
+    font-size: var(--text-xs);
+    opacity: 0.9;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="sw-outer">
+
+  <!-- Eyebrow + page title -->
+  <div class="sw-title-area">
+    <div class="eyebrow">{{ page_eyebrow }}</div>
+    <h1 class="page-title">{{ page_title }}</h1>
+  </div>
+
+  <!-- 3 × 2 tile grid -->
+  <div class="sw-grid">
+    {% for tile in tiles %}
+    <div class="sw-tile">
+      {% if tile.image %}
+      <img src="{{ tile.image }}" alt="{{ tile.name }}">
+      {% endif %}
+      <div class="sw-tile-scrim"></div>
+      <div class="sw-tile-caption">
+        <div class="sw-tile-name">{{ tile.name }}</div>
+        <div class="sw-tile-meta">{{ tile.location_year }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

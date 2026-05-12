@@ -121,6 +121,11 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["Company Profile", "Founded 1998", "Daniel Christenson", "Director of Sales"]),
     ("about_riverside", "about", "riverside", "about_ctx",
         ["Company Profile", "Founded 1998", "Daniel Christenson", "Director of Sales"]),
+    ("sample_of_work_riverside", "sample_of_work", "riverside", "sample_of_work_ctx", [
+        "Sample of Our Work", "Recent installations",
+        "Sample Project A", "Sample Project F",
+        "Sample City, AA · 2024", "Sample City, FF · 2022",
+    ]),
 ]
 
 

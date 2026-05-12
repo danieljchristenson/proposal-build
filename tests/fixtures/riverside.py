@@ -314,3 +314,30 @@ about_ctx = {
     ],
     "contact_strip": "ST-NICKS.COM  ·  (562) 438-0017  ·  6861 Walker St, La Palma, CA 90623  ·  © 2026 St. Nick's Christmas Lighting & Décor",
 }
+
+
+# ===== Sample of Our Work =====
+# Six synthetic entries. Images are loaded from tests/fixtures/past_work_library/
+# so the rendered tile shows a real (synthetic) JPG.
+_PAST_WORK_FIXTURE_DIR = REPO_ROOT / "tests" / "fixtures" / "past_work_library"
+sample_of_work_ctx = {
+    **PROJECT,
+    "page_num": 10,
+    "page_total": 14,
+    "page_eyebrow": "Sample of Our Work",
+    "page_title": "Recent installations",
+    "tiles": [
+        {"name": "Sample Project A", "location_year": "Sample City, AA · 2024",
+         "image": (_PAST_WORK_FIXTURE_DIR / "fixture_a.jpg").as_uri()},
+        {"name": "Sample Project B", "location_year": "Sample City, BB · 2024",
+         "image": (_PAST_WORK_FIXTURE_DIR / "fixture_b.jpg").as_uri()},
+        {"name": "Sample Project C", "location_year": "Sample City, CC · 2023",
+         "image": (_PAST_WORK_FIXTURE_DIR / "fixture_c.jpg").as_uri()},
+        {"name": "Sample Project D", "location_year": "Sample City, DD · 2023",
+         "image": (_PAST_WORK_FIXTURE_DIR / "fixture_d.jpg").as_uri()},
+        {"name": "Sample Project E", "location_year": "Sample City, EE · 2022",
+         "image": (_PAST_WORK_FIXTURE_DIR / "fixture_e.jpg").as_uri()},
+        {"name": "Sample Project F", "location_year": "Sample City, FF · 2022",
+         "image": (_PAST_WORK_FIXTURE_DIR / "fixture_f.jpg").as_uri()},
+    ],
+}
