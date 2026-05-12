@@ -22,7 +22,9 @@ REQUIRED_PROSE_SECTIONS = (
     "Creative Direction",
 )
 BRIEF_RELPATH = "04 - Process & Notes/Project Brief.md"
-PAST_WORK_LIBRARY_RELPATH = "skill_assets/past_work_library"
+PAST_WORK_LIBRARY_DIR = (
+    Path(__file__).resolve().parents[3] / "skill_assets" / "past_work_library"
+)
 
 
 def check(project_path: Path) -> list[Finding]:
@@ -190,4 +192,22 @@ def _check_sample_work(project_path: Path, fm: dict) -> list[Finding]:
             ),
             field="sample_work",
         ))
+
+    for pid in sample_work:
+        md_path = PAST_WORK_LIBRARY_DIR / f"{pid}.md"
+        if not md_path.exists():
+            findings.append(Finding(
+                severity="blocker", category="brief",
+                issue="sample_work_unknown_id",
+                detail=(
+                    f"sample_work ID '{pid}' has no entry at "
+                    f"{md_path.relative_to(PAST_WORK_LIBRARY_DIR.parents[1])}"
+                ),
+                fix=(
+                    f"Either remove '{pid}' from sample_work: in the Brief, "
+                    f"or add {pid}.md (and {pid}.jpg) to the past_work_library/."
+                ),
+                field="sample_work",
+            ))
+
     return findings

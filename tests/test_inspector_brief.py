@@ -121,3 +121,37 @@ def test_inspector_accepts_sample_work_absent():
     findings = check(project_dir)
     sw_issues = {f.issue for f in findings if f.issue.startswith("sample_work_")}
     assert sw_issues == set()
+
+
+def test_inspector_flags_sample_work_unknown_id(tmp_path, monkeypatch):
+    """sample_work: with an ID not in the library → sample_work_unknown_id."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Point inspector at the test fixture library
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "past_work_library"
+    monkeypatch.setattr(inspector_brief, "PAST_WORK_LIBRARY_DIR", fixture_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # 6 IDs, but 'not_in_library' doesn't exist
+    parts[1] = parts[1].rstrip() + (
+        "\nsample_work:\n  - fixture_a\n  - fixture_b\n  - fixture_c\n"
+        "  - fixture_d\n  - fixture_e\n  - not_in_library\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "sample_work_unknown_id" in issues
+    # And no wrong-count (we have exactly 6)
+    assert "sample_work_wrong_count" not in issues
