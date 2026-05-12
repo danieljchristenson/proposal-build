@@ -155,3 +155,43 @@ def test_inspector_flags_sample_work_unknown_id(tmp_path, monkeypatch):
     assert "sample_work_unknown_id" in issues
     # And no wrong-count (we have exactly 6)
     assert "sample_work_wrong_count" not in issues
+
+
+def test_inspector_flags_sample_work_missing_image(tmp_path, monkeypatch):
+    """sample_work: ID has .md but no .jpg → sample_work_missing_image."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Build a temporary library where fixture_g has an .md but no .jpg
+    tmp_lib = tmp_path / "lib"
+    tmp_lib.mkdir()
+    (tmp_lib / "fixture_g.md").write_text(
+        '---\nid: fixture_g\nname: "G"\nlocation: "City, GG"\nyear: 2023\n---\n'
+    )
+    monkeypatch.setattr(inspector_brief, "PAST_WORK_LIBRARY_DIR", tmp_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # 6 IDs, all with .md but fixture_g lacks .jpg
+    for pid in ("fixture_g",) * 6:
+        (tmp_lib / f"{pid}.md").write_text(
+            f'---\nid: {pid}\nname: "G"\nlocation: "City, GG"\nyear: 2023\n---\n'
+        )
+    parts[1] = parts[1].rstrip() + (
+        "\nsample_work:\n  - fixture_g\n  - fixture_g\n  - fixture_g\n"
+        "  - fixture_g\n  - fixture_g\n  - fixture_g\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "sample_work_missing_image" in issues

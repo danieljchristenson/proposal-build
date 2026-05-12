@@ -209,5 +209,20 @@ def _check_sample_work(project_path: Path, fm: dict) -> list[Finding]:
                 ),
                 field="sample_work",
             ))
+        jpg_path = PAST_WORK_LIBRARY_DIR / f"{pid}.jpg"
+        if md_path.exists() and not jpg_path.exists():
+            findings.append(Finding(
+                severity="blocker", category="brief",
+                issue="sample_work_missing_image",
+                detail=(
+                    f"sample_work ID '{pid}' has a .md entry but no "
+                    f"matching {pid}.jpg in past_work_library/."
+                ),
+                fix=(
+                    f"Add {pid}.jpg to skill_assets/past_work_library/ "
+                    f"(recommended ~1200x800)."
+                ),
+                field="sample_work",
+            ))
 
     return findings
