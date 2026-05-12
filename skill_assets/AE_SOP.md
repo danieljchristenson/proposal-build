@@ -226,6 +226,36 @@ generate — but the Brief schema and Worksheet shape are different:
    Item / Rental (annual, all-in) / Purchase (one-time + annual
    service). Customer can mix and match per line item.
 
+### Past Work slide (`sample_work:` in Brief)
+
+The Past Work slide is a 6-tile image grid of prior-season installations.
+To include it in a proposal, add a `sample_work:` list to the Brief naming
+exactly 6 project IDs from `skill_assets/past_work_library/`.
+
+```yaml
+sample_work:
+  - project_id_one
+  - project_id_two
+  - project_id_three
+  - project_id_four
+  - project_id_five
+  - project_id_six
+```
+
+Rules:
+
+- **Past work only.** Never include current-cycle prospects or any project
+  still being pitched. The slide is social proof; an active deal on it reads
+  as inflated track record.
+- **Real customers only.** Every ID must correspond to a real installed
+  project. No fictional, aspirational, or stand-in names.
+- **Library is curated by Daniel.** New past-work entries (`.md` + `.jpg`)
+  are added out-of-band. Do not auto-fill from the `Projects/` directory.
+
+Omit `sample_work:` to skip the slide entirely. The inspector blocks
+generation if `sample_work:` is present but lists ≠ 6 IDs, an unknown ID,
+or an ID with a missing image.
+
 ### Common errors and what they mean
 
 | What Claude says | What's actually wrong | Fix |
