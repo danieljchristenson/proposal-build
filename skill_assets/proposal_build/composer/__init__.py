@@ -21,6 +21,7 @@ from proposal_build.models import ProjectModel, SlidePlanItem, Tier, MenuProject
 
 
 CASE_STUDIES_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "case_studies"
+PAST_WORK_LIBRARY_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "past_work_library"
 
 
 def compose(model) -> tuple[list[SlidePlanItem], list]:
@@ -164,6 +165,41 @@ def _build_ctx(model: ProjectModel, layout: str, page_num: int, page_total: int,
     if layout == "about":
         return build_about_ctx(model, page_num, page_total)
     raise ValueError(f"Unknown layout: {layout}")
+
+
+def _load_past_work_entries(ids: list[str], library_dir: Path | None = None) -> list[dict]:
+    """Resolve a list of past_work_library IDs to display-ready dicts.
+
+    Returns one dict per ID in input order:
+        {"id": str, "name": str, "location": str, "year": int, "image": str}
+
+    `image` is an absolute filesystem path to the corresponding .jpg.
+
+    Raises FileNotFoundError if any ID lacks a matching .md file. The
+    inspector catches this earlier in practice; the raise here is a
+    belt-and-braces guard for unit tests that hit the loader directly.
+
+    `library_dir` lets tests point at tests/fixtures/past_work_library/.
+    Production callers omit it and use skill_assets/past_work_library/.
+    """
+    base = library_dir if library_dir is not None else PAST_WORK_LIBRARY_DIR
+    entries: list[dict] = []
+    for pid in ids:
+        md_path = base / f"{pid}.md"
+        if not md_path.exists():
+            raise FileNotFoundError(
+                f"past_work_library entry not found: {pid} (looked at {md_path})"
+            )
+        post = frontmatter.load(str(md_path))
+        jpg_path = base / f"{pid}.jpg"
+        entries.append({
+            "id": pid,
+            "name": post.metadata["name"],
+            "location": post.metadata["location"],
+            "year": int(post.metadata["year"]),
+            "image": str(jpg_path.resolve()),
+        })
+    return entries
 
 
 def _load_case_study(case_id: str) -> dict:
