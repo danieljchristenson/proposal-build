@@ -73,3 +73,44 @@ def test_tiered_composer_skips_sample_of_work_when_sample_work_empty(tmp_path):
     slides, _ = compose(model)
     layouts = [s.layout_name for s in slides]
     assert "sample_of_work" not in layouts
+
+
+def test_menu_composer_emits_sample_of_work_when_sample_work_present(
+    tmp_path, monkeypatch,
+):
+    """sample_work: in a menu Brief → menu composer emits sample_of_work."""
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    _patch_brief(dst, ["fixture_a", "fixture_b", "fixture_c",
+                       "fixture_d", "fixture_e", "fixture_f"])
+    _swap_library_to_fixture(monkeypatch)
+
+    from proposal_build.parser import parse_project
+    from proposal_build.composer import compose
+
+    model = parse_project(dst)
+    slides, _ = compose(model)
+    layouts = [s.layout_name for s in slides]
+
+    assert "sample_of_work" in layouts, (
+        f"Expected sample_of_work in menu deck; got: {layouts}"
+    )
+
+
+def test_menu_composer_skips_sample_of_work_when_sample_work_empty():
+    """A FIGat7th Brief without sample_work → no sample_of_work slide."""
+    project_dir = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    from proposal_build.parser import parse_project
+    from proposal_build.composer import compose
+
+    model = parse_project(project_dir)
+    slides, _ = compose(model)
+    layouts = [s.layout_name for s in slides]
+    assert "sample_of_work" not in layouts
