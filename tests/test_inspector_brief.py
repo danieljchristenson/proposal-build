@@ -109,6 +109,9 @@ def test_inspector_flags_sample_work_with_wrong_count(tmp_path):
     assert "sample_work_wrong_count" in issues, (
         f"Expected sample_work_wrong_count; got {issues}"
     )
+    assert "sample_work_unknown_id" not in issues, (
+        "Short-circuit failed: unknown_id blockers should not fire when count is wrong"
+    )
 
 
 def test_inspector_accepts_sample_work_absent():

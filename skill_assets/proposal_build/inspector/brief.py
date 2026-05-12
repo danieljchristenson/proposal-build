@@ -192,6 +192,7 @@ def _check_sample_work(project_path: Path, fm: dict) -> list[Finding]:
             ),
             field="sample_work",
         ))
+        return findings
 
     for pid in sample_work:
         md_path = PAST_WORK_LIBRARY_DIR / f"{pid}.md"
