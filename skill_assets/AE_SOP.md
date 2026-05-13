@@ -256,6 +256,51 @@ Omit `sample_work:` to skip the slide entirely. The inspector blocks
 generation if `sample_work:` is present but lists ≠ 6 IDs, an unknown ID,
 or an ID with a missing image.
 
+### Tree Comparison slide (`tree_comparison:` in Brief, menu mode)
+
+The Tree Comparison slide shows three tree-size alternatives near the
+end of a menu-mode deck. Useful when the main pitch carries a flagship
+tree that may be larger than the customer's budget. The slide does NOT
+modify Section 2's pricing — it presents scale-down options as a
+conversation tool, giving a customer who balks at the headline tree
+price a downgrade path without St. Nick's pulling out a new proposal.
+
+To include it, add a `tree_comparison:` block to the Brief naming
+exactly 3 tree IDs from `skill_assets/tree_library/` plus a
+`recommended:` ID (must be one of the three):
+
+```yaml
+tree_comparison:
+  trees: [tree_30, tree_40, tree_50]
+  recommended: tree_50
+```
+
+Rules:
+
+- **Real configurations only.** Every ID must correspond to a tree
+  St. Nick's can actually deliver from the vendor (Unisun frame tree
+  series; `Master Proposal Reference/Reference Tree Catalog/` has the
+  source docs).
+- **Pricing must be confirmed.** Catalog dollar figures are
+  heavy-decorated purchase prices pulled from the 2026 Frame Tree
+  Pricing spreadsheet and appear on a customer-facing slide. Never
+  seed an entry with placeholder or unconfirmed pricing.
+- **Library is curated by Daniel.** New tree entries (`.md` + `.jpg`)
+  are added out-of-band from confirmed spec sheets. The skill bundle
+  ships the library with `.md` files for sizes 30/40/50; Daniel drops
+  the matching `.jpg` photos before using the slide in a real customer
+  deck.
+
+**Internal note on ornament counts.** The 2026 Frame Tree Pricing
+spreadsheet header column reads "22 Ornaments Per Branch" but the
+customer-facing brochure (`St Nick's Frame Trees - 2026 Collection.pdf`)
+defines heavy decoration as 20 ornaments per branch. The brochure
+language is authoritative for customer copy; the pricing-column header
+reconciliation is pending with the vendor (Abigail Lacson). Always
+quote 20/branch on the customer slide.
+
+Omit `tree_comparison:` entirely to skip the slide.
+
 ### Common errors and what they mean
 
 | What Claude says | What's actually wrong | Fix |
