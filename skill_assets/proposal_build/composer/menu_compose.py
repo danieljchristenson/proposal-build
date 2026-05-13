@@ -113,6 +113,16 @@ def _build_slides(model: MenuProjectModel) -> Tuple[list[SlidePlanItem], list]:
     layout_hints.append(("rom_investment", {"page_part": 1}))
     layout_hints.append(("rom_investment", {"page_part": 2}))
 
+    # Tree comparison (opt-in alternate-tree-sizes slide)
+    if model.tree_comparison:
+        from proposal_build.composer import _load_tree_entries
+        tc = model.tree_comparison
+        entries = _load_tree_entries(list(tc["trees"]))
+        layout_hints.append(("tree_comparison", {
+            "tree_entries": entries,
+            "recommended_id": tc["recommended"],
+        }))
+
     # Sign-off
     layout_hints.append(("sign_off_menu", {}))
 
@@ -195,6 +205,13 @@ def _build_ctx(model: MenuProjectModel, logical: str, page_num: int, page_total:
         from proposal_build.composer.menu_ctx_builders import build_menu_sample_of_work_ctx
         return "sample_of_work", build_menu_sample_of_work_ctx(
             model, page_num, page_total, hint["past_work_entries"]
+        )
+    if logical == "tree_comparison":
+        from proposal_build.composer.menu_ctx_builders import build_tree_comparison_ctx
+        return "tree_comparison", build_tree_comparison_ctx(
+            model, page_num, page_total,
+            tree_entries=hint["tree_entries"],
+            recommended_id=hint["recommended_id"],
         )
     if logical == "sign_off_menu":
         return "sign_off", build_menu_sign_off_ctx(model, page_num, page_total)
