@@ -233,3 +233,40 @@ def test_inspector_flags_tree_comparison_wrong_count(tmp_path, monkeypatch):
     # Short-circuit assertion: no per-ID checks should fire when count is wrong
     assert "tree_comparison_unknown_id" not in issues
     assert "tree_comparison_missing_image" not in issues
+
+
+def test_inspector_flags_tree_comparison_unknown_id(tmp_path, monkeypatch):
+    """tree_comparison.trees ID with no .md in tree_library → tree_comparison_unknown_id."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Point inspector at the test fixture library
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "tree_library"
+    monkeypatch.setattr(inspector_brief, "TREE_LIBRARY_DIR", fixture_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # 3 IDs (count is correct) but 'tree_not_in_library' doesn't exist
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - fixture_tree_a\n"
+        "    - fixture_tree_b\n"
+        "    - tree_not_in_library\n"
+        "  recommended: fixture_tree_b\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "tree_comparison_unknown_id" in issues
+    assert "tree_comparison_wrong_count" not in issues  # we have 3

@@ -263,4 +263,21 @@ def _check_tree_comparison(project_path: Path, fm: dict) -> list[Finding]:
         ))
         return findings  # short-circuit per-ID checks
 
+    for tid in trees:
+        md_path = TREE_LIBRARY_DIR / f"{tid}.md"
+        if not md_path.exists():
+            findings.append(Finding(
+                severity="blocker", category="brief",
+                issue="tree_comparison_unknown_id",
+                detail=(
+                    f"tree_comparison ID '{tid}' has no entry at "
+                    f"{md_path}"
+                ),
+                fix=(
+                    f"Either remove '{tid}' from tree_comparison.trees in the "
+                    f"Brief, or add {tid}.md (and {tid}.jpg) to the tree_library/."
+                ),
+                field="tree_comparison",
+            ))
+
     return findings
