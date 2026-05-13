@@ -146,6 +146,13 @@ def test_layout_renders(out_name, layout_name, fixture_module, ctx_attr, expecte
         _assert_text_present(doc, expected_text)
 
 
+def test_tree_comparison_template_file_exists():
+    """The tree_comparison layout file ships in skill_assets/layouts/."""
+    from pathlib import Path
+    p = Path(__file__).resolve().parent.parent / "skill_assets" / "layouts" / "tree_comparison.html"
+    assert p.is_file(), f"Expected layout at {p}"
+
+
 def test_all_layouts_rendered():
     """After the suite runs, every PDF named in LAYOUT_CASES must exist on disk."""
     if not LAYOUT_CASES:

@@ -1,0 +1,247 @@
+<!-- layout-version: 2026-05-12 -->
+{% extends "base.html" %}
+{% block layout_version %}<!-- layout-version: 2026-05-12 -->{% endblock %}
+{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
+{% block extra_head %}
+<style>
+  /* Tree Comparison — light page, footer present.
+     Reuses the investment.html tier-card pattern (3-up cards with recommended
+     banner) plus a top photo block per card. Inline CSS for V1 — refactor to
+     brand.css if a 3rd layout adopts the pattern. */
+
+  .tc-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page eyebrow + title + standfirst ── */
+  .tc-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-4);
+  }
+  .tc-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── 3-card grid ── */
+  .tc-cards-wrapper {
+    flex: 1 1 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  .tc-card-col { display: flex; flex-direction: column; }
+
+  /* Recommended banner + spacer */
+  .tc-recommended-banner {
+    background: var(--color-red);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: var(--space-2) 0;
+    border-radius: 3pt 3pt 0 0;
+  }
+  .tc-banner-spacer {
+    height: calc(var(--text-xs) * 1.45 + var(--space-2) * 2);
+  }
+
+  /* Card */
+  .tc-card {
+    flex: 1 1 0;
+    background: white;
+    border: 1pt solid #E0E0E0;
+    box-sizing: border-box;
+    padding: var(--space-3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .tc-card.recommended { background: #FFF8F8; }
+  .tc-recommended-banner + .tc-card {
+    border-radius: 0 0 3pt 3pt;
+    border-top: none;
+  }
+  .tc-card:not(.recommended) { border-radius: 3pt; }
+
+  /* Top rule strip (replaces border-top on non-recommended) */
+  .tc-card-rule {
+    height: 4pt;
+    margin: 0 calc(-1 * var(--space-3)) var(--space-3) calc(-1 * var(--space-3));
+  }
+  .tc-card-rule.gray { background: #9E9E9E; }
+  .tc-card-rule.red  { background: var(--color-red); }
+  .tc-card-rule.navy { background: var(--color-navy); }
+
+  /* Tree photo (the only structural deviation from investment.html) */
+  .tc-photo {
+    width: 100%;
+    height: 110pt;
+    background: #F5F5F5;
+    margin-bottom: var(--space-3);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tc-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Header — height eyebrow + name */
+  .tc-height-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    margin-bottom: 2pt;
+  }
+  .tc-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-md);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin-bottom: 4pt;
+  }
+
+  /* Tagline */
+  .tc-tagline {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  /* Divider */
+  .tc-divider {
+    height: 1pt;
+    background: #E0E0E0;
+    margin-bottom: var(--space-2);
+  }
+
+  /* Bullets */
+  .tc-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+  }
+  .tc-bullets li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 9pt;
+    line-height: 1.3;
+    color: var(--color-charcoal);
+    padding-left: var(--space-3);
+    position: relative;
+    margin-bottom: 2pt;
+  }
+  .tc-bullets li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 10pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* Price + sublabel pinned at the bottom of the card */
+  .tc-price {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-lg);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-red);
+    margin-top: var(--space-3);
+  }
+  .tc-price-sublabel {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    margin-top: 2pt;
+  }
+
+  /* Footnote */
+  .tc-footnote {
+    flex: 0 0 auto;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+    margin-top: var(--space-3);
+    line-height: 1.5;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="tc-outer">
+
+  <div class="tc-title-area">
+    <div class="tc-eyebrow">{{ page_eyebrow }}</div>
+    <h1 class="page-title">{{ page_title }}</h1>
+    {% if standfirst %}
+    <p class="standfirst">{{ standfirst }}</p>
+    {% endif %}
+  </div>
+
+  <div class="tc-cards-wrapper">
+    {% for card in cards %}
+    <div class="tc-card-col">
+      {% if card.is_recommended %}
+      <div class="tc-recommended-banner">&#9733; RECOMMENDED &#9733;</div>
+      {% else %}
+      <div class="tc-banner-spacer"></div>
+      {% endif %}
+      <div class="tc-card {% if card.is_recommended %}recommended{% endif %}">
+        <div class="tc-card-rule {{ card.rule_color }}"></div>
+        <div class="tc-photo">
+          {% if card.image %}<img src="{{ card.image }}" alt="{{ card.name }}">{% endif %}
+        </div>
+        <div class="tc-height-eyebrow">{{ card.height_eyebrow }}</div>
+        <div class="tc-name">{{ card.name }}</div>
+        <div class="tc-tagline">{{ card.tagline }}</div>
+        <div class="tc-divider"></div>
+        <ul class="tc-bullets">
+          {% for item in card.bullets %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+        <div class="tc-price">{{ card.price_display }}</div>
+        <div class="tc-price-sublabel">{{ card.price_sublabel }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if footnote %}
+  <div class="tc-footnote">{{ footnote }}</div>
+  {% endif %}
+
+</div>
+{% endblock %}
