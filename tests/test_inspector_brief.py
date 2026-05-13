@@ -270,3 +270,55 @@ def test_inspector_flags_tree_comparison_unknown_id(tmp_path, monkeypatch):
     issues = [f.issue for f in findings]
     assert "tree_comparison_unknown_id" in issues
     assert "tree_comparison_wrong_count" not in issues  # we have 3
+
+
+def test_inspector_flags_tree_comparison_missing_image(tmp_path, monkeypatch):
+    """tree_comparison ID has .md but no .jpg → tree_comparison_missing_image."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Build a temporary library with one entry that has .md but no .jpg
+    tmp_lib = tmp_path / "lib"
+    tmp_lib.mkdir()
+    for pid in ("tree_x", "tree_y", "tree_z"):
+        (tmp_lib / f"{pid}.md").write_text(
+            f'---\nid: {pid}\nheight_display: "30 ft"\nname: "X"\n'
+            f'tagline: "t"\nlight_count: 1\nornament_count_heavy: 1\n'
+            f'ornament_count_light: 1\nornaments_per_branch_heavy: 20\n'
+            f'branch_count: 1\ncanopy_diameter_display: "1 ft"\n'
+            f'price_display: "$1"\nbullets:\n  - "b1"\n---\n'
+        )
+    # Only tree_x and tree_y get .jpgs; tree_z is missing its image
+    fixture_jpg = Path(__file__).resolve().parent / "fixtures" / "past_work_library" / "fixture_a.jpg"
+    shutil.copy(fixture_jpg, tmp_lib / "tree_x.jpg")
+    shutil.copy(
+        Path(__file__).resolve().parent / "fixtures" / "past_work_library" / "fixture_b.jpg",
+        tmp_lib / "tree_y.jpg",
+    )
+    monkeypatch.setattr(inspector_brief, "TREE_LIBRARY_DIR", tmp_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - tree_x\n"
+        "    - tree_y\n"
+        "    - tree_z\n"
+        "  recommended: tree_x\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "tree_comparison_missing_image" in issues
+    assert "tree_comparison_unknown_id" not in issues

@@ -279,5 +279,22 @@ def _check_tree_comparison(project_path: Path, fm: dict) -> list[Finding]:
                 ),
                 field="tree_comparison",
             ))
+            continue  # skip image check if md is missing — unknown_id already covers it
+
+        jpg_path = TREE_LIBRARY_DIR / f"{tid}.jpg"
+        if not jpg_path.exists():
+            findings.append(Finding(
+                severity="blocker", category="brief",
+                issue="tree_comparison_missing_image",
+                detail=(
+                    f"tree_comparison ID '{tid}' has a .md entry but no "
+                    f"matching {tid}.jpg in tree_library/."
+                ),
+                fix=(
+                    f"Add {tid}.jpg to skill_assets/tree_library/ "
+                    f"(recommended ~1200x800, landscape)."
+                ),
+                field="tree_comparison",
+            ))
 
     return findings
