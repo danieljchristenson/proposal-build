@@ -340,17 +340,11 @@ tree_comparison_ctx = {
     "page_num": 11,
     "page_total": 12,
     "page_eyebrow": "Alternate Tree Options",
-    "page_title": "Tree scale alternatives for the program",
+    "page_title": "Three scale options",
     "standfirst": (
         "Three commercial frame trees, side by side. Each replaces the "
         "program tree in Section 2; the surrounding enhancement package "
         "carries over to whichever tree you pick."
-    ),
-    "footnote": (
-        "These are scale alternatives to the program tree in Section 2. "
-        "Selecting one of these replaces the Section 2 tree pricing; the "
-        "enhancement package (lit reindeer, gift boxes, branded arch) "
-        "carries over to whichever tree the customer picks."
     ),
     "cards": [
         {

@@ -140,9 +140,8 @@ def test_build_tree_comparison_ctx_produces_three_cards_with_recommended_flag():
     assert ctx["page_num"] == 11
     assert ctx["page_total"] == 12
     assert ctx["page_eyebrow"] == "Alternate Tree Options"
-    assert ctx["page_title"] == "Tree scale alternatives for the program"
+    assert ctx["page_title"] == "Three scale options"
     assert "Three commercial frame trees" in ctx["standfirst"]
-    assert "scale alternatives to the program tree" in ctx["footnote"]
 
     # Cards
     assert len(ctx["cards"]) == 3
