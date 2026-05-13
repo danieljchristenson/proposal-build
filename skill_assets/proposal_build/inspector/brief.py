@@ -297,4 +297,20 @@ def _check_tree_comparison(project_path: Path, fm: dict) -> list[Finding]:
                 field="tree_comparison",
             ))
 
+    recommended = tc.get("recommended")
+    if recommended and recommended not in trees:
+        findings.append(Finding(
+            severity="blocker", category="brief",
+            issue="tree_comparison_recommended_not_in_trees",
+            detail=(
+                f"tree_comparison.recommended is '{recommended}', which is "
+                f"not in tree_comparison.trees ({trees})."
+            ),
+            fix=(
+                "Set `recommended:` to one of the tree IDs already listed "
+                "under `tree_comparison.trees:`."
+            ),
+            field="tree_comparison",
+        ))
+
     return findings
