@@ -126,6 +126,14 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         "Sample Project A", "Sample Project F",
         "Sample City, AA · 2024", "Sample City, FF · 2022",
     ]),
+    ("tree_comparison_pier39", "tree_comparison", "pier_39", "tree_comparison_ctx", [
+        "Alternate Tree Options", "Tree scale alternatives",
+        "30 FT", "40 FT", "50 FT", "RECOMMENDED",
+        "Sample Tree A", "Sample Tree B", "Sample Tree C",
+        "Compact landmark", "Confident centerpiece", "Hero-scale flagship",
+        "18,700 warm-white", "65,200 warm-white",
+        "20 per branch fully decorated",
+    ]),
 ]
 
 
