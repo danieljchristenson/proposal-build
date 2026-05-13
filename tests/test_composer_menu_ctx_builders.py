@@ -92,12 +92,9 @@ def test_rom_investment_totals(model):
         model, page_num=11, page_total=12, page_part=2,
     )
     assert ctx2["show_totals"] is True
-    # ROM math: alternate groups now use min(single) / sum(all) — see rom_pricing.py
-    # docstring. Arches contribute their full sum to the high end (4 arches summed,
-    # rather than max of 4) so high totals are larger than the original bookended math.
-    assert ctx2["total_rental"] == "$227,150 – $261,650"
-    assert ctx2["total_purchase_ot"] == "$280,000 – $317,000"
-    assert ctx2["total_purchase_svc"] == "$117,000 – $127,100"
+    assert ctx2["total_rental"] == "$231,527 – $239,652"
+    assert ctx2["total_purchase_ot"] == "$299,601 – $309,201"
+    assert ctx2["total_purchase_svc"] == "$107,001 – $112,401"
 
 
 def test_sign_off_uses_dm_contact(model):

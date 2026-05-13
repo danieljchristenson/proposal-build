@@ -20,8 +20,8 @@ def slides():
     return slides_
 
 
-def test_figat7th_compose_yields_twelve_slides(slides):
-    assert len(slides) == 12
+def test_figat7th_compose_yields_thirteen_slides(slides):
+    assert len(slides) == 13
 
 
 def test_figat7th_slide_layouts_in_order(slides):
@@ -37,7 +37,8 @@ def test_figat7th_slide_layouts_in_order(slides):
         "zone_2up_gallery",  # 9 moments B
         "rom_investment",    # 10 investment p1
         "rom_investment",    # 11 investment p2
-        "sign_off",          # 12
+        "tree_comparison",   # 12 tree size comparison
+        "sign_off",          # 13
     ]
     actual = [s.layout_name for s in slides]
     assert actual == expected
