@@ -198,3 +198,38 @@ def test_inspector_flags_sample_work_missing_image(tmp_path, monkeypatch):
     findings = check(dst)
     issues = [f.issue for f in findings]
     assert "sample_work_missing_image" in issues
+
+
+def test_inspector_flags_tree_comparison_wrong_count(tmp_path, monkeypatch):
+    """tree_comparison.trees with 2 IDs → tree_comparison_wrong_count blocker, short-circuits."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - tree_30\n"
+        "    - tree_40\n"
+        "  recommended: tree_30\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = {f.issue for f in findings}
+    assert "tree_comparison_wrong_count" in issues, (
+        f"Expected tree_comparison_wrong_count; got {issues}"
+    )
+    # Short-circuit assertion: no per-ID checks should fire when count is wrong
+    assert "tree_comparison_unknown_id" not in issues
+    assert "tree_comparison_missing_image" not in issues

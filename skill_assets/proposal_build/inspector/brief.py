@@ -25,6 +25,9 @@ BRIEF_RELPATH = "04 - Process & Notes/Project Brief.md"
 PAST_WORK_LIBRARY_DIR = (
     Path(__file__).resolve().parents[3] / "skill_assets" / "past_work_library"
 )
+TREE_LIBRARY_DIR = (
+    Path(__file__).resolve().parents[3] / "skill_assets" / "tree_library"
+)
 
 
 def check(project_path: Path) -> list[Finding]:
@@ -167,6 +170,7 @@ def _check_menu_mode(project_path: Path, fm: dict, body: str) -> list[Finding]:
             ))
 
     findings.extend(_check_sample_work(project_path, fm))
+    findings.extend(_check_tree_comparison(project_path, fm))
     return findings
 
 
@@ -225,5 +229,38 @@ def _check_sample_work(project_path: Path, fm: dict) -> list[Finding]:
                 ),
                 field="sample_work",
             ))
+
+    return findings
+
+
+def _check_tree_comparison(project_path: Path, fm: dict) -> list[Finding]:
+    """Findings on the tree_comparison: field (menu-mode Brief).
+
+    Empty/absent → no findings. Mirrors _check_sample_work's wrong-count
+    short-circuit so per-ID errors don't drown out the real problem when
+    the user's count is off.
+    """
+    findings: list[Finding] = []
+    tc = fm.get("tree_comparison") or {}
+    if not tc:
+        return findings
+
+    trees = tc.get("trees") or []
+    if len(trees) != 3:
+        findings.append(Finding(
+            severity="blocker", category="brief",
+            issue="tree_comparison_wrong_count",
+            detail=(
+                f"tree_comparison.trees lists {len(trees)} IDs; the "
+                "Alternate Tree Options slide requires exactly 3."
+            ),
+            fix=(
+                "Edit the Brief so `tree_comparison.trees:` has exactly 3 "
+                "tree IDs from skill_assets/tree_library/, or remove the "
+                "`tree_comparison:` block entirely to skip the slide."
+            ),
+            field="tree_comparison",
+        ))
+        return findings  # short-circuit per-ID checks
 
     return findings
