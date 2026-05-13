@@ -164,3 +164,53 @@ def test_menu_brief_sample_work_present_is_parsed_as_tuple(tmp_path):
 
     model = parse_project(dst)
     assert model.sample_work == ("fixture_a", "fixture_b")
+
+
+def test_resolve_menu_project_carries_tree_comparison_through():
+    """tree_comparison: in Brief frontmatter → MenuProjectModel.tree_comparison populated."""
+    from proposal_build.parser.brief import BriefData
+    from proposal_build.parser.worksheet_rom import ROMWorksheetData
+    from proposal_build.parser.menu_resolver import resolve_menu_project
+
+    fm = {
+        "client_company": "FIGat7th Property Management",
+        "client_short": "FIGat7th",
+        "project_name": "FIGat7th Holiday 2026",
+        "project_short": "FIGat7th",
+        "project_year": 2026,
+        "design_phrase": "menu test",
+        "voice": "destination",
+        "prebuilt_cover_image": "cover.png",
+        "creative_vision_hero": "hero.png",
+        "sections": [],
+        "tree_comparison": {
+            "trees": ["tree_30", "tree_40", "tree_50"],
+            "recommended": "tree_50",
+        },
+    }
+    brief = BriefData(frontmatter=fm, sections={})
+    worksheet = ROMWorksheetData(line_items=())
+    model = resolve_menu_project(brief, worksheet)
+    assert model.tree_comparison == {
+        "trees": ["tree_30", "tree_40", "tree_50"],
+        "recommended": "tree_50",
+    }
+
+
+def test_resolve_menu_project_tree_comparison_absent_defaults_to_empty():
+    """tree_comparison: absent → model field is {} (slide skipped downstream)."""
+    from proposal_build.parser.brief import BriefData
+    from proposal_build.parser.worksheet_rom import ROMWorksheetData
+    from proposal_build.parser.menu_resolver import resolve_menu_project
+
+    fm = {
+        "client_company": "X", "client_short": "X",
+        "project_name": "Y", "project_short": "Y", "project_year": 2026,
+        "design_phrase": "d", "voice": "v",
+        "prebuilt_cover_image": "c.png", "creative_vision_hero": "h.png",
+        "sections": [],
+    }
+    brief = BriefData(frontmatter=fm, sections={})
+    worksheet = ROMWorksheetData(line_items=())
+    model = resolve_menu_project(brief, worksheet)
+    assert model.tree_comparison == {}

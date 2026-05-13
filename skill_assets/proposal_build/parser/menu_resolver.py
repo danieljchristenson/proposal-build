@@ -64,6 +64,7 @@ def resolve_menu_project(
         sections=tuple(sections),
         what_youre_approving=fm.get("what_youre_approving", ""),
         sample_work=tuple(fm.get("sample_work") or ()),
+        tree_comparison=fm.get("tree_comparison") or {},
     )
 
 
