@@ -95,10 +95,12 @@
   .tc-card-rule.red  { background: var(--color-red); }
   .tc-card-rule.navy { background: var(--color-navy); }
 
-  /* Tree photo (the only structural deviation from investment.html) */
+  /* Tree photo — portrait-friendly: trees are tall subjects, so use
+     object-fit:contain to show the full tree with subtle gray
+     letterbox bars on the sides rather than crop the topper or base. */
   .tc-photo {
     width: 100%;
-    height: 70pt;
+    height: 130pt;
     background: #F5F5F5;
     margin-bottom: var(--space-3);
     overflow: hidden;
@@ -109,7 +111,7 @@
   .tc-photo img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   /* Header — height eyebrow + name */
