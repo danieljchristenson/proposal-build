@@ -95,23 +95,20 @@
   .tc-card-rule.red  { background: var(--color-red); }
   .tc-card-rule.navy { background: var(--color-navy); }
 
-  /* Tree photo — portrait-friendly: trees are tall subjects, so use
-     object-fit:contain to show the full tree with subtle gray
-     letterbox bars on the sides rather than crop the topper or base. */
+  /* Tree photo — portrait-friendly: trees are tall, so the gray frame
+     shrink-wraps the actual image (fixed pixel height, natural width)
+     instead of a full-width letterbox. This keeps the card compact so
+     the price/sublabel clears the page footer crumb. */
   .tc-photo {
-    width: 100%;
-    height: 130pt;
+    align-self: center;
     background: #F5F5F5;
     margin-bottom: var(--space-3);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    line-height: 0;
   }
   .tc-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    display: block;
+    height: 100pt;
+    width: auto;
   }
 
   /* Header — height eyebrow + name */
