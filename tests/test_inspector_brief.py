@@ -198,3 +198,195 @@ def test_inspector_flags_sample_work_missing_image(tmp_path, monkeypatch):
     findings = check(dst)
     issues = [f.issue for f in findings]
     assert "sample_work_missing_image" in issues
+
+
+def test_inspector_flags_tree_comparison_wrong_count(tmp_path, monkeypatch):
+    """tree_comparison.trees with 2 IDs → tree_comparison_wrong_count blocker, short-circuits."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - tree_30\n"
+        "    - tree_40\n"
+        "  recommended: tree_30\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = {f.issue for f in findings}
+    assert "tree_comparison_wrong_count" in issues, (
+        f"Expected tree_comparison_wrong_count; got {issues}"
+    )
+    # Short-circuit assertion: no per-ID checks should fire when count is wrong
+    assert "tree_comparison_unknown_id" not in issues
+    assert "tree_comparison_missing_image" not in issues
+
+
+def test_inspector_flags_tree_comparison_unknown_id(tmp_path, monkeypatch):
+    """tree_comparison.trees ID with no .md in tree_library → tree_comparison_unknown_id."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Point inspector at the test fixture library
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "tree_library"
+    monkeypatch.setattr(inspector_brief, "TREE_LIBRARY_DIR", fixture_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # 3 IDs (count is correct) but 'tree_not_in_library' doesn't exist
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - fixture_tree_a\n"
+        "    - fixture_tree_b\n"
+        "    - tree_not_in_library\n"
+        "  recommended: fixture_tree_b\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "tree_comparison_unknown_id" in issues
+    assert "tree_comparison_wrong_count" not in issues  # we have 3
+
+
+def test_inspector_flags_tree_comparison_missing_image(tmp_path, monkeypatch):
+    """tree_comparison ID has .md but no .jpg → tree_comparison_missing_image."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Build a temporary library with one entry that has .md but no .jpg
+    tmp_lib = tmp_path / "lib"
+    tmp_lib.mkdir()
+    for pid in ("tree_x", "tree_y", "tree_z"):
+        (tmp_lib / f"{pid}.md").write_text(
+            f'---\nid: {pid}\nheight_display: "30 ft"\nname: "X"\n'
+            f'tagline: "t"\nlight_count: 1\nornament_count_heavy: 1\n'
+            f'ornament_count_light: 1\nornaments_per_branch_heavy: 20\n'
+            f'branch_count: 1\ncanopy_diameter_display: "1 ft"\n'
+            f'price_display: "$1"\nbullets:\n  - "b1"\n---\n'
+        )
+    # Only tree_x and tree_y get .jpgs; tree_z is missing its image
+    fixture_jpg = Path(__file__).resolve().parent / "fixtures" / "past_work_library" / "fixture_a.jpg"
+    shutil.copy(fixture_jpg, tmp_lib / "tree_x.jpg")
+    shutil.copy(
+        Path(__file__).resolve().parent / "fixtures" / "past_work_library" / "fixture_b.jpg",
+        tmp_lib / "tree_y.jpg",
+    )
+    monkeypatch.setattr(inspector_brief, "TREE_LIBRARY_DIR", tmp_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - tree_x\n"
+        "    - tree_y\n"
+        "    - tree_z\n"
+        "  recommended: tree_x\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "tree_comparison_missing_image" in issues
+    assert "tree_comparison_unknown_id" not in issues
+
+
+def test_inspector_flags_tree_comparison_recommended_not_in_trees(tmp_path, monkeypatch):
+    """recommended ID not in trees → tree_comparison_recommended_not_in_trees."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "tree_library"
+    monkeypatch.setattr(inspector_brief, "TREE_LIBRARY_DIR", fixture_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # All 3 IDs valid, but 'tree_50' is not in the trees list (typo simulation)
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - fixture_tree_a\n"
+        "    - fixture_tree_b\n"
+        "    - fixture_tree_c\n"
+        "  recommended: tree_50\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "tree_comparison_recommended_not_in_trees" in issues
+
+
+def test_inspector_flags_tree_comparison_recommended_missing(tmp_path, monkeypatch):
+    """tree_comparison present but no recommended key → tree_comparison_recommended_missing."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "tree_library"
+    monkeypatch.setattr(inspector_brief, "TREE_LIBRARY_DIR", fixture_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Fig at 7th - 2026 - Multi-Rendering Project"
+    )
+    dst = tmp_path / "fake_figat7th"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + (
+        "\ntree_comparison:\n"
+        "  trees:\n"
+        "    - fixture_tree_a\n"
+        "    - fixture_tree_b\n"
+        "    - fixture_tree_c\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "tree_comparison_recommended_missing" in issues

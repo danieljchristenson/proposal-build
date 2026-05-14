@@ -100,3 +100,22 @@ def test_menu_project_model_has_sample_work_field():
     assert "sample_work" in fields, (
         "MenuProjectModel missing sample_work field — see spec §5"
     )
+
+
+def test_menu_project_model_has_tree_comparison_field_defaulting_to_empty_dict():
+    """MenuProjectModel.tree_comparison defaults to {} so missing Brief field is OK."""
+    from proposal_build.models import MenuProjectModel
+    m = MenuProjectModel(
+        client_company="X", client_short="X",
+        project_name="Y", project_short="Y", project_year=2026, project_subtitle="",
+        presenter_name="", presenter_title="", presenter_org="",
+        proposal_date="",
+        client_contact_name="", client_contact_title="",
+        client_contact_email="", client_contact_phone="",
+        design_phrase="d", voice="v",
+        creative_direction="", customer_goals=(), creative_phases=(),
+        prebuilt_cover_image="c.png", prebuilt_palette_image="",
+        creative_vision_hero="h.png",
+        sections=(), what_youre_approving="",
+    )
+    assert m.tree_comparison == {}

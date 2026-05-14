@@ -265,9 +265,9 @@ def _rom_footnote() -> str:
     return (
         "<strong>Rental</strong> is an annual all-inclusive fee covering item, install, removal, and storage. "
         "<strong>Purchase</strong> is a one-time price plus a separate annual service fee for install, removal, and storage. "
-        "Each section is a menu of options — Program ROM Total spans the lowest single pick across all sections "
-        "(low) and the full menu taken together (high). All figures are rough order of magnitude for first-pass "
-        "scoping; final numbers will follow site walk and scope refinement."
+        "Plaza arches are mutually exclusive — Program ROM Total is bookended by the cheapest-pick (low) and "
+        "most-expensive-pick (high) configurations. All figures are rough order of magnitude for first-pass scoping; "
+        "final numbers will follow site walk and scope refinement."
     )
 
 
@@ -296,6 +296,48 @@ def build_menu_sample_of_work_ctx(
             }
             for e in past_work_entries
         ],
+    }
+
+
+_TREE_RULE_COLORS = ("gray", "red", "navy")
+
+
+def build_tree_comparison_ctx(
+    model: MenuProjectModel, page_num: int, page_total: int,
+    tree_entries: list[dict], recommended_id: str,
+) -> dict:
+    """Build the ctx for the tree_comparison layout.
+
+    Receives 3 entries (loader output) + the recommended ID. Maps each entry
+    to a card dict with rule-color alternation across positions and the
+    recommended flag derived from ID match. Locked at 3 cards per V1 spec.
+    """
+    cards = []
+    for i, e in enumerate(tree_entries):
+        cards.append({
+            "rule_color": _TREE_RULE_COLORS[i],
+            "image": e["image"],
+            "height_eyebrow": e["height_eyebrow"],
+            "name": e["name"],
+            "tagline": e["tagline"],
+            "bullets": list(e["bullets"]),
+            "price_display": e["price_display"],
+            "price_sublabel": "PURCHASE · FULLY DECORATED",
+            "is_recommended": e["id"] == recommended_id,
+        })
+
+    return {
+        **_project_dict(model),
+        "page_num": page_num,
+        "page_total": page_total,
+        "page_eyebrow": "Alternate Tree Options",
+        "page_title": "Three scale options",
+        "standfirst": (
+            "Three commercial frame trees, side by side. Each replaces the "
+            "program tree in Section 2; the surrounding enhancement package "
+            "carries over to whichever tree you pick."
+        ),
+        "cards": cards,
     }
 
 

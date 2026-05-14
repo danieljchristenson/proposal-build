@@ -23,6 +23,7 @@ from proposal_build.models import ProjectModel, SlidePlanItem, Tier, MenuProject
 
 CASE_STUDIES_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "case_studies"
 PAST_WORK_LIBRARY_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "past_work_library"
+TREE_LIBRARY_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "tree_library"
 
 
 def compose(model) -> tuple[list[SlidePlanItem], list]:
@@ -204,6 +205,57 @@ def _load_past_work_entries(ids: list[str], library_dir: Path | None = None) -> 
             "name": post.metadata["name"],
             "location": post.metadata["location"],
             "year": int(post.metadata["year"]),
+            "image": str(jpg_path.resolve()),
+        })
+    return entries
+
+
+def _load_tree_entries(ids: list[str], library_dir: Path | None = None) -> list[dict]:
+    """Resolve a list of tree_library IDs to display-ready dicts.
+
+    Returns one dict per ID in input order with keys:
+        id, letter_code, factory_part_no,
+        height_display, height_eyebrow, name, tagline,
+        light_count, ornament_count_heavy, ornament_count_light,
+        ornaments_per_branch_heavy, branch_count,
+        canopy_diameter_display, price_display, bullets, image
+
+    `image` is an absolute filesystem path to {id}.jpg.
+
+    Raises FileNotFoundError if any ID lacks a matching .md file. The
+    inspector catches this earlier in normal flow; the raise here is a
+    belt-and-braces guard for unit tests that hit the loader directly.
+
+    `library_dir` lets tests point at tests/fixtures/tree_library/.
+    Production callers omit it and use skill_assets/tree_library/.
+    """
+    base = library_dir if library_dir is not None else TREE_LIBRARY_DIR
+    entries: list[dict] = []
+    for tid in ids:
+        md_path = base / f"{tid}.md"
+        if not md_path.exists():
+            raise FileNotFoundError(
+                f"tree_library entry not found: {tid} (looked at {md_path})"
+            )
+        post = frontmatter.load(str(md_path))
+        meta = post.metadata
+        jpg_path = base / f"{tid}.jpg"
+        entries.append({
+            "id": tid,
+            "letter_code": meta.get("letter_code", ""),
+            "factory_part_no": meta.get("factory_part_no", ""),
+            "height_display": meta["height_display"],
+            "height_eyebrow": meta["height_eyebrow"],
+            "name": meta["name"],
+            "tagline": meta["tagline"],
+            "light_count": int(meta["light_count"]),
+            "ornament_count_heavy": int(meta["ornament_count_heavy"]),
+            "ornament_count_light": int(meta["ornament_count_light"]),
+            "ornaments_per_branch_heavy": int(meta["ornaments_per_branch_heavy"]),
+            "branch_count": int(meta["branch_count"]),
+            "canopy_diameter_display": meta["canopy_diameter_display"],
+            "price_display": meta["price_display"],
+            "bullets": list(meta["bullets"]),
             "image": str(jpg_path.resolve()),
         })
     return entries

@@ -327,3 +327,73 @@ about_ctx = {
     ],
     "contact_strip": "ST-NICKS.COM  ·  (562) 438-0017  ·  6861 Walker St, La Palma, CA 90623  ·  © 2026 St. Nick's Christmas Lighting & Décor",
 }
+
+
+# ── Tree Comparison fixture (Plan 11) ──
+# Synthetic 3-card ctx for the tree_comparison layout render test. Images
+# come from tests/fixtures/tree_library/ so the rendered card shows a real
+# (1x1 JPEG) photo asset.
+_TREE_LIBRARY_FIXTURE_DIR = REPO_ROOT / "tests" / "fixtures" / "tree_library"
+
+tree_comparison_ctx = {
+    **PROJECT,
+    "page_num": 11,
+    "page_total": 12,
+    "page_eyebrow": "Alternate Tree Options",
+    "page_title": "Three scale options",
+    "standfirst": (
+        "Three commercial frame trees, side by side. Each replaces the "
+        "program tree in Section 2; the surrounding enhancement package "
+        "carries over to whichever tree you pick."
+    ),
+    "cards": [
+        {
+            "rule_color": "gray",
+            "image": (_TREE_LIBRARY_FIXTURE_DIR / "fixture_tree_a.jpg").as_uri(),
+            "height_eyebrow": "30 FT",
+            "name": "Sample Tree A — 30 ft",
+            "tagline": "Compact landmark presence.",
+            "bullets": [
+                "18,700 warm-white LED lights",
+                "3,740 ornaments · 20 per branch fully decorated",
+                "15 ft canopy diameter at base",
+                "5 ft illuminated tree top · welded steel mast",
+            ],
+            "price_display": "$60,153",
+            "price_sublabel": "PURCHASE · FULLY DECORATED",
+            "is_recommended": False,
+        },
+        {
+            "rule_color": "red",
+            "image": (_TREE_LIBRARY_FIXTURE_DIR / "fixture_tree_b.jpg").as_uri(),
+            "height_eyebrow": "40 FT",
+            "name": "Sample Tree B — 40 ft",
+            "tagline": "Confident centerpiece scale.",
+            "bullets": [
+                "38,200 warm-white LED lights",
+                "7,640 ornaments · 20 per branch fully decorated",
+                "20 ft canopy diameter at base",
+                "5 ft illuminated tree top · welded steel mast",
+            ],
+            "price_display": "$131,778",
+            "price_sublabel": "PURCHASE · FULLY DECORATED",
+            "is_recommended": True,
+        },
+        {
+            "rule_color": "navy",
+            "image": (_TREE_LIBRARY_FIXTURE_DIR / "fixture_tree_c.jpg").as_uri(),
+            "height_eyebrow": "50 FT",
+            "name": "Sample Tree C — 50 ft",
+            "tagline": "Hero-scale flagship statement.",
+            "bullets": [
+                "65,200 warm-white LED lights",
+                "13,040 ornaments · 20 per branch fully decorated",
+                "25 ft canopy diameter at base",
+                "5 ft illuminated tree top · welded steel mast",
+            ],
+            "price_display": "$244,991",
+            "price_sublabel": "PURCHASE · FULLY DECORATED",
+            "is_recommended": False,
+        },
+    ],
+}

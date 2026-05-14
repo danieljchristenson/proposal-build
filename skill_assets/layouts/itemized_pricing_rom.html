@@ -1,0 +1,264 @@
+<!-- layout-version: 2026-05-13 -->
+{% extends "base.html" %}
+{% block title %}Itemized Pricing — {{ project_name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Letter portrait — supplement to the proposal deck.
+     ROM (menu-mode) variant of itemized_pricing.html: three pricing columns
+     instead of qty/unit/rate/amount, grouped by deck section. */
+  @page { size: 8.5in 11in; margin: 0; }
+  html, body { width: 8.5in; height: auto; }
+  .page-content { position: static; top: auto; bottom: auto; }
+  .page-header, .page-footer { display: none; }
+
+  .pricing-page { padding: 0.4in 0.5in 0.35in; }
+
+  .pricing-head {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: flex-start; gap: var(--space-5);
+    margin-bottom: 6pt;
+  }
+  .pricing-head .brand { display: flex; gap: 12pt; align-items: flex-start; }
+  .pricing-head .brand img { width: 50pt; height: auto; flex-shrink: 0; }
+  .pricing-head .brand-text {
+    font-family: var(--font-body); font-size: 9pt; color: var(--color-charcoal);
+    line-height: 1.45;
+  }
+  .pricing-head .brand-text .name {
+    font-family: var(--font-heading); font-weight: 700; font-size: 10pt;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-charcoal);
+    margin-bottom: 3pt;
+  }
+  .pricing-head .doc-label { text-align: right; }
+  .pricing-head .doc-label .doc-type {
+    font-family: var(--font-display); font-weight: 900; font-size: 26pt;
+    color: var(--color-charcoal); letter-spacing: 0.02em;
+    text-transform: uppercase; line-height: 1;
+  }
+  .pricing-head .doc-label .doc-eyebrow {
+    font-family: var(--font-heading); font-weight: 700; font-size: 11pt;
+    color: var(--color-red); letter-spacing: 0.10em; text-transform: uppercase;
+    margin-top: 6pt;
+  }
+
+  .meta-strip {
+    display: grid; grid-template-columns: 1fr 230pt;
+    gap: 18pt; margin-bottom: 6pt;
+    padding-top: 6pt; padding-bottom: 6pt;
+    border-top: 0.5pt solid #d4d4d4; border-bottom: 0.5pt solid #d4d4d4;
+  }
+  .meta-strip .col {
+    font-family: var(--font-body); font-size: 9.5pt; color: var(--color-charcoal);
+    line-height: 1.5;
+  }
+  .meta-strip .col .label {
+    color: var(--color-gray); font-family: var(--font-heading);
+    font-weight: 700; font-size: 8.5pt; letter-spacing: 0.10em;
+    text-transform: uppercase; margin-bottom: 4pt;
+  }
+  .meta-strip .col .name { font-weight: 700; font-size: 10.5pt; }
+  .meta-strip .right { text-align: right; }
+  .meta-strip .right .row {
+    display: flex; gap: 10pt; justify-content: flex-end;
+    align-items: baseline; margin-bottom: 3pt;
+    white-space: nowrap;
+  }
+  .meta-strip .right .row .k {
+    color: var(--color-gray); font-family: var(--font-heading);
+    font-weight: 700; font-size: 8.5pt; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .meta-strip .right .row .v {
+    font-weight: 700; font-size: 10pt; color: var(--color-charcoal);
+    text-align: right; white-space: nowrap;
+  }
+
+  table.pricing-table {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--font-body); font-size: 8pt;
+  }
+  table.pricing-table th {
+    background: var(--color-charcoal); color: var(--color-light);
+    font-family: var(--font-heading); font-weight: 700; font-size: 7.5pt;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 6pt 6pt; text-align: left;
+    vertical-align: bottom;
+  }
+  table.pricing-table th.num { text-align: center; width: 18pt; }
+  table.pricing-table th.price { text-align: right; width: 90pt; }
+  table.pricing-table th.price .sub {
+    display: block; font-weight: 400; font-size: 6.5pt;
+    color: rgba(236, 239, 241, 0.75);
+    letter-spacing: 0.04em; margin-top: 2pt; text-transform: none;
+  }
+
+  table.pricing-table td {
+    padding: 3pt 6pt; vertical-align: top; color: var(--color-charcoal);
+    border-bottom: 0.5pt solid #e8e8e8; line-height: 1.25;
+  }
+  table.pricing-table td.num { text-align: center; color: var(--color-gray); }
+  table.pricing-table td.price {
+    text-align: right; font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  table.pricing-table td .item-name {
+    font-weight: 700; font-size: 8.5pt; color: var(--color-charcoal);
+    margin-bottom: 1pt;
+  }
+  table.pricing-table td .item-desc {
+    color: var(--color-charcoal); font-size: 7.5pt; line-height: 1.3;
+  }
+  table.pricing-table td .item-tag {
+    display: inline-block; margin-left: 6pt;
+    font-family: var(--font-heading); font-weight: 700; font-size: 6.5pt;
+    color: var(--color-red); letter-spacing: 0.06em; text-transform: uppercase;
+    vertical-align: 1pt;
+  }
+
+  table.pricing-table tr.group-header td {
+    background: white; color: var(--color-charcoal);
+    font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding-top: 8pt; padding-bottom: 3pt;
+    border-bottom: 1pt solid var(--color-charcoal);
+  }
+  table.pricing-table tr.group-header td .group-note {
+    display: inline-block; margin-left: 10pt;
+    font-weight: 400; text-transform: none; letter-spacing: 0;
+    color: var(--color-gray); font-size: 8pt; font-style: italic;
+  }
+
+  /* Grand-total strip — 3 totals stacked on the right */
+  .totals {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 4pt; margin-top: 10pt; padding-top: 8pt;
+    border-top: 1.5pt solid var(--color-charcoal);
+  }
+  .totals .row {
+    display: flex; align-items: baseline; gap: 16pt;
+    font-variant-numeric: tabular-nums;
+  }
+  .totals .row .label {
+    font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-gray);
+    text-align: right; min-width: 200pt;
+  }
+  .totals .row .value {
+    font-family: var(--font-display); font-weight: 900;
+    color: var(--color-charcoal); font-size: 15pt; line-height: 1;
+    text-align: right; min-width: 130pt; white-space: nowrap;
+  }
+  .totals .row.grand .label { color: var(--color-charcoal); font-size: 11pt; }
+  .totals .row.grand .value { color: var(--color-red); font-size: 18pt; }
+
+  /* Footer note — explains rental vs purchase pricing modes */
+  .pricing-note {
+    margin-top: 14pt; padding: 8pt 10pt;
+    background: var(--color-panel); border-left: 2pt solid var(--color-red);
+    font-family: var(--font-body); font-size: 8pt; line-height: 1.45;
+    color: var(--color-charcoal);
+  }
+  .pricing-note strong {
+    font-family: var(--font-heading); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em; font-size: 7.5pt;
+  }
+
+  .pricing-footer {
+    color: var(--color-red); font-family: var(--font-heading); font-weight: 700; font-size: 8.5pt;
+    letter-spacing: 0.04em; padding: var(--space-2) 0 0;
+    border-top: 0.5pt solid #e0e0e0; margin-top: var(--space-3);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pricing-page">
+  <header class="pricing-head">
+    <div class="brand">
+      <img src="{{ logo_path }}" alt="St. Nick's">
+      <div class="brand-text">
+        <div class="name">St. Nick's Christmas Lighting &amp; Décor</div>
+        6861 Walker St<br>
+        La Palma, CA 90623<br>
+        ST-NICKS.COM &nbsp;·&nbsp; <span style="white-space: nowrap;">(562)&nbsp;438-0017</span>
+      </div>
+    </div>
+    <div class="doc-label">
+      <div class="doc-type">Itemized Pricing</div>
+      <div class="doc-eyebrow">{{ project_year }} {{ proposal_type }} · ROM</div>
+    </div>
+  </header>
+
+  <div class="meta-strip">
+    <div class="col">
+      <div class="label">Bill To</div>
+      <div class="name">{{ client_company }}</div>
+      {% if client_contact_name %}<div>{{ client_contact_name }}{% if client_contact_title %}, {{ client_contact_title }}{% endif %}</div>{% endif %}
+      {% if client_contact_email %}<div>{{ client_contact_email }}</div>{% endif %}
+      {% if client_contact_phone %}<div>{{ client_contact_phone }}</div>{% endif %}
+    </div>
+    <div class="right">
+      <div class="row"><div class="k">Quote Date</div><div class="v">{{ proposal_date_long }}</div></div>
+      <div class="row"><div class="k">Project</div><div class="v">{{ project_year }} {{ proposal_type }}</div></div>
+      <div class="row"><div class="k">Valid</div><div class="v">60 days from quote date</div></div>
+    </div>
+  </div>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th class="num">#</th>
+        <th>Item &amp; Description</th>
+        <th class="price">Rental<span class="sub">annual · all-inclusive</span></th>
+        <th class="price">Purchase<span class="sub">one-time</span></th>
+        <th class="price">Service<span class="sub">annual · install + storage</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set ln = namespace(n=0) %}
+      {% for section in sections %}
+      <tr class="group-header">
+        <td colspan="5">
+          {{ section.label }}
+          {% if section.note %}<span class="group-note">{{ section.note }}</span>{% endif %}
+        </td>
+      </tr>
+      {% for li in section.lines %}
+      {% set ln.n = ln.n + 1 %}
+      <tr>
+        <td class="num">{{ ln.n }}</td>
+        <td>
+          <div class="item-name">{{ li.name }}{% if li.tag %}<span class="item-tag">{{ li.tag }}</span>{% endif %}</div>
+          <div class="item-desc">{{ li.customer_facing }}</div>
+        </td>
+        <td class="price">{{ li.rental_display }}</td>
+        <td class="price">{{ li.purchase_ot_display }}</td>
+        <td class="price">{{ li.purchase_svc_display }}</td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <div class="row grand"><div class="label">Program ROM Total — Rental</div><div class="value">{{ total_rental }}</div></div>
+    <div class="row grand"><div class="label">Program ROM Total — Purchase (one-time)</div><div class="value">{{ total_purchase_ot }}</div></div>
+    <div class="row grand"><div class="label">Program ROM Total — Annual Service</div><div class="value">{{ total_purchase_svc }}</div></div>
+  </div>
+
+  <div class="pricing-note">
+    <strong>How to read this sheet</strong> ·
+    Each item can be priced two ways. <strong>Rental</strong> is a single all-inclusive annual fee that covers the item plus install, removal, and storage. <strong>Purchase</strong> shows a one-time cost plus an annual service fee (install + removal + storage). Customers may mix and match item-by-item; the totals above span the full low-to-high range across all priced items.
+    {% if pricing_caveats %}<br>{{ pricing_caveats }}{% endif %}
+  </div>
+
+  <div class="pricing-footer">
+    Supplement to the {{ project_year }} {{ proposal_type }} concept deck. Contract terms prevail.
+    &nbsp;·&nbsp; <span style="white-space: nowrap;">ST-NICKS.COM</span>
+    &nbsp;·&nbsp; <span style="white-space: nowrap;">(562)&nbsp;438-0017</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

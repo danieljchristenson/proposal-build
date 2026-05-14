@@ -11,7 +11,7 @@ from proposal_build.renderer.pdf import render_proposal_pdf
 
 
 def test_slide_count():
-    assert len(SLIDES) == 12
+    assert len(SLIDES) == 13
 
 
 def test_first_two_slides_are_prebuilt_creatives():
@@ -36,6 +36,6 @@ def test_pricing_totals_in_investment_p2():
     layout, ctx = inv_p2
     assert layout == "rom_investment"
     assert ctx["show_totals"] is True
-    assert ctx["total_rental"] == "$227,150 – $261,650"
-    assert ctx["total_purchase_ot"] == "$280,000 – $317,000"
-    assert ctx["total_purchase_svc"] == "$117,000 – $127,100"
+    assert ctx["total_rental"] == "$231,527 – $239,652"
+    assert ctx["total_purchase_ot"] == "$299,601 – $309,201"
+    assert ctx["total_purchase_svc"] == "$107,001 – $112,401"

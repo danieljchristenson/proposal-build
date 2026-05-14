@@ -31,9 +31,9 @@ def test_parse_figat7th_canopy_pricing():
     data = parse_rom_worksheet(FIGAT7TH_WORKSHEET)
     canopy = next(it for it in data.line_items if it.code == "20")
     assert canopy.name == "Mixed Ornament Canopy"
-    assert canopy.rental_low == 22400 and canopy.rental_high == 22400
-    assert canopy.purchase_ot_low == 19200 and canopy.purchase_ot_high == 19200
-    assert canopy.purchase_svc_low == 18600 and canopy.purchase_svc_high == 18600
+    assert canopy.rental_low == 21197 and canopy.rental_high == 21197
+    assert canopy.purchase_ot_low == 19197 and canopy.purchase_ot_high == 19197
+    assert canopy.purchase_svc_low == 17097 and canopy.purchase_svc_high == 18597
 
 
 def test_parse_figat7th_arch_alternates_have_group():
@@ -51,7 +51,7 @@ def test_parse_figat7th_gift_box_trio_is_range():
     """Item 43 (Gift Box Trio) is the only true range in the locked sheet."""
     data = parse_rom_worksheet(FIGAT7TH_WORKSHEET)
     trio = next(it for it in data.line_items if it.code == "43")
-    assert trio.rental_low == 4000 and trio.rental_high == 6000
+    assert trio.rental_low == 3997 and trio.rental_high == 5997
     assert trio.is_point_estimate is False
 
 

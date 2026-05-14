@@ -92,15 +92,63 @@ def test_rom_investment_totals(model):
         model, page_num=11, page_total=12, page_part=2,
     )
     assert ctx2["show_totals"] is True
-    # ROM math: alternate groups now use min(single) / sum(all) — see rom_pricing.py
-    # docstring. Arches contribute their full sum to the high end (4 arches summed,
-    # rather than max of 4) so high totals are larger than the original bookended math.
-    assert ctx2["total_rental"] == "$227,150 – $261,650"
-    assert ctx2["total_purchase_ot"] == "$280,000 – $317,000"
-    assert ctx2["total_purchase_svc"] == "$117,000 – $127,100"
+    assert ctx2["total_rental"] == "$231,527 – $239,652"
+    assert ctx2["total_purchase_ot"] == "$299,601 – $309,201"
+    assert ctx2["total_purchase_svc"] == "$107,001 – $112,401"
 
 
 def test_sign_off_uses_dm_contact(model):
     ctx = build_menu_sign_off_ctx(model, page_num=12, page_total=12)
     assert ctx["client_contact_name"] == "Alexandra Castro"
     assert ctx["client_contact_email"] == "acastro@athenapm.com"
+
+
+def test_build_tree_comparison_ctx_produces_three_cards_with_recommended_flag():
+    """Builder maps loaded entries → cards with rule-color alternation + recommended flag."""
+    from pathlib import Path
+    from proposal_build.composer import _load_tree_entries
+    from proposal_build.composer.menu_ctx_builders import build_tree_comparison_ctx
+    from proposal_build.models import MenuProjectModel
+
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "tree_library"
+    entries = _load_tree_entries(
+        ["fixture_tree_a", "fixture_tree_b", "fixture_tree_c"],
+        library_dir=fixture_lib,
+    )
+    model = MenuProjectModel(
+        client_company="X", client_short="X",
+        project_name="Y", project_short="Y", project_year=2026, project_subtitle="",
+        presenter_name="", presenter_title="", presenter_org="",
+        proposal_date="",
+        client_contact_name="", client_contact_title="",
+        client_contact_email="", client_contact_phone="",
+        design_phrase="d", voice="v",
+        creative_direction="", customer_goals=(), creative_phases=(),
+        prebuilt_cover_image="c.png", prebuilt_palette_image="",
+        creative_vision_hero="h.png",
+        sections=(), what_youre_approving="",
+    )
+    ctx = build_tree_comparison_ctx(
+        model, page_num=11, page_total=12,
+        tree_entries=entries, recommended_id="fixture_tree_b",
+    )
+
+    # Header copy
+    assert ctx["page_num"] == 11
+    assert ctx["page_total"] == 12
+    assert ctx["page_eyebrow"] == "Alternate Tree Options"
+    assert ctx["page_title"] == "Three scale options"
+    assert "Three commercial frame trees" in ctx["standfirst"]
+
+    # Cards
+    assert len(ctx["cards"]) == 3
+    assert [c["height_eyebrow"] for c in ctx["cards"]] == ["30 FT", "40 FT", "50 FT"]
+    assert [c["is_recommended"] for c in ctx["cards"]] == [False, True, False]
+    # Rule-color alternation: gray / red / navy across the three cards
+    assert [c["rule_color"] for c in ctx["cards"]] == ["gray", "red", "navy"]
+    # Image URI is propagated
+    assert ctx["cards"][0]["image"].endswith("fixture_tree_a.jpg")
+    # Bullets propagated verbatim
+    assert ctx["cards"][0]["bullets"][0].startswith("18,700")
+    # Price sublabel constant on every card
+    assert ctx["cards"][0]["price_sublabel"] == "PURCHASE · FULLY DECORATED"

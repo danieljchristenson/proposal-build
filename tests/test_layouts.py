@@ -126,6 +126,16 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         "Sample Project A", "Sample Project F",
         "Sample City, AA · 2024", "Sample City, FF · 2022",
     ]),
+    ("tree_comparison_pier39", "tree_comparison", "pier_39", "tree_comparison_ctx", [
+        "Alternate Tree Options", "Three scale options",
+        "30 FT", "40 FT", "50 FT", "RECOMMENDED",
+        "Sample Tree A", "Sample Tree B", "Sample Tree C",
+        "Compact landmark", "Confident centerpiece", "Hero-scale flagship",
+        "18,700 warm-white", "65,200 warm-white",
+        "20 per branch fully decorated",
+        "$60,153", "$131,778", "$244,991",
+        "PURCHASE · FULLY DECORATED",
+    ]),
 ]
 
 
@@ -144,6 +154,13 @@ def test_layout_renders(out_name, layout_name, fixture_module, ctx_attr, expecte
         _assert_font_family_present(doc, "Roboto")
         _assert_font_family_present(doc, "Poppins")
         _assert_text_present(doc, expected_text)
+
+
+def test_tree_comparison_template_file_exists():
+    """The tree_comparison layout file ships in skill_assets/layouts/."""
+    from pathlib import Path
+    p = Path(__file__).resolve().parent.parent / "skill_assets" / "layouts" / "tree_comparison.html"
+    assert p.is_file(), f"Expected layout at {p}"
 
 
 def test_all_layouts_rendered():
