@@ -17,13 +17,26 @@ from proposal_build.composer.ctx_builders import (
 )
 from proposal_build.composer.slide_plan import auto_arrange_zones, SlidePlanError
 from proposal_build.composer.pricing import build_itemized_pricing_docs
-from proposal_build.models import ProjectModel, SlidePlanItem, Tier
+from proposal_build.models import ProjectModel, SlidePlanItem, Tier, MenuProjectModel
 
 
 CASE_STUDIES_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "case_studies"
 
 
-def compose(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
+def compose(model) -> tuple[list[SlidePlanItem], list]:
+    """Top-level compose dispatcher.
+
+    Routes to the tiered or menu compose path based on the model type.
+    Returns (slides, pricing_docs). For menu-mode, pricing_docs is empty
+    (no per-tier itemized PDFs).
+    """
+    if isinstance(model, MenuProjectModel):
+        from proposal_build.composer.menu_compose import compose_menu
+        return compose_menu(model)
+    return _compose_tiered(model)
+
+
+def _compose_tiered(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     """Returns (slides, itemized_pricing_docs).
 
     slides is an ordered list of SlidePlanItem (layout_name, ctx). itemized_pricing_docs

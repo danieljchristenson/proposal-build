@@ -156,6 +156,36 @@ time, never dumping all findings at once. For each finding:
   the JSON and relay them to the user verbatim. If `fix` is null or
   not actionable by the AE, hit the beta safety rail.
 
+### Menu Mode (creative-menu / ROM pricing)
+
+When the project is a first-pass creative-menu proposal — multiple
+sections, some with customer-choice alternates ("pick one"), some
+with always-included items — the Brief uses `mode: menu` and a
+different field set than the default tiered mode. Used for projects
+like FIGat7th DTLA where the AE wants to present creative directions
+to the client before committing to a final scope.
+
+Menu-mode required Brief fields (replace the tiered ones):
+
+- `mode: menu`
+- `design_phrase`, `voice`
+- `prebuilt_cover_image`, `creative_vision_hero`
+- `sections` — ordered list of `{key, label, name, is_lead, item_codes}`
+
+Forbidden in menu mode: `recommended_tier`, `pricing_format`, `zones`.
+
+The Worksheet for menu mode uses the ROM (rough-order-of-magnitude)
+shape — 15 columns covering Section, Item Name, Description,
+Alternate Group, Rental Low/High, Purchase OT Low/High, Purchase Svc
+Low/High, Customer-Facing Description, Materials, Notes, and
+Rendering Reference. Rental is a single all-inclusive annual fee;
+Purchase is a one-time price plus a separate annual service fee.
+
+The pipeline auto-detects mode from the Brief and routes parsing,
+compose, and inspection through the menu path. The generate command
+is unchanged — `python -m proposal_build generate "Projects/<name>"`
+works for both modes.
+
 After fixing a batch of findings, re-run `inspect` and continue from
 Step 3 with the new report. Do not loop more than 5 times — if the
 same finding persists after 2 attempted fixes, hit the safety rail

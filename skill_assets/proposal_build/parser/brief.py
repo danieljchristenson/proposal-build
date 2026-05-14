@@ -12,10 +12,21 @@ from typing import Any
 import frontmatter
 
 
-REQUIRED_FIELDS = (
+TIERED_REQUIRED_FIELDS = (
     "client_company", "project_name", "project_year", "presenter_name",
     "voice", "recommended_tier", "pricing_format", "cover_image",
 )
+
+MENU_REQUIRED_FIELDS = (
+    "client_company", "project_name", "project_year",
+    "voice", "design_phrase",
+    "prebuilt_cover_image", "creative_vision_hero",
+    "sections",
+)
+MENU_FORBIDDEN_FIELDS = ("recommended_tier", "pricing_format", "zones")
+
+# Backward-compat alias — external callers may still reference REQUIRED_FIELDS.
+REQUIRED_FIELDS = TIERED_REQUIRED_FIELDS
 
 PROSE_SECTIONS = (
     "Creative Direction", "Customer Goals", "Customer Constraints",
@@ -45,24 +56,52 @@ def parse_brief(path: Path) -> BriefData:
 
     post = frontmatter.load(str(path))
     fm = dict(post.metadata)
+    mode = fm.get("mode", "tiered")
 
-    # Required-field check
-    missing = [f for f in REQUIRED_FIELDS if not fm.get(f)]
+    if mode == "menu":
+        _validate_menu_mode(fm)
+    elif mode == "tiered":
+        _validate_tiered_mode(fm)
+    else:
+        raise BriefParseError(f"Unknown mode: {mode!r} (expected 'tiered' or 'menu')")
+
+    sections = _split_sections(post.content)
+    return BriefData(frontmatter=fm, sections=sections)
+
+
+def _validate_tiered_mode(fm: dict) -> None:
+    missing = [f for f in TIERED_REQUIRED_FIELDS if not fm.get(f)]
     if missing:
         raise BriefParseError(f"Brief missing required fields: {', '.join(missing)}")
     if not fm.get("zones"):
         raise BriefParseError("Brief missing required field: zones (must be non-empty list)")
-
-    # Signature-count check
     sigs = [z for z in fm["zones"] if "signature" in (z.get("flags") or [])]
     if len(sigs) > 1:
         names = ", ".join(z["name"] for z in sigs)
         raise BriefParseError(f"At most one zone may carry the 'signature' flag; found: {names}")
 
-    # Parse markdown body into sections
-    sections = _split_sections(post.content)
 
-    return BriefData(frontmatter=fm, sections=sections)
+def _validate_menu_mode(fm: dict) -> None:
+    missing = [f for f in MENU_REQUIRED_FIELDS if not fm.get(f)]
+    if missing:
+        raise BriefParseError(f"Menu-mode Brief missing required fields: {', '.join(missing)}")
+    forbidden = [f for f in MENU_FORBIDDEN_FIELDS if fm.get(f)]
+    if forbidden:
+        raise BriefParseError(
+            f"Menu-mode Brief carries fields used only in tiered mode: {', '.join(forbidden)}"
+        )
+    if not isinstance(fm["sections"], list) or not fm["sections"]:
+        raise BriefParseError("Menu-mode Brief: `sections` must be a non-empty list")
+    for s in fm["sections"]:
+        for required_key in ("key", "label", "name", "is_lead", "item_codes"):
+            if required_key not in s:
+                raise BriefParseError(
+                    f"Menu-mode section missing key: {required_key!r}"
+                )
+        if not s["item_codes"]:
+            raise BriefParseError(
+                f"Menu-mode section {s['key']!r} has empty item_codes"
+            )
 
 
 def _split_sections(body: str) -> dict[str, Any]:

@@ -191,6 +191,41 @@ empty); the rest are recommended but optional.
 | **`pricing_format`** | `tiered` for 3-tier proposals, `single` for one-tier. |
 | **`cover_image`** | Filename of the cover hero (must exist in `02 - Renderings/Base Scope/`). |
 
+### Menu-Mode Project Walkthrough
+
+For projects where you want to present creative options to the client
+before committing to a final scope (multi-rendering decks, first-pass
+concept proposals like FIGat7th DTLA), use **menu mode** instead of
+the default tiered flow.
+
+The high-level workflow is the same — Brief, Worksheet, renderings,
+generate — but the Brief schema and Worksheet shape are different:
+
+1. In the Brief frontmatter, set `mode: menu` and define `sections:`
+   instead of `zones:`. Each section is `{key, label, name, is_lead,
+   item_codes}` — a short identifier (e.g. `"3a"`), the customer-
+   facing label, the section name, whether this section's first slide
+   carries a section header strip, and the ordered list of item codes
+   to include from the worksheet.
+2. Drop `recommended_tier`, `pricing_format`, `cover_image`, and
+   `zones` — they don't apply in menu mode. Add `design_phrase`,
+   `prebuilt_cover_image`, and `creative_vision_hero` instead.
+3. Build the **ROM Worksheet** using the 15-column menu schema (see
+   `Projects/Fig at 7th .../03 - Scope & Pricing/FIGat7th DTLA - Scope
+   Worksheet.xlsx` for the canonical example). Each row carries
+   rental low/high, purchase one-time low/high, and purchase annual
+   service low/high — point estimates use low == high.
+4. Drop pre-built cover and palette renderings into
+   `02 - Renderings/Base Scope/` and reference them by filename in
+   the Brief's `prebuilt_cover_image` and `prebuilt_palette_image`
+   fields.
+5. Single-item sections render as one `zone_solo` slide; multi-item
+   sections render as one or two `zone_2up_gallery` slides (the lead
+   slide carries the section header strip).
+6. The customer sees a 3-column ROM pricing table at the end:
+   Item / Rental (annual, all-in) / Purchase (one-time + annual
+   service). Customer can mix and match per line item.
+
 ### Common errors and what they mean
 
 | What Claude says | What's actually wrong | Fix |
