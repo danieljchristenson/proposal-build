@@ -158,6 +158,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         company_facts=company_facts, team=team, contact_strip=contact_strip,
         partnership_discounts=partnership_discounts,
         slide_plan_override=tuple(fm.get("slide_plan", ())),
+        sample_work=tuple(fm.get("sample_work") or ()),
         resolved_renderings={n: str(eligible[n].resolve()) for n in eligible},
         tier_highlights=fm.get("tier_highlights") or {},
         greenery_references=_resolve_greenery_refs(project_dir, fm.get("greenery_references", [])),

@@ -14,6 +14,7 @@ from proposal_build.composer.ctx_builders import (
     build_zone_2up_ctx, build_zone_3up_ctx,
     build_scope_ctx, build_a_la_carte_ctx, build_case_study_ctx, build_investment_ctx,
     build_terms_ctx, build_sign_off_ctx, build_about_ctx,
+    build_sample_of_work_ctx,
 )
 from proposal_build.composer.slide_plan import auto_arrange_zones, SlidePlanError
 from proposal_build.composer.pricing import build_itemized_pricing_docs
@@ -21,6 +22,7 @@ from proposal_build.models import ProjectModel, SlidePlanItem, Tier, MenuProject
 
 
 CASE_STUDIES_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "case_studies"
+PAST_WORK_LIBRARY_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "past_work_library"
 
 
 def compose(model) -> tuple[list[SlidePlanItem], list]:
@@ -80,6 +82,9 @@ def _compose_tiered(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     if model.case_study and model.case_study != "skip":
         cs = _load_case_study(model.case_study)
         slides_raw.append(("case_study", {"case_study_data": cs}))
+    if model.sample_work:
+        entries = _load_past_work_entries(list(model.sample_work))
+        slides_raw.append(("sample_of_work", {"past_work_entries": entries}))
     slides_raw.append(("investment", {"tier_totals": tier_totals,
                                        "partnership_discounts": _format_partnership_for_slide(model.partnership_discounts)}))
     slides_raw.append(("scope", {}))
@@ -163,7 +168,45 @@ def _build_ctx(model: ProjectModel, layout: str, page_num: int, page_total: int,
         return build_sign_off_ctx(model, page_num, page_total)
     if layout == "about":
         return build_about_ctx(model, page_num, page_total)
+    if layout == "sample_of_work":
+        return build_sample_of_work_ctx(model, page_num, page_total,
+                                         hint["past_work_entries"])
     raise ValueError(f"Unknown layout: {layout}")
+
+
+def _load_past_work_entries(ids: list[str], library_dir: Path | None = None) -> list[dict]:
+    """Resolve a list of past_work_library IDs to display-ready dicts.
+
+    Returns one dict per ID in input order:
+        {"id": str, "name": str, "location": str, "year": int, "image": str}
+
+    `image` is an absolute filesystem path to the corresponding .jpg.
+
+    Raises FileNotFoundError if any ID lacks a matching .md file. The
+    inspector catches this earlier in practice; the raise here is a
+    belt-and-braces guard for unit tests that hit the loader directly.
+
+    `library_dir` lets tests point at tests/fixtures/past_work_library/.
+    Production callers omit it and use skill_assets/past_work_library/.
+    """
+    base = library_dir if library_dir is not None else PAST_WORK_LIBRARY_DIR
+    entries: list[dict] = []
+    for pid in ids:
+        md_path = base / f"{pid}.md"
+        if not md_path.exists():
+            raise FileNotFoundError(
+                f"past_work_library entry not found: {pid} (looked at {md_path})"
+            )
+        post = frontmatter.load(str(md_path))
+        jpg_path = base / f"{pid}.jpg"
+        entries.append({
+            "id": pid,
+            "name": post.metadata["name"],
+            "location": post.metadata["location"],
+            "year": int(post.metadata["year"]),
+            "image": str(jpg_path.resolve()),
+        })
+    return entries
 
 
 def _load_case_study(case_id: str) -> dict:

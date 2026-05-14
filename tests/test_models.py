@@ -80,3 +80,23 @@ def test_project_model_minimal():
     )
     assert pm.project_name == "MetroLink"
     assert pm.recommended_tier == Tier.ENHANCED
+
+
+def test_project_model_has_sample_work_field():
+    """ProjectModel exposes sample_work as an empty tuple by default."""
+    from proposal_build.models import ProjectModel
+    import dataclasses
+    fields = {f.name for f in dataclasses.fields(ProjectModel)}
+    assert "sample_work" in fields, (
+        "ProjectModel missing sample_work field — see spec §5"
+    )
+
+
+def test_menu_project_model_has_sample_work_field():
+    """MenuProjectModel exposes sample_work as an empty tuple by default."""
+    from proposal_build.models import MenuProjectModel
+    import dataclasses
+    fields = {f.name for f in dataclasses.fields(MenuProjectModel)}
+    assert "sample_work" in fields, (
+        "MenuProjectModel missing sample_work field — see spec §5"
+    )

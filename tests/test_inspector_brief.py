@@ -86,3 +86,115 @@ def test_missing_required_section_reports_blocker(tmp_path):
     blockers = [f for f in findings if f.issue == "missing-section"]
     expected = len(REQUIRED_BULLET_SECTIONS) + len(REQUIRED_PROSE_SECTIONS)
     assert len(blockers) == expected
+
+
+def test_inspector_flags_sample_work_with_wrong_count(tmp_path):
+    """sample_work: with 5 IDs → sample_work_wrong_count blocker."""
+    import shutil
+    from proposal_build.inspector.brief import check
+    src = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    parts[1] = parts[1].rstrip() + "\nsample_work:\n  - fixture_a\n  - fixture_b\n  - fixture_c\n  - fixture_d\n  - fixture_e\n"
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = {f.issue for f in findings}
+    assert "sample_work_wrong_count" in issues, (
+        f"Expected sample_work_wrong_count; got {issues}"
+    )
+    assert "sample_work_unknown_id" not in issues, (
+        "Short-circuit failed: unknown_id blockers should not fire when count is wrong"
+    )
+
+
+def test_inspector_accepts_sample_work_absent():
+    """No sample_work: → no sample_work_* findings (slide just gets skipped)."""
+    from proposal_build.inspector.brief import check
+    project_dir = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    findings = check(project_dir)
+    sw_issues = {f.issue for f in findings if f.issue.startswith("sample_work_")}
+    assert sw_issues == set()
+
+
+def test_inspector_flags_sample_work_unknown_id(tmp_path, monkeypatch):
+    """sample_work: with an ID not in the library → sample_work_unknown_id."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Point inspector at the test fixture library
+    fixture_lib = Path(__file__).resolve().parent / "fixtures" / "past_work_library"
+    monkeypatch.setattr(inspector_brief, "PAST_WORK_LIBRARY_DIR", fixture_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # 6 IDs, but 'not_in_library' doesn't exist
+    parts[1] = parts[1].rstrip() + (
+        "\nsample_work:\n  - fixture_a\n  - fixture_b\n  - fixture_c\n"
+        "  - fixture_d\n  - fixture_e\n  - not_in_library\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "sample_work_unknown_id" in issues
+    # And no wrong-count (we have exactly 6)
+    assert "sample_work_wrong_count" not in issues
+
+
+def test_inspector_flags_sample_work_missing_image(tmp_path, monkeypatch):
+    """sample_work: ID has .md but no .jpg → sample_work_missing_image."""
+    import shutil
+    from pathlib import Path
+    from proposal_build.inspector import brief as inspector_brief
+    from proposal_build.inspector.brief import check
+
+    # Build a temporary library where fixture_g has an .md but no .jpg
+    tmp_lib = tmp_path / "lib"
+    tmp_lib.mkdir()
+    (tmp_lib / "fixture_g.md").write_text(
+        '---\nid: fixture_g\nname: "G"\nlocation: "City, GG"\nyear: 2023\n---\n'
+    )
+    monkeypatch.setattr(inspector_brief, "PAST_WORK_LIBRARY_DIR", tmp_lib)
+
+    src = (
+        Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    # 6 IDs, all with .md but fixture_g lacks .jpg
+    for pid in ("fixture_g",) * 6:
+        (tmp_lib / f"{pid}.md").write_text(
+            f'---\nid: {pid}\nname: "G"\nlocation: "City, GG"\nyear: 2023\n---\n'
+        )
+    parts[1] = parts[1].rstrip() + (
+        "\nsample_work:\n  - fixture_g\n  - fixture_g\n  - fixture_g\n"
+        "  - fixture_g\n  - fixture_g\n  - fixture_g\n"
+    )
+    brief.write_text("---".join(parts))
+
+    findings = check(dst)
+    issues = [f.issue for f in findings]
+    assert "sample_work_missing_image" in issues

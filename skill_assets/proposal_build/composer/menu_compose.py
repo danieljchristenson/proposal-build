@@ -103,6 +103,12 @@ def _build_slides(model: MenuProjectModel) -> Tuple[list[SlidePlanItem], list]:
     for section in model.sections:
         layout_hints.extend(_section_slides(section))
 
+    # Sample of work (conditional)
+    if model.sample_work:
+        from proposal_build.composer import _load_past_work_entries
+        entries = _load_past_work_entries(list(model.sample_work))
+        layout_hints.append(("sample_of_work", {"past_work_entries": entries}))
+
     # Investment p1 + p2
     layout_hints.append(("rom_investment", {"page_part": 1}))
     layout_hints.append(("rom_investment", {"page_part": 2}))
@@ -184,6 +190,11 @@ def _build_ctx(model: MenuProjectModel, logical: str, page_num: int, page_total:
     if logical == "rom_investment":
         return "rom_investment", build_menu_rom_investment_ctx(
             model, page_num, page_total, page_part=hint["page_part"]
+        )
+    if logical == "sample_of_work":
+        from proposal_build.composer.menu_ctx_builders import build_menu_sample_of_work_ctx
+        return "sample_of_work", build_menu_sample_of_work_ctx(
+            model, page_num, page_total, hint["past_work_entries"]
         )
     if logical == "sign_off_menu":
         return "sign_off", build_menu_sign_off_ctx(model, page_num, page_total)

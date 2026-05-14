@@ -22,6 +22,9 @@ REQUIRED_PROSE_SECTIONS = (
     "Creative Direction",
 )
 BRIEF_RELPATH = "04 - Process & Notes/Project Brief.md"
+PAST_WORK_LIBRARY_DIR = (
+    Path(__file__).resolve().parents[3] / "skill_assets" / "past_work_library"
+)
 
 
 def check(project_path: Path) -> list[Finding]:
@@ -103,6 +106,7 @@ def check(project_path: Path) -> list[Finding]:
                 field=section,
             ))
 
+    findings.extend(_check_sample_work(project_path, fm))
     return findings
 
 
@@ -160,6 +164,66 @@ def _check_menu_mode(project_path: Path, fm: dict, body: str) -> list[Finding]:
                 detail=f"{name} references missing rendering file: {fname}",
                 fix=f"Place {fname} in 02 - Renderings/Base Scope/ or update the Brief.",
                 field=name,
+            ))
+
+    findings.extend(_check_sample_work(project_path, fm))
+    return findings
+
+
+def _check_sample_work(project_path: Path, fm: dict) -> list[Finding]:
+    """Findings on the sample_work: field. Empty/absent → no findings."""
+    findings: list[Finding] = []
+    sample_work = fm.get("sample_work") or []
+    if not sample_work:
+        return findings
+
+    if len(sample_work) != 6:
+        findings.append(Finding(
+            severity="blocker", category="brief",
+            issue="sample_work_wrong_count",
+            detail=(
+                f"sample_work: lists {len(sample_work)} IDs; the past-work "
+                "slide requires exactly 6."
+            ),
+            fix=(
+                "Edit the Brief so `sample_work:` has exactly 6 project IDs "
+                "from skill_assets/past_work_library/, or remove the field "
+                "entirely to skip the slide."
+            ),
+            field="sample_work",
+        ))
+        return findings
+
+    for pid in sample_work:
+        md_path = PAST_WORK_LIBRARY_DIR / f"{pid}.md"
+        if not md_path.exists():
+            findings.append(Finding(
+                severity="blocker", category="brief",
+                issue="sample_work_unknown_id",
+                detail=(
+                    f"sample_work ID '{pid}' has no entry at "
+                    f"{md_path.relative_to(PAST_WORK_LIBRARY_DIR.parents[1])}"
+                ),
+                fix=(
+                    f"Either remove '{pid}' from sample_work: in the Brief, "
+                    f"or add {pid}.md (and {pid}.jpg) to the past_work_library/."
+                ),
+                field="sample_work",
+            ))
+        jpg_path = PAST_WORK_LIBRARY_DIR / f"{pid}.jpg"
+        if md_path.exists() and not jpg_path.exists():
+            findings.append(Finding(
+                severity="blocker", category="brief",
+                issue="sample_work_missing_image",
+                detail=(
+                    f"sample_work ID '{pid}' has a .md entry but no "
+                    f"matching {pid}.jpg in past_work_library/."
+                ),
+                fix=(
+                    f"Add {pid}.jpg to skill_assets/past_work_library/ "
+                    f"(recommended ~1200x800)."
+                ),
+                field="sample_work",
             ))
 
     return findings

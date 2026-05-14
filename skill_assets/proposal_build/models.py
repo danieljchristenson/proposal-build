@@ -201,6 +201,10 @@ class ProjectModel:
     # in build_material_palette_ctx — useful for single-tier projects
     # where the base→Signature progression line doesn't apply.
     greenery_description: str = ""
+    # AE-supplied list of past_work_library project IDs. When non-empty, the
+    # composer emits a sample_of_work slide. Must contain exactly 6 IDs at
+    # generation time; inspector enforces. Empty tuple → slide skipped.
+    sample_work: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -323,3 +327,6 @@ class MenuProjectModel:
 
     sections: Tuple[Section, ...]
     what_youre_approving: str
+    # AE-supplied list of past_work_library project IDs. Same semantics as
+    # ProjectModel.sample_work.
+    sample_work: Tuple[str, ...] = ()

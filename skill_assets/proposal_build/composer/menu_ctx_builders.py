@@ -271,6 +271,34 @@ def _rom_footnote() -> str:
     )
 
 
+def build_menu_sample_of_work_ctx(
+    model: MenuProjectModel, page_num: int, page_total: int,
+    past_work_entries: list[dict],
+) -> dict:
+    """Build context for the sample_of_work slide in menu mode.
+
+    Mirrors build_sample_of_work_ctx from ctx_builders.py but uses
+    _project_dict (menu-compatible base) instead of _project_base, which
+    would call _date_long() and fail on the MenuProjectModel's pre-formatted
+    proposal_date string.
+    """
+    return {
+        **_project_dict(model),
+        "page_num": page_num,
+        "page_total": page_total,
+        "page_eyebrow": "Sample of Our Work",
+        "page_title": "Recent installations",
+        "tiles": [
+            {
+                "name": e["name"],
+                "location_year": f"{e['location']} · {e['year']}",
+                "image": e["image"],
+            }
+            for e in past_work_entries
+        ],
+    }
+
+
 def build_menu_sign_off_ctx(
     model: MenuProjectModel, page_num: int, page_total: int
 ) -> dict:
