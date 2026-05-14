@@ -1,0 +1,275 @@
+# Plan 4 dependency map: which Brief fields, Worksheet patterns, and
+# follow-chain assets each layout consumes. Used by the diff module to
+# (a) cross-reference change reports with affected slides and
+# (b) build human-readable labels for change_summary.md bullets.
+#
+# Every brief entry MUST have a human_label so the change summary stays
+# customer-paste-ready. Missing layouts are tolerated (they just won't
+# get linked to affected slides), but missing human_label on a declared
+# brief path will fail tests.
+schema_version: 1
+
+slides:
+  cover:
+    brief:
+      - path: client_name
+        human_label: "Client name"
+      - path: project_name
+        human_label: "Project name"
+      - path: project_year
+        human_label: "Project year"
+      - path: cover_image
+        human_label: "Cover image"
+    worksheet: []
+    renderings:
+      - glob: "Base Scope/01_*"
+
+  creative_vision:
+    brief:
+      - path: design_phrase
+        human_label: "Design phrase"
+      - path: creative_vision_hero
+        human_label: "Creative vision hero image"
+      - path: creative_phases
+        human_label: "Creative phases (ARRIVE/GATHER/EXPLORE bodies)"
+    worksheet: []
+
+  exec_summary:
+    brief:
+      - path: voice
+        human_label: "Voice preset"
+      - path: customer_goals
+        human_label: "Customer goals"
+    worksheet: []
+
+  understanding:
+    brief:
+      - path: customer_goals
+        human_label: "Customer goals"
+      - path: customer_constraints
+        human_label: "Customer constraints"
+      - path: success_criteria
+        human_label: "Success criteria"
+    worksheet: []
+
+  scope:
+    brief:
+      - path: scope_includes
+        human_label: "Scope inclusions"
+      - path: add_ons
+        human_label: "Add-on items"
+    worksheet: []
+
+  case_study:
+    brief:
+      - path: case_study
+        human_label: "Case study selection"
+      - path: case_study_hero
+        human_label: "Case study hero image"
+      - path: voice
+        human_label: "Voice preset"
+    worksheet: []
+
+  zone_solo:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_solo_gallery:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_solo_fullbleed:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_feature:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_2up:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_2up_gallery:
+    brief:
+      - path: sections
+        human_label: "Section structure"
+    worksheet: []
+
+  zone_3up:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_4up:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  zone_index:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  image_fullbleed:
+    brief:
+      - path: zones
+        human_label: "Zone scope and copy"
+    worksheet: []
+
+  section_divider:
+    brief:
+      - path: sections
+        human_label: "Section structure"
+    worksheet: []
+
+  investment:
+    brief:
+      - path: tier_highlights
+        human_label: "Tier highlights"
+      - path: recommended_tier
+        human_label: "Recommended tier"
+    worksheet:
+      - pattern: "row.*.tier"
+        human_label: "Line-item tier assignment"
+      - pattern: "row.*.price"
+        human_label: "Line-item price"
+
+  rom_investment:
+    brief:
+      - path: sections
+        human_label: "Section / scope structure"
+    worksheet:
+      - pattern: "row.*.rental_low"
+        human_label: "Annual rental low"
+      - pattern: "row.*.rental_high"
+        human_label: "Annual rental high"
+      - pattern: "row.*.purchase_ot_low"
+        human_label: "One-time purchase low"
+      - pattern: "row.*.purchase_ot_high"
+        human_label: "One-time purchase high"
+      - pattern: "row.*.purchase_svc_low"
+        human_label: "Annual service low"
+      - pattern: "row.*.purchase_svc_high"
+        human_label: "Annual service high"
+
+  itemized_pricing:
+    brief:
+      - path: client_name
+        human_label: "Client name"
+      - path: recommended_tier
+        human_label: "Recommended tier"
+    worksheet:
+      - pattern: "row.*"
+        human_label: "Pricing line items"
+
+  itemized_pricing_rom:
+    brief:
+      - path: client_name
+        human_label: "Client name"
+      - path: sections
+        human_label: "Section / scope structure"
+    worksheet:
+      - pattern: "row.*"
+        human_label: "Pricing line items"
+
+  a_la_carte:
+    brief:
+      - path: add_ons
+        human_label: "Add-on items"
+    worksheet: []
+
+  material_palette:
+    brief:
+      - path: greenery_references
+        human_label: "Greenery references"
+      - path: greenery_description
+        human_label: "Greenery description"
+    worksheet: []
+
+  tree_comparison:
+    brief:
+      - path: tree_comparison.trees
+        human_label: "Tree comparison — sizes shown"
+      - path: tree_comparison.recommended
+        human_label: "Tree comparison — recommended size"
+    worksheet: []
+    follow:
+      - resolve_from: tree_comparison.trees
+        to_assets:
+          - "skill_assets/tree_library/{id}.md"
+          - "skill_assets/tree_library/{id}.jpg"
+
+  sample_of_work:
+    brief:
+      - path: sample_work
+        human_label: "Past-work selection"
+    worksheet: []
+    follow:
+      - resolve_from: sample_work
+        to_assets:
+          - "skill_assets/past_work_library/{id}.md"
+          - "skill_assets/past_work_library/{id}.jpg"
+
+  about:
+    brief:
+      - path: company_facts
+        human_label: "Company facts"
+      - path: team
+        human_label: "Team roster"
+    worksheet: []
+
+  terms:
+    brief:
+      - path: term_panels
+        human_label: "Terms and conditions"
+    worksheet: []
+
+  sign_off:
+    brief:
+      - path: presenter_name
+        human_label: "Presenter name"
+      - path: presenter_email
+        human_label: "Presenter email"
+      - path: presenter_phone
+        human_label: "Presenter phone"
+      - path: proposal_date
+        human_label: "Proposal date"
+      - path: signing_deadline
+        human_label: "Signing deadline"
+    worksheet: []
+
+itemized_pricing_pdf:
+  brief:
+    - path: client_name
+      human_label: "Client name"
+    - path: sections
+      human_label: "Section / scope structure"
+    - path: recommended_tier
+      human_label: "Recommended tier"
+  worksheet:
+    - pattern: "row.*"
+      human_label: "Pricing line items"
+
+customer_workbook_xlsx:
+  brief:
+    - path: client_name
+      human_label: "Client name"
+    - path: project_name
+      human_label: "Project name"
+  worksheet:
+    - pattern: "row.*"
+      human_label: "Worksheet line items"
