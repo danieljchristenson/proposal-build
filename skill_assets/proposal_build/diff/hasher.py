@@ -41,3 +41,36 @@ def hash_brief(brief: BriefData) -> dict[str, str]:
     """Hash each flattened Brief path value. Returns {path: 'sha256:...'}."""
     flat = flatten_brief(brief)
     return {path: hash_string(repr(value)) for path, value in flat.items()}
+
+
+def hash_worksheet_rows(rows: list[dict]) -> dict[str, str]:
+    """Hash each worksheet cell. Keys: row.<item_code>.<column_name>.
+
+    Each row dict must include an 'item_code' key. All other keys are
+    treated as columns.
+    """
+    out: dict[str, str] = {}
+    for row in rows:
+        item_code = row.get("item_code")
+        if item_code is None:
+            continue
+        for col, val in row.items():
+            if col == "item_code":
+                continue
+            key = f"row.{item_code}.{col}"
+            out[key] = hash_string(repr(val))
+    return out
+
+
+from pathlib import Path
+
+
+def hash_file(path: Path, chunk_size: int = 65536) -> str | None:
+    """Return sha256 of file contents, or None if file does not exist."""
+    if not path.exists():
+        return None
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(chunk_size), b""):
+            h.update(chunk)
+    return f"sha256:{h.hexdigest()}"
