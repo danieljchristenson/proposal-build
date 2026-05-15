@@ -104,3 +104,78 @@ def _parse_slide_entry(body: dict[str, Any]) -> SlideEntry:
     return SlideEntry(
         brief=brief, worksheet=worksheet, renderings=renderings, follow=follow,
     )
+
+
+import fnmatch
+import re
+
+
+@dataclass(frozen=True)
+class ResolvedDeps:
+    """Concrete dependency keys for one slide, resolved against current inputs."""
+    brief: frozenset[str]      # brief flat paths
+    worksheet: frozenset[str]  # worksheet flat keys
+    assets: frozenset[str]     # filesystem paths (from follow chains + rendering globs)
+
+
+def resolve_slide_deps(
+    slide: SlideEntry,
+    brief_flat: dict[str, Any],
+    worksheet_hashes: dict[str, str],
+) -> ResolvedDeps:
+    """Expand a SlideEntry's patterns + follow chains against current inputs."""
+    # Brief: direct path matches AND any nested children
+    # (a brief entry of 'tree_comparison.trees' should also match
+    # 'tree_comparison.trees.0', 'tree_comparison.trees.1', etc.)
+    brief: set[str] = set()
+    for b in slide.brief:
+        if b.path in brief_flat:
+            brief.add(b.path)
+        for key in brief_flat:
+            if key == b.path or key.startswith(b.path + "."):
+                brief.add(key)
+
+    # Worksheet: fnmatch each pattern against actual cell keys.
+    worksheet: set[str] = set()
+    for w in slide.worksheet:
+        regex = _glob_to_regex(w.pattern)
+        for key in worksheet_hashes:
+            if regex.fullmatch(key):
+                worksheet.add(key)
+
+    # Follow chains: read brief values, substitute {id}, collect paths.
+    assets: set[str] = set()
+    for chain in slide.follow:
+        ids = _collect_follow_ids(chain.resolve_from, brief_flat)
+        for asset_template in chain.to_assets:
+            for ident in ids:
+                assets.add(asset_template.format(id=ident))
+
+    return ResolvedDeps(
+        brief=frozenset(brief),
+        worksheet=frozenset(worksheet),
+        assets=frozenset(assets),
+    )
+
+
+def _glob_to_regex(pattern: str) -> re.Pattern[str]:
+    """fnmatch-style glob to compiled regex."""
+    return re.compile(fnmatch.translate(pattern))
+
+
+def _collect_follow_ids(source_path: str, brief_flat: dict[str, Any]) -> list[str]:
+    """Read the brief value at source_path. If it's a list (tree_comparison.trees),
+    return list elements. If scalar, return [value]. Missing -> []."""
+    # Scalar case: source_path is directly in brief_flat
+    if source_path in brief_flat:
+        val = brief_flat[source_path]
+        if isinstance(val, list):
+            return [str(v) for v in val]
+        return [str(val)]
+    # List case: brief_flat has source_path.0, source_path.1, ...
+    prefix = source_path + "."
+    indexed = [(k, v) for k, v in brief_flat.items() if k.startswith(prefix)]
+    if not indexed:
+        return []
+    indexed.sort(key=lambda kv: kv[0])
+    return [str(v) for _, v in indexed]
