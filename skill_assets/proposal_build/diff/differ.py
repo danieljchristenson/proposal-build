@@ -54,3 +54,33 @@ def _diff_hash_dict(prior: dict[str, str], current: dict[str, str]) -> dict[str,
 
 def _slide_layouts(snap: dict) -> frozenset[str]:
     return frozenset(s.get("layout", "") for s in snap.get("slides_rendered", []))
+
+
+from proposal_build.diff.dep_map import DepMap, resolve_slide_deps
+
+
+def compute_affected_slides(
+    change_report: ChangeReport,
+    dep_map: DepMap,
+    brief_flat: dict,
+    worksheet_hashes: dict[str, str],
+    rendered_slides: tuple[str, ...],
+) -> set[str]:
+    """Cross-reference change_report against dep_map to produce the set of
+    rendered-slide names whose inputs changed."""
+    changed_brief_paths = set(change_report.brief)
+    changed_worksheet_keys = set(change_report.worksheet)
+
+    affected: set[str] = set()
+    for slide_name in rendered_slides:
+        entry = dep_map.slides.get(slide_name)
+        if entry is None:
+            continue
+        deps = resolve_slide_deps(entry, brief_flat, worksheet_hashes)
+        if deps.brief & changed_brief_paths:
+            affected.add(slide_name)
+            continue
+        if deps.worksheet & changed_worksheet_keys:
+            affected.add(slide_name)
+            continue
+    return affected
