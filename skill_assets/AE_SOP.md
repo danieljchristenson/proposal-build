@@ -332,6 +332,49 @@ Stephanie Escobar.
 
 ---
 
+## Revision Tracking
+
+After each successful `python -m proposal_build generate <project>`
+run, the skill writes three new artifacts:
+
+- `04 - Process & Notes/last_run.json` — internal snapshot of all
+  inputs and outputs. Drives the next run's change report. Do not edit
+  by hand.
+- `04 - Process & Notes/revisions/v<n>/` — automatic archive of the
+  deck, itemized PDF, last_run.json, and change_summary.md at the time
+  of revision N. Gitignored, local-only. Open in Finder to recover a
+  prior version.
+- `05 - Output/change_summary.md` — paste into the customer email
+  body. The section above the second `---` is customer-facing; the
+  section below it is internal notes you should trim before sending.
+
+### Re-generating after a Brief or Worksheet edit
+
+Just run `python -m proposal_build generate <project>` again. The
+terminal prints a CHANGES SINCE LAST RUN block listing exactly what
+changed and which slides are affected. Review it before sending the
+revised proposal to the customer.
+
+If nothing changed since the last run, the skill rebuilds the outputs
+but does not bump the revision counter or create a new `v<n>/` folder.
+
+### Flags
+
+- `--no-snapshot` — skip writing last_run.json and the revisions/
+  archive. Use for throwaway or test renders.
+- `--diff-only` — run the differ and write change_summary.md, but skip
+  the render entirely. Use to preview what would change without
+  rebuilding the deck.
+
+### Schema mismatch
+
+If a future skill version changes the snapshot format, an old
+last_run.json will stop the run with upgrade instructions. Delete the
+file to start fresh — you lose the revision counter but no actual
+proposal data.
+
+---
+
 ## Glossary
 
 - **Brief**: the YAML + Markdown file at `04 - Process & Notes/

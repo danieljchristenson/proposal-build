@@ -166,12 +166,32 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         greenery_description=fm.get("greenery_description", "") or "",
     )
 
+    # worksheet_rows: per-line dicts keyed by item_code for diff hashing
+    worksheet_rows = [
+        {
+            "item_code": li.line_num,
+            "item": li.item,
+            "description": li.description,
+            "qty": li.qty,
+            "unit": li.unit,
+            "price": li.price_per_unit,
+            "line_total": li.line_total,
+            "customer_facing": li.customer_facing,
+            "zone": li.zone,
+            "tier": ",".join(t.value for t in li.tiers),
+            "rendering_ref": li.rendering_ref,
+        }
+        for li in ws.line_items
+    ]
+
     artifacts = {
         "eligible_renderings": eligible,
         "all_renderings": all_renderings,
         "referenced_filenames": referenced_filenames,
         "scenarios": ws.scenarios,
         "per_line_sums": ws.tier_sums_per_line(),
+        "brief_data": brief,            # for diff hashing (Plan 4)
+        "worksheet_rows": worksheet_rows,  # for diff hashing (Plan 4)
     }
     return model, artifacts
 
