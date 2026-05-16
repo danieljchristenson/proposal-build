@@ -21,6 +21,18 @@ RIVERSIDE = (
 )
 
 
+def _pristine_copy(dst: Path) -> None:
+    """Copy the Riverside fixture and scrub any diff/output artifacts a prior
+    real `generate` run may have left behind, so each test starts clean
+    regardless of the on-disk fixture state."""
+    shutil.copytree(RIVERSIDE, dst)
+    notes = dst / "04 - Process & Notes"
+    for stale in [notes / "last_run.json", *notes.glob("last_run.json.broken-*")]:
+        stale.unlink(missing_ok=True)
+    shutil.rmtree(notes / "revisions", ignore_errors=True)
+    shutil.rmtree(dst / "05 - Output", ignore_errors=True)
+
+
 def _last_run(project: Path) -> dict:
     return json.loads(
         (project / "04 - Process & Notes" / "last_run.json").read_text()
@@ -29,7 +41,7 @@ def _last_run(project: Path) -> dict:
 
 def test_run_twice_with_brief_edit_in_between(tmp_path: Path):
     project = tmp_path / "p"
-    shutil.copytree(RIVERSIDE, project)
+    _pristine_copy(project)
 
     # First run: no prior snapshot, creates v1.
     rc = main(["generate", str(project)])
@@ -70,7 +82,7 @@ def test_run_twice_with_brief_edit_in_between(tmp_path: Path):
 
 def test_run_twice_with_no_changes_does_not_bump_revision(tmp_path: Path):
     project = tmp_path / "p"
-    shutil.copytree(RIVERSIDE, project)
+    _pristine_copy(project)
 
     rc = main(["generate", str(project)])
     assert rc == 0
@@ -92,7 +104,7 @@ def test_run_twice_with_no_changes_does_not_bump_revision(tmp_path: Path):
 
 def test_no_snapshot_flag_skips_snapshot(tmp_path: Path):
     project = tmp_path / "p"
-    shutil.copytree(RIVERSIDE, project)
+    _pristine_copy(project)
 
     rc = main(["generate", str(project), "--no-snapshot"])
     assert rc == 0

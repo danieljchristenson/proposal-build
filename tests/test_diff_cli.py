@@ -21,11 +21,23 @@ RIVERSIDE = (
 )
 
 
+def _pristine_copy(dst: Path) -> None:
+    """Copy the Riverside fixture and scrub any diff/output artifacts a prior
+    real `generate` run may have left behind, so each test starts clean
+    regardless of the on-disk fixture state."""
+    shutil.copytree(RIVERSIDE, dst)
+    notes = dst / "04 - Process & Notes"
+    for stale in [notes / "last_run.json", *notes.glob("last_run.json.broken-*")]:
+        stale.unlink(missing_ok=True)
+    shutil.rmtree(notes / "revisions", ignore_errors=True)
+    shutil.rmtree(dst / "05 - Output", ignore_errors=True)
+
+
 def test_diff_only_flag_with_no_prior_snapshot(tmp_path: Path, capsys):
     """--diff-only on a fresh project should print 'no prior run' and exit 0
     without running the renderer."""
     project = tmp_path / "p"
-    shutil.copytree(RIVERSIDE, project)
+    _pristine_copy(project)
     rc = main(["generate", str(project), "--diff-only"])
     assert rc == 0
     captured = capsys.readouterr()
