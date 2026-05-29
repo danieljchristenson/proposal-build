@@ -1,168 +1,171 @@
 # AE Standard Operating Procedure — Proposal Builder
 
-This guide is for St. Nick's account executives using the proposal-
-builder skill in Claude Desktop. It walks through one-time setup, the
-per-project workflow, and reference material.
+This guide is for St. Nick's account executives. Proposals are **built
+for you centrally** — you prepare the inputs on OneDrive, and the finished
+deck + pricing PDFs are generated and dropped back into your project
+folder. You do not install or run any software.
 
 If you get stuck, ping Daniel.
 
 ---
 
-## Setup (one-time)
+## How it works (read once)
 
-You only do this once per Mac.
+- Everything lives in OneDrive under **`Proposal Builder/Projects/<your project>/`**.
+- You prepare three things: the **Brief**, the **renderings**, and the
+  **Worksheet**.
+- When they're ready, you tell Daniel. Generation runs on the build
+  machine, and the finished PDFs sync back into your `03 - Scope & Pricing/`
+  folder a few minutes later.
+- You review, optionally polish in Canva, and send.
 
-### 1. Install Claude Desktop
-
-Download Claude Desktop from <https://claude.ai/download> and sign in
-with your `@st-nicks.com` account.
-
-### 2. Enable shell access in Claude Desktop
-
-The skill needs Claude to run command-line commands on your behalf.
-In Claude Desktop's settings, allow Bash / shell tool access for the
-proposal-builder skill. Daniel can walk you through this if needed.
-
-### 3. Clone the team repository
-
-Ask Claude:
-
-> *"Clone the proposal-build repo from GitHub into my Documents folder."*
-
-Claude will run the clone for you. The repo lives at
-`~/Documents/Claude/Projects/proposal-build/`.
-
-### 4. Install the skill
-
-In Claude Desktop's skill settings, point to
-`~/Documents/Claude/Projects/proposal-build/skill_assets/skill.md` and
-install the skill. Claude Desktop should now activate the skill on
-phrases like *"build a proposal for X."*
-
-### 5. Verify with a smoke test
-
-Ask Claude:
-
-> *"Run the proposal builder on Downtown Riverside Metro Link as a smoke
-> test."*
-
-Expected outcome: Claude inspects, reports "Ready to generate," runs
-the generator, and tells you the PDF paths in
-`Projects/Downtown Riverside Metro Link/03 - Scope & Pricing/`. Open
-one PDF to confirm it renders correctly.
-
-If anything fails, send Daniel the error message Claude shows you.
-
-### Setup troubleshooting
-
-If the smoke test fails with a font/library error like
-`cannot load library 'libgobject-2.0-0'`, the proposal renderer's
-system dependencies aren't on your machine yet. Send Daniel the error
-and he'll walk you through installing Pango/Cairo via Homebrew. (Most
-AE machines already have it from a prior project; only first-time
-setups hit this.)
-
-For any other smoke-test failure, send Daniel the error verbatim. Do
-NOT try to "fix" it yourself unless he says so — the skill's beta
-safety rails are designed to protect your project files.
+You never run Python, install a skill, or use git. If anything tells you to
+"install the proposal builder skill" or "run a smoke test," that's the old
+setup — **skip it**, it won't work on a PC and isn't how we run anymore.
 
 ---
 
-## Daily workflow — building a new proposal
+## Setup (one-time)
 
-### 1. Pull the latest
+1. **OneDrive signed in.** Make sure `OneDrive - Unicon Financial Services, Inc`
+   is syncing on your PC.
+2. **Keep the folder on your device.** In File Explorer, find
+   `OneDrive - Unicon Financial Services, Inc › Proposal Builder`,
+   right-click it → **"Always keep on this device."** Renderings must be
+   real local files, not cloud placeholders, or generation can stall.
+3. **Canva** (for optional final polish) — sign in with your `@st-nicks.com`
+   account. The **"St. Nick's Branding Colors"** brand kit is already set up.
 
-Before starting any project, ask Claude:
+No Claude Desktop install, no Python, no repo to clone.
 
-> *"Pull the latest changes for the proposal-build repo."*
+---
 
-This makes sure you have the team's latest layouts, boilerplate, and
-sibling projects before you start.
+## Building a proposal
 
-### 2. Start the project
+### 1. Get your project folder
 
-Ask Claude:
+New project? Ask Daniel to set it up — he'll create
+`Proposal Builder/Projects/<name>/` with the full folder structure ready to
+fill. It syncs to your PC within a minute or two.
 
-> *"Build a proposal for `<project name>`."*
+### 2. Fill the Brief
 
-Examples:
-- *"Build a proposal for Long Beach Airport."*
-- *"Generate the Tachi Christmas 2026 proposal."*
+Open `Project Brief.md` in the project folder and fill the fields at the top
+(see **Brief frontmatter** in Reference for what each one means). If the YAML
+format is unfamiliar, send Daniel the details and he'll set it.
 
-If the project doesn't exist yet, Claude will offer to scaffold it from
-the template. Say yes — you'll get the full folder structure ready to
-fill in.
+### 3. Drop the renderings
 
-### 3. Answer the Brief questions
-
-Claude will walk you through filling in the Brief one question at a
-time. Examples:
-
-- *"What's the client company?"*
-- *"What's the proposal date?"* (today, in YYYY-MM-DD)
-- *"Who's the AE on this project?"*
-
-Claude writes your answers into the Brief automatically. If you don't
-know an answer, just say so — you can come back to it later.
-
-### 4. Drop the renderings
-
-When Claude tells you the renderings folder is empty, drop your zone
-renderings (PNG / JPG files from Stephanie or your design source) into:
+Put your zone renderings (PNG / JPG from Stephanie or your design source) into:
 
 ```
-Projects/<project name>/02 - Renderings/Base Scope/
+02 - Renderings/Base Scope/     ← base-tier images
+02 - Renderings/Enhancements/   ← enhancement-tier images
+02 - Renderings/_inbox/         ← unsorted; sort into the two folders above later
 ```
 
-Use the sibling `02 - Renderings/Enhancements/` folder for enhancement-tier
-images. Greenery reference photos go in `Projects/<project name>/Greenery references/` (at the project root, NOT under `02 - Renderings/`).
+Greenery reference photos go in `Greenery references/` at the project root
+(NOT under `02 - Renderings/`). Don't delete the `_inbox` or
+`Unused Renderings` folders — the generator needs them to exist.
 
-If you have unsorted renderings, drop them into `_inbox/` first and
-sort them later.
+### 4. Fill the Worksheet
 
-Reply *"renderings ready"* and Claude will pick up.
+Open `03 - Scope & Pricing/<project> - Scope Worksheet.xlsx` in Excel. Fill
+the Customer-Facing Description and Tiers columns for every line item
+(Size → Item → Details format; Daniel can show you the first time).
+**Save and close Excel** when done — the generator can't read the file while
+it's open in Excel.
 
-### 5. Fill the Worksheet
+### 5. Request generation
 
-Claude will tell you when the Worksheet needs work. Open the file in
-Excel:
+Tell Daniel (or post in the team channel): **"<project> is ready to
+generate."** Generation runs centrally — you don't run this step yourself.
 
-```
-Projects/<project name>/03 - Scope & Pricing/<project> - Scope Worksheet.xlsx
-```
+### 6. Review
 
-Fill the Customer-Facing Description and Tiers columns for every line
-item. Daniel can show you the format if it's your first time.
-
-Save and close Excel before you reply *"worksheet ready"* — the skill
-can't read the file while it's open.
-
-### 6. Pick hero images per zone
-
-Claude will list the renderings you dropped and ask which one fits each
-zone. Pick the best one per zone (the photo customers will associate
-with that location).
-
-### 7. Generate
-
-Once everything's filled in, Claude says *"Ready to generate"* and runs
-the generator. The output PDFs land in
-`03 - Scope & Pricing/`:
+A few minutes later these appear in `03 - Scope & Pricing/` and sync to your PC:
 
 - `<project> - <year> Holiday Proposal.pdf` — the proposal deck.
-- `<project> - <year> Itemized Pricing - Essential.pdf` /
-  `Enhanced.pdf` / `Signature.pdf` — the per-tier pricing supplements.
+- `<project> - <year> Itemized Pricing - Essential.pdf` / `Enhanced.pdf` /
+  `Signature.pdf` — the per-tier pricing supplements.
 
-Open them and review.
+Open them and review. Need a change? **Fix the Brief or Worksheet and ask for
+another generation** — don't edit the PDF directly.
 
-### 8. Commit & push
+### 7. Polish in Canva (optional — the "last 10%")
 
-Claude will offer to save your work to the team repo:
+The generated PDF is the source of truth: the numbers, scope, and brand
+layout are already correct and approved. Use Canva *only* for final visual
+polish on a deck you're done editing — nudging a title, swapping a hero
+image, tightening spacing before it goes to the customer. Don't rebuild the
+deck in Canva and don't change pricing or scope there; if those need to
+change, fix the Worksheet/Brief and request another generation (step 5).
 
-> *"Want me to commit and push?"*
+**A. Start from the final PDF.** Finish all real edits first. Canva is the
+last step, not part of the drafting loop.
 
-Say yes. Your project folder is now safely backed up and visible to
-the rest of the team.
+**B. Get the deck into Canva.** Use the manual upload — it's the simplest and
+keeps the file off any public link:
+
+1. In Canva, click **Create design → Import file** and choose the proposal
+   PDF from `03 - Scope & Pricing/`.
+2. Canva converts each PDF page into an editable slide.
+3. Heads-up: PDF import can **shift some formatting** (fonts, spacing, image
+   crops). That's normal for any PDF-to-Canva conversion — it's exactly the
+   kind of thing the polish pass fixes. Apply the **"St. Nick's Branding
+   Colors"** brand kit after import to snap colors and fonts back.
+
+> If you'd rather not upload by hand, Claude can pull the deck in
+> automatically — but only from a public download link (e.g. a OneDrive
+> "share with download" URL). Because that briefly exposes the pricing deck
+> at a URL, prefer the manual upload for customer proposals and ask Daniel
+> before using the link method.
+
+**C. Let Claude do the polish.** Once the deck is open in Canva, Claude can
+edit it directly through the Canva connection. Ask things like:
+
+> *"Apply the St. Nick's brand kit to this Canva design and fix any fonts
+> that imported wrong."*
+>
+> *"Swap the cover image on page 1 for this rendering."*
+>
+> *"Tighten the spacing on the pricing slide so nothing's cut off."*
+
+Claude can adjust text, swap assets, re-apply brand colors/fonts, and tidy
+layout. It **cannot** reach a file on your computer — the deck has to be in
+Canva first (step B).
+
+**D. Export the finished deck from Canva** (Share → Download → PDF) and save
+it back into `03 - Scope & Pricing/` as your send-ready version. The original
+generated PDF stays as the system-of-record copy.
+
+---
+
+## For the build operator (Daniel)
+
+Generation runs on the Mac that has the engine installed (the repo + venv +
+WeasyPrint). It reads and writes the OneDrive project folder directly, so
+outputs sync straight back to the AE.
+
+```bash
+cd "/Users/Daniel-Admin/Documents/Claude/Projects/proposal-build"
+.venv/bin/python -m proposal_build inspect  "<OneDrive>/Proposal Builder/Projects/<name>"
+.venv/bin/python -m proposal_build generate "<OneDrive>/Proposal Builder/Projects/<name>"
+```
+
+(Or do it conversationally in your own Claude Desktop, where the skill + venv
+already work — just point it at the OneDrive path.)
+
+- **Scaffolding a new project:** `python -m proposal_build scaffold "<name>"`
+  creates the folder skeleton; create it under the OneDrive `Projects/` path
+  so the AE can fill it.
+- **Snapshots / diff mode:** each `generate` writes a `runs/` snapshot and
+  `last_run.json` into `04 - Process & Notes/`. These power diff-mode
+  regeneration (regenerate only what changed), so keep them on — AEs never
+  open that folder. Prune old `runs/` occasionally to keep OneDrive tidy. Use
+  `--no-snapshot` only for throwaway test runs.
+- **Source of truth:** active customer projects live on OneDrive; the git repo
+  holds the engine + the Riverside fixture only.
 
 ---
 
@@ -303,28 +306,27 @@ Omit `tree_comparison:` entirely to skip the slide.
 
 ### Common errors and what they mean
 
-| What Claude says | What's actually wrong | Fix |
+| What you'll hear | What's actually wrong | Fix |
 |---|---|---|
-| "Brief is missing `client_company`." | Required field empty in the YAML. | Reply with the value when Claude asks. |
-| "X.png referenced but not in renderings folder." | A `hero_image:` points at a file that's not there. | Either drop the file in, or change the reference. |
-| "Worksheet appears to be open in Excel." | The `.xlsx` is locked because Excel is editing it. | Close Excel, reply "ready". |
-| "I've tried twice and the same error came back." | The skill hit its safety rail. | Send Daniel the output Claude shows. |
+| "Brief is missing `client_company`." | Required field empty in the YAML. | Fill the value in `Project Brief.md`. |
+| "X.png referenced but not in renderings folder." | A `hero_image:`/`cover_image:` points at a file that's not there. | Drop the file into `Base Scope/` (or fix the reference). |
+| "Worksheet appears to be open in Excel." | The `.xlsx` is locked because Excel is editing it. | Close Excel, then ask for generation again. |
+| PDFs never show up after you asked for generation | The request didn't reach Daniel, or a blocker stopped it. | Ping Daniel — he'll see the blocker and tell you what to fix. |
 
 ### FAQ
 
-**Q: Why do I have to fill the Worksheet manually instead of Claude
-   filling it from the RFP?**
-A: That automation is on the roadmap (Plan 6 / Phase 0). For now,
-the skill assumes you've prepped the Worksheet.
+**Q: Why do I have to fill the Worksheet manually instead of it being
+   filled from the RFP?**
+A: That automation is on the roadmap. For now, prep the Worksheet yourself.
 
 **Q: Can two AEs work on the same project at the same time?**
-A: Not safely. Pull first, work, push when done. If two of you push
-overlapping changes, ping Daniel before resolving.
+A: Avoid it. OneDrive will create "conflict copies" if two people edit the
+same file at once. Coordinate so one person owns a project's inputs at a
+time; if you see a conflict copy, ping Daniel before resolving it.
 
-**Q: Where do generated PDFs go?**
-A: `Projects/<project>/03 - Scope & Pricing/`. They're git-ignored
-(you don't push the PDFs themselves; the team regenerates from the
-Brief + Worksheet + renderings).
+**Q: Where do the generated PDFs go?**
+A: `Projects/<project>/03 - Scope & Pricing/` on OneDrive. They sync to your
+PC automatically a few minutes after generation runs.
 
 **Q: Who do I ask for help?**
 A: Daniel (`daniel@st-nicks.com`). For design / rendering questions,
@@ -332,62 +334,17 @@ Stephanie Escobar.
 
 ---
 
-## Revision Tracking
+## Revision Tracking (operator reference)
 
 After each successful `python -m proposal_build generate <project>`
-run, the skill writes three new artifacts:
+run, the engine writes three artifacts into the project folder:
 
 - `04 - Process & Notes/last_run.json` — internal snapshot of all
   inputs and outputs. Drives the next run's change report. Do not edit
   by hand.
 - `04 - Process & Notes/revisions/v<n>/` — automatic archive of the
   deck, itemized PDF, last_run.json, and change_summary.md at the time
-  of revision N. Gitignored, local-only. Open in Finder to recover a
-  prior version.
+  of revision N. Open in Finder/Explorer to recover a prior version.
 - `05 - Output/change_summary.md` — paste into the customer email
   body. The section above the second `---` is customer-facing; the
-  section below it is internal notes you should trim before sending.
-
-### Re-generating after a Brief or Worksheet edit
-
-Just run `python -m proposal_build generate <project>` again. The
-terminal prints a CHANGES SINCE LAST RUN block listing exactly what
-changed and which slides are affected. Review it before sending the
-revised proposal to the customer.
-
-If nothing changed since the last run, the skill rebuilds the outputs
-but does not bump the revision counter or create a new `v<n>/` folder.
-
-### Flags
-
-- `--no-snapshot` — skip writing last_run.json and the revisions/
-  archive. Use for throwaway or test renders.
-- `--diff-only` — run the differ and write change_summary.md, but skip
-  the render entirely. Use to preview what would change without
-  rebuilding the deck.
-
-### Schema mismatch
-
-If a future skill version changes the snapshot format, an old
-last_run.json will stop the run with upgrade instructions. Delete the
-file to start fresh — you lose the revision counter but no actual
-proposal data.
-
----
-
-## Glossary
-
-- **Brief**: the YAML + Markdown file at `04 - Process & Notes/
-  Project Brief.md`. Defines everything about the project.
-- **Worksheet**: the `.xlsx` at `03 - Scope & Pricing/<project> -
-  Scope Worksheet.xlsx`. Defines line items and pricing per tier.
-- **Skill**: the proposal-builder skill in Claude Desktop. Activates
-  on phrases like "build a proposal for X."
-- **Tier**: Essential / Enhanced / Signature — the three tiers of
-  scope/pricing.
-- **Hero image**: the primary rendering for a zone, shown big on the
-  zone slide.
-- **Inspect**: the readiness check the skill runs to find what's
-  missing before generating.
-- **Generate**: the actual PDF-creation step, run after all checks
-  pass.
+  section below it is internal notes to trim before sending.

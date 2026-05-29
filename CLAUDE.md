@@ -40,8 +40,30 @@ WeasyPrint depends on Pango/Cairo system libraries from Homebrew, not pip:
    so cffi's `dlopen` finds the libs at import time. Without this every
    WeasyPrint command fails with `cannot load library 'libgobject-2.0-0'`.
 
-This setup is for *local development only* — the deployed skill bundle runs
-in Claude's sandbox where these libs are already available.
+### Deployment: centralized generation (NOT a sandbox skill)
+
+The skill (`skill_assets/skill.md`) is a **Bash orchestrator** — it shells out
+to `python -m proposal_build inspect|generate "<project_dir>"`. It does NOT run
+inside Claude's sandbox; it requires a machine with this repo installed (`pip
+install -e .`) and WeasyPrint/Pango present. An earlier note here claimed "the
+deployed skill bundle runs in Claude's sandbox where these libs are available"
+— that was never true (a Claude Desktop Skills install of it failed with
+`ModuleNotFoundError: proposal_build`, no Pango, no data access).
+
+How it actually runs (decided 2026-05-29):
+
+- **Generation is centralized** on a build machine that has the engine working
+  (Daniel's Mac). The CLI accepts any path, so it reads/writes a project folder
+  that lives on OneDrive.
+- **AEs (on PCs)** prepare inputs and review/polish outputs via OneDrive; they
+  do not run the engine. See `skill_assets/AE_SOP.md`.
+- **OneDrive** is the source of truth for active customer projects; this git
+  repo holds the engine + the Riverside fixture only.
+- `scripts/export_to_onedrive.py` mirrors the AE-facing files to OneDrive
+  (drops `.git`/`.venv`/`runs`/`_archive`; keeps `_inbox` + `Unused Renderings`,
+  which the engine requires).
+
+The Homebrew/Pango steps above remain required on the build machine.
 
 ## Working with plans
 
