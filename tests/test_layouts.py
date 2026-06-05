@@ -105,10 +105,12 @@ LAYOUT_CASES: list[tuple[str, str, str, str, list[str]]] = [
         ["CASE STUDY", "Oregon Zoo", "ZooLights 2025", "31% YoY increase"]),
     ("case_study_riverside", "case_study", "riverside", "case_study_ctx",
         ["CASE STUDY", "Long Beach Transit", "14 transit stations", "Zero revenue-service disruptions"]),
+    # Partnership-savings strip was removed from all investment output, so its
+    # fragments ("MULTI-YEAR PARTNERSHIP", "9% OFF") are no longer expected.
     ("investment_pier39",    "investment", "pier_39",   "investment_ctx",
-        ["Investment", "Three levels", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$225,000", "$345,000", "$485,000", "RECOMMENDED", "MULTI-YEAR PARTNERSHIP", "9% OFF"]),
+        ["Investment", "Three levels", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$225,000", "$345,000", "$485,000", "RECOMMENDED"]),
     ("investment_riverside", "investment", "riverside", "investment_ctx",
-        ["Investment", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$184,500", "$284,500", "$384,500", "RECOMMENDED", "MULTI-YEAR PARTNERSHIP"]),
+        ["Investment", "ESSENTIAL", "ENHANCED", "SIGNATURE", "$184,500", "$284,500", "$384,500", "RECOMMENDED"]),
     ("terms_pier39",    "terms", "pier_39",   "terms_ctx",
         ["Terms & Next Steps", "November 14, 2026", "August 22, 2026", "PAYMENT SCHEDULE", "INSURANCE & PERMITS", "AFTER APPROVAL"]),
     ("terms_riverside", "terms", "riverside", "terms_ctx",

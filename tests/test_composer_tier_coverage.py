@@ -18,8 +18,11 @@ def _zone(name: str) -> Zone:
 
 
 class _Model:
-    def __init__(self, line_items):
+    def __init__(self, line_items, pricing_format="tiered"):
         self.line_items = tuple(line_items)
+        # tier coverage is suppressed for single-tier projects; default to
+        # tiered so these multi-tier coverage cases exercise the real path.
+        self.pricing_format = pricing_format
 
 
 def test_zone_in_both_essential_and_enhanced():
