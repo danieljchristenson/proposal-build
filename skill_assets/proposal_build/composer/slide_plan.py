@@ -63,7 +63,7 @@ def auto_arrange_zones(zones: Sequence[Zone]) -> list[tuple[str, dict]]:
 
     soloed_set = set()
     for z in zones:
-        if z.is_flagship or z.is_signature or z.layout_override in ("zone_solo", "zone_solo_fullbleed"):
+        if z.is_flagship or z.is_signature or z.layout_override in _VALID_SOLO_OVERRIDES:
             plan.append(_solo_or_fullbleed(z))
             soloed_set.add(z.num)
 
