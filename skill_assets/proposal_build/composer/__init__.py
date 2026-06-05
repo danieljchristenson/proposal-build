@@ -10,7 +10,7 @@ from proposal_build.composer.ctx_builders import (
     build_creative_vision_ctx, build_material_palette_ctx,
     build_zone_index_ctx, build_zone_solo_ctx,
     build_zone_solo_fullbleed_ctx, build_zone_solo_gallery_ctx,
-    build_zone_feature_ctx,
+    build_zone_feature_ctx, build_palette_fullbleed_ctx,
     build_zone_2up_ctx, build_zone_3up_ctx,
     build_scope_ctx, build_a_la_carte_ctx, build_case_study_ctx, build_investment_ctx,
     build_terms_ctx, build_sign_off_ctx, build_about_ctx,
@@ -77,7 +77,11 @@ def _compose_tiered(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     slides_raw.append(("exec_summary", {"investment_range": investment_range}))
     slides_raw.append(("understanding", {}))
     slides_raw.append(("creative_vision", {}))
-    if model.greenery_references:
+    # Palette slide: a pre-designed full-bleed palette/mood board takes
+    # precedence over the generated Greenery Mood Board when present.
+    if model.prebuilt_palette_image:
+        slides_raw.append(("image_fullbleed", {"kind": "palette"}))
+    elif model.greenery_references:
         slides_raw.append(("material_palette", {}))
     slides_raw.extend(zone_block)
     if model.case_study and model.case_study != "skip":
@@ -140,6 +144,8 @@ def _build_ctx(model: ProjectModel, layout: str, page_num: int, page_total: int,
         return build_creative_vision_ctx(model, page_num, page_total)
     if layout == "material_palette":
         return build_material_palette_ctx(model, page_num, page_total)
+    if layout == "image_fullbleed":
+        return build_palette_fullbleed_ctx(model, page_num, page_total)
     if layout == "zone_index":
         return build_zone_index_ctx(model, page_num, page_total)
     if layout == "zone_solo":

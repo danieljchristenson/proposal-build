@@ -114,6 +114,26 @@
     border-bottom: 1pt solid var(--color-charcoal);
   }
 
+  table.pricing-table tr.zone-header td {
+    background: var(--color-panel); color: var(--color-red);
+    font-family: var(--font-heading); font-weight: 700; font-size: 8.5pt;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    padding: 5pt 6pt 4pt;
+    border-bottom: 0.5pt solid var(--color-red);
+    border-top: 0.5pt solid var(--color-red);
+  }
+
+  table.pricing-table tr.zone-subtotal td {
+    color: var(--color-charcoal);
+    font-family: var(--font-heading); font-weight: 700; font-size: 9pt;
+    padding: 4pt 6pt 6pt;
+    border-bottom: 0.75pt solid var(--color-charcoal);
+    font-variant-numeric: tabular-nums;
+  }
+  table.pricing-table tr.zone-subtotal td:first-child {
+    text-align: right; letter-spacing: 0.04em;
+  }
+
   .grand-total {
     display: flex; justify-content: flex-end; align-items: baseline;
     gap: 16pt; margin-top: 8pt;
@@ -217,7 +237,7 @@
     </div>
     <div class="doc-label">
       <div class="doc-type">Proposal Pricing</div>
-      <div class="tier-label">{{ tier_name }} Tier</div>
+      <div class="tier-label">{{ project_year }} Holiday Program</div>
     </div>
   </header>
 
@@ -251,16 +271,39 @@
       {% set ln = namespace(n=0) %}
       {% if base_scope_lines %}
       <tr class="group-header"><td colspan="6">Base Scope</td></tr>
+      {# Group base-scope lines by zone, emit a subtotal row after each zone.
+         Preserves zone order by first-appearance in base_scope_lines so the
+         document reads in the order the AE arranged them. #}
+      {% set zone_order = [] %}
+      {% set zone_lines = {} %}
       {% for li in base_scope_lines %}
-      {% set ln.n = ln.n + 1 %}
-      <tr>
-        <td class="num">{{ ln.n }}</td>
-        <td>{{ li.customer_facing }}</td>
-        <td class="qty">{{ li.qty | int if li.qty == li.qty|int else li.qty }}</td>
-        <td class="unit">{{ li.unit }}</td>
-        <td class="rate">{{ "{:,.2f}".format(li.price_per_unit) }}</td>
-        <td class="amount">{{ "{:,.2f}".format(li.line_total) }}</td>
-      </tr>
+        {% set z = li.zone or "Other" %}
+        {% if z not in zone_order %}{% set _ = zone_order.append(z) %}{% endif %}
+        {% set _ = zone_lines.setdefault(z, []).append(li) %}
+      {% endfor %}
+      {% for z in zone_order %}
+        {% if zone_order|length > 1 %}
+        <tr class="zone-header"><td colspan="6">{{ z }}</td></tr>
+        {% endif %}
+        {% set zone_subtotal = namespace(s=0) %}
+        {% for li in zone_lines[z] %}
+        {% set ln.n = ln.n + 1 %}
+        {% set zone_subtotal.s = zone_subtotal.s + li.line_total %}
+        <tr>
+          <td class="num">{{ ln.n }}</td>
+          <td>{{ li.customer_facing }}</td>
+          <td class="qty">{{ li.qty | int if li.qty == li.qty|int else li.qty }}</td>
+          <td class="unit">{{ li.unit }}</td>
+          <td class="rate">{{ "{:,.2f}".format(li.price_per_unit) }}</td>
+          <td class="amount">{{ "{:,.2f}".format(li.line_total) }}</td>
+        </tr>
+        {% endfor %}
+        {% if zone_order|length > 1 %}
+        <tr class="zone-subtotal">
+          <td colspan="5">{{ z }} Subtotal</td>
+          <td class="amount">{{ "{:,.2f}".format(zone_subtotal.s) }}</td>
+        </tr>
+        {% endif %}
       {% endfor %}
       {% endif %}
       {% if enhancement_lines %}
@@ -291,32 +334,16 @@
   <div class="pricing-header-band">
     <div class="eyebrow">ST. NICK'S CHRISTMAS LIGHTING &amp; DÉCOR</div>
     <h1>Payment Terms &amp; Savings</h1>
-    <div class="standfirst">{{ client_short }} &nbsp;·&nbsp; {{ project_year }} {{ proposal_type }} &nbsp;·&nbsp; {{ tier_name }} Tier</div>
+    <div class="standfirst">{{ client_short }} &nbsp;·&nbsp; {{ project_year }} {{ proposal_type }}</div>
   </div>
 
   <div class="pricing-meta-panel">
-    <div><div class="label">TOTAL — {{ tier_name | upper }} TIER</div></div>
+    <div><div class="label">PROGRAM TOTAL</div></div>
     <div style="text-align:right;"><div class="value" style="color: var(--color-red); font-size: 18pt;">${{ "{:,.0f}".format(tier_total) }}</div></div>
   </div>
 
   <div class="terms-card"><h3>Payment Schedule</h3></div>
   {{ payment_schedule_md_html | safe }}
-
-  <div class="terms-card" style="margin-top: var(--space-3);"><h3>Multi-Year Partnership Savings</h3></div>
-  <table class="savings">
-    <thead><tr><th>TERM</th><th>DISCOUNT</th><th>SAVINGS</th><th>YEAR 1 PRICE</th></tr></thead>
-    <tbody>
-    {% for row in partnership_rows %}
-      <tr>
-        <td><strong>{{ row.term | lower | replace('-year', '-year lock') }}</strong></td>
-        <td style="color: var(--color-red); font-weight: 700;">{{ row.discount_label }}</td>
-        <td>${{ "{:,.0f}".format(row.savings) }}</td>
-        <td style="font-weight: 700;">${{ "{:,.0f}".format(row.year_1_price) }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  <p class="renewal-note">{{ non_multi_year_renewal_note }}</p>
 
   <div class="terms-card"><h3>Terms Summary</h3></div>
   <ul class="terms-bullets">

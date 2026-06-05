@@ -83,6 +83,10 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
     for greenery_name in fm.get("greenery_references") or ():
         if greenery_name:
             referenced_filenames.append(greenery_name)
+    # A prebuilt palette / mood board image is referenced by the full-bleed
+    # palette slide; mark it so W1 doesn't flag it as unused.
+    if fm.get("prebuilt_palette_image"):
+        referenced_filenames.append(fm["prebuilt_palette_image"])
 
     # 5. Auto-derive blank dates
     go_live = fm["go_live"]
@@ -146,6 +150,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         voice=fm["voice"], recommended_tier=Tier.from_string(fm["recommended_tier"]),
         design_phrase=fm.get("design_phrase", ""), pricing_format=fm["pricing_format"],
         cover_image=fm["cover_image"], creative_vision_hero=fm.get("creative_vision_hero", ""),
+        creative_vision_hero_fit=fm.get("creative_vision_hero_fit", "cover"),
         case_study=fm.get("case_study", "skip"), case_study_hero=fm.get("case_study_hero", ""),
         zones=zones, line_items=ws.line_items,
         creative_direction=brief.sections.get("Creative Direction", ""),
@@ -164,6 +169,8 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         greenery_references=_resolve_greenery_refs(project_dir, fm.get("greenery_references", [])),
         venue_context=fm.get("venue_context", "") or "",
         greenery_description=fm.get("greenery_description", "") or "",
+        prebuilt_palette_image=fm.get("prebuilt_palette_image", "") or "",
+        scope_accent=fm.get("scope_accent", "green") or "green",
     )
 
     # worksheet_rows: per-line dicts keyed by item_code for diff hashing
@@ -248,23 +255,27 @@ def _build_zone_summary(zones: list) -> str:
 
 
 def _fill_pillars(brief, voice, ph):
-    # V1: Brief-level Pillars override is not supported — voice preset always wins.
-    # If an AE writes a `## Pillars` section, raise rather than silently ignore it.
+    # Honor Brief-level `pillars:` frontmatter override when present;
+    # fall back to the voice preset's default_pillars otherwise.
     if "Pillars" in brief.sections:
         raise ProjectLoadError(
-            "Brief 'Pillars' section is not supported in V1; "
-            "remove the section to use the voice preset's pillars."
+            "Brief 'Pillars' section is not supported; use the `pillars:` "
+            "frontmatter key with a list of {title, body} dicts instead."
         )
+    source = brief.frontmatter.get("pillars") or voice.default_pillars
     return tuple(
         {"title": p["title"], "body": substitute_placeholders(p["body"], ph)}
-        for p in voice.default_pillars
+        for p in source
     )
 
 
 def _fill_phases(brief, voice, ph):
+    # Honor Brief-level `phases:` frontmatter override when present;
+    # fall back to the voice preset's default_phases otherwise.
+    source = brief.frontmatter.get("phases") or voice.default_phases
     return tuple(
         {"label": p["label"], "body": substitute_placeholders(p["body"], ph)}
-        for p in voice.default_phases
+        for p in source
     )
 
 
