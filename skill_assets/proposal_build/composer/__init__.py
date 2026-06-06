@@ -90,9 +90,9 @@ def _compose_tiered(model: ProjectModel) -> tuple[list[SlidePlanItem], list]:
     if model.sample_work:
         entries = _load_past_work_entries(list(model.sample_work))
         slides_raw.append(("sample_of_work", {"past_work_entries": entries}))
+    slides_raw.append(("scope", {}))
     slides_raw.append(("investment", {"tier_totals": tier_totals,
                                        "partnership_discounts": _format_partnership_for_slide(model.partnership_discounts)}))
-    slides_raw.append(("scope", {}))
     if model.add_ons:
         slides_raw.append(("a_la_carte", {}))
     slides_raw.append(("terms", {}))
