@@ -26,11 +26,16 @@
     height: 100%;
   }
 
-  /* ── Top: page title + standfirst ── */
+  /* ── Top: page title + standfirst ──
+     Shrink the default 50pt page-title (mirrors scope.html) so the zone table,
+     rental band, and footer note all clear the page footer on dense
+     single-tier decks (up to ~10 zones). */
   .inv-title-area {
     flex: 0 0 auto;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
   }
+  .inv-title-area .page-title { font-size: 36pt; }
+  .inv-title-area .standfirst { font-size: 12pt; margin-top: var(--space-1); }
 
   /* ── Tier grid wrapper (includes recommended banner row) ──
      Sized to its own content (flex: 0 0 auto) so the partnership strip
@@ -259,6 +264,78 @@
     color: white;
   }
 
+  /* ── Zone-itemized investment (single-tier mode) ── */
+  .inv-zone-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .inv-zone-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    color: var(--color-charcoal);
+  }
+  .inv-zone-table thead th {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    padding: 6pt 12pt 4pt;
+    border-bottom: 1pt solid var(--color-red);
+    text-align: left;
+  }
+  .inv-zone-table thead th.amt-col { text-align: right; }
+  .inv-zone-table tbody td {
+    padding: 4pt 12pt;
+    border-bottom: 0.5pt solid #d4d4d4;
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-zone-table tbody td.zone-col {
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+  .inv-zone-table tbody td.amt-col {
+    text-align: right;
+    font-weight: 600;
+  }
+  .inv-zone-table tfoot tr.inv-zone-total td {
+    padding: 6pt 12pt 4pt;
+    border-top: 1.5pt solid var(--color-charcoal);
+    border-bottom: none;
+    font-family: var(--font-display);
+    font-weight: 900;
+    color: var(--color-red);
+    font-size: 16pt;
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-zone-table tfoot tr.inv-zone-total td.zone-col {
+    letter-spacing: 0.04em;
+    font-size: 12pt;
+    color: var(--color-charcoal);
+  }
+  .inv-zone-table tfoot tr.inv-zone-total td.amt-col { text-align: right; }
+  .inv-allin-band {
+    margin-top: var(--space-2);
+    padding: 5pt 12pt;
+    background: var(--color-charcoal);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
   /* ── Footer note ── */
   .inv-footer-note {
     flex: 0 0 auto;
@@ -286,6 +363,31 @@
     {% endif %}
   </div>
 
+  {% if zone_breakdown is defined and zone_breakdown and tier_count == 1 %}
+  <!-- Zone-itemized investment (single-tier projects). Mirrors the pricing PDF. -->
+  <div class="inv-zone-wrapper">
+    <table class="inv-zone-table">
+      <thead>
+        <tr><th class="zone-col">Zone</th><th class="amt-col">Investment</th></tr>
+      </thead>
+      <tbody>
+        {% for z in zone_breakdown %}
+        <tr>
+          <td class="zone-col">{{ z.name }}</td>
+          <td class="amt-col">${{ "{:,.2f}".format(z.total) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr class="inv-zone-total">
+          <td class="zone-col">PROGRAM TOTAL</td>
+          <td class="amt-col">${{ "{:,.0f}".format(grand_total) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="inv-allin-band">FULL-SERVICE SEASONAL RENTAL &middot; TAX EXCLUDED</div>
+  </div>
+  {% else %}
   <!-- Tier columns (1, 2, or 3 based on active tiers) -->
   <div class="inv-tiers-wrapper tiers-{{ tier_count }}">
     {% for tier in tiers %}
@@ -316,18 +418,11 @@
     </div>
     {% endfor %}
   </div>
+  {% endif %}
 
-  <!-- Footer note (multi-year partnership savings folded in here as a single line) -->
+  <!-- Footer note. Multi-year partnership savings disabled at the ctx layer. -->
   {% if footer_note %}
-  <div class="inv-footer-note">
-    {{ footer_note }}
-    {% if partnership_discounts %}
-    <span class="inv-partnership-inline">
-      &nbsp;·&nbsp; <strong>Multi-year partnership savings:</strong>
-      {% for label, off in partnership_discounts %}{{ label }} ({{ off }}){% if not loop.last %} · {% endif %}{% endfor %}
-    </span>
-    {% endif %}
-  </div>
+  <div class="inv-footer-note">{{ footer_note }}</div>
   {% endif %}
 
 </div>

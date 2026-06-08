@@ -35,6 +35,6 @@ def test_ae_sop_exists_and_has_required_sections():
     p = SKILL_BUNDLE / "AE_SOP.md"
     assert p.is_file(), "skill_assets/AE_SOP.md missing"
     body = p.read_text()
-    for section in ("## Setup (one-time)", "## Daily workflow", "## Reference"):
+    for section in ("## Setup (one-time)", "## Building a proposal", "## Reference"):
         assert section in body, f"AE_SOP.md missing section: {section}"
     assert len(body) > 1000, "AE_SOP.md suspiciously short"

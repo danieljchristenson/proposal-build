@@ -53,6 +53,7 @@ def render_pricing_pdf(doc, out_path: Path) -> Path:
         "proposal_type": model.proposal_type,
         "proposal_date_long": _date_long(model.proposal_date),
         "tier_name": doc.tier.value, "tier_total": doc.tier_total,
+        "service_note": model.scope_service_note,
         "base_scope_lines": list(doc.base_scope_lines),
         "enhancement_lines": list(doc.enhancement_lines),
         "base_subtotal": sum(li.line_total for li in doc.base_scope_lines),

@@ -205,6 +205,23 @@ class ProjectModel:
     # composer emits a sample_of_work slide. Must contain exactly 6 IDs at
     # generation time; inspector enforces. Empty tuple → slide skipped.
     sample_work: Tuple[str, ...] = ()
+    # Creative Vision hero fit: "cover" (default, crops) | "contain" (letterbox).
+    # Lets an AE opt into contain-fit when a hero image gets cropped at the edges.
+    creative_vision_hero_fit: str = "cover"
+    # AE-supplied full-bleed palette / mood board image (filename in Base Scope/).
+    # When set, tiered mode renders it as a chrome-less full-bleed slide instead
+    # of the generated Greenery Mood Board — for projects that arrive with a
+    # pre-designed palette board.
+    prebuilt_palette_image: str = ""
+    # Accent color class for the Scope slide "includes" card header. One of the
+    # brand.css card-header colors: "green" (default), "red", or "navy". Lets a
+    # project whose palette clashes with green retheme that band.
+    scope_accent: str = "green"
+    # Optional framing line shown below the Scope "includes" card, used to state
+    # the commercial model (e.g. full-service seasonal rental: install,
+    # maintenance, removal, and storage included in the annual fee). Empty by
+    # default so purchase/ROM projects aren't forced into rental language.
+    scope_service_note: str = ""
 
 
 @dataclass(frozen=True)

@@ -126,6 +126,27 @@
     color: var(--color-red);
     white-space: nowrap;
   }
+
+  /* ── Service-model framing line (e.g. full-service seasonal rental) ── */
+  .sc-service-note {
+    flex: 0 0 auto;
+    margin-top: var(--space-3);
+    padding: 7pt 12pt;
+    background: var(--color-charcoal);
+    color: var(--color-light);
+    border-radius: 3pt;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.4;
+  }
+  .sc-service-note strong {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-light);
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -142,7 +163,7 @@
   <!-- Single full-width card -->
   <div class="sc-body">
 
-    <div class="card has-header green">
+    <div class="card has-header {{ includes_accent|default('green') }}">
       <div class="card-header">YOUR PROGRAM INCLUDES</div>
       <div class="card-body">
         <ul class="sc-includes-list">
@@ -154,6 +175,10 @@
     </div>
 
   </div>
+
+  {% if service_note is defined and service_note %}
+  <div class="sc-service-note">{{ service_note }}</div>
+  {% endif %}
 
 </div>
 {% endblock %}

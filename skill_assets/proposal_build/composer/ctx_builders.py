@@ -44,8 +44,12 @@ def _zone_tier_coverage(model: ProjectModel, zone: Zone) -> str:
     """Tier-coverage label for a zone, e.g. 'ESSENTIAL + ENHANCED' or 'ENHANCED ONLY'.
 
     Returns an empty string when no priced line items reference this zone (and
-    no wildcard rows apply), so the layout can omit the badge.
+    no wildcard rows apply), so the layout can omit the badge. Also suppressed
+    entirely when the project is single-tier — there's no tier choice to
+    communicate.
     """
+    if model.pricing_format == "single":
+        return ""
     tiers: set[Tier] = set()
     for li in model.line_items:
         if li.zone == zone.name or li.zone == "*":
@@ -82,14 +86,16 @@ def build_exec_summary_ctx(model: ProjectModel, page_num: int, page_total: int,
         "page_title": "Executive Summary",
         "standfirst": _exec_standfirst(model),
         "body_paragraphs": [_exec_body_para_1(model), _exec_body_para_2(model)],
-        "at_a_glance": [
+        "at_a_glance": [r for r in [
             ("PROJECT", f"{model.project_year} {model.proposal_type}", False),
             ("ZONES", _zone_summary_short(model), False),
-            ("RECOMMENDED TIER", model.recommended_tier.value, False),
-            ("INVESTMENT RANGE", investment_range, False),
+            # RECOMMENDED TIER row suppressed when single-tier (no tier choice exists)
+            None if model.pricing_format == "single"
+                else ("RECOMMENDED TIER", model.recommended_tier.value, False),
+            ("INVESTMENT", investment_range, False),
             ("GO LIVE", _date_month(model.go_live), False),
             ("SIGNING DEADLINE", _date_short(model.signing_deadline), True),
-        ],
+        ] if r is not None],
         "pillars": list(model.pillars),
     }
 
@@ -142,6 +148,15 @@ def _date_month(iso: str) -> str:
     return datetime.fromisoformat(iso).date().strftime("%B %Y")
 
 
+def _join_clauses(items) -> str:
+    """Join list items into one semicolon-separated line. Brief items are often
+    authored as full sentences ending in a period; strip that trailing period
+    before joining so we don't render "...season.; Replace..." (period then
+    semicolon), then close the whole line with a single period."""
+    parts = [s.strip().rstrip(".").strip() for s in items if s and s.strip()]
+    return "; ".join(parts) + "." if parts else ""
+
+
 def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
     return {
         **_project_base(model),
@@ -152,11 +167,11 @@ def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int)
             {"title": "VENUE & CONTEXT",
              "body": _understanding_venue(model)},
             {"title": "GOALS FOR " + str(model.project_year),
-             "body": "; ".join(model.customer_goals)},
+             "body": _join_clauses(model.customer_goals)},
             {"title": "KEY CONSTRAINTS",
-             "body": "; ".join(model.customer_constraints) if model.customer_constraints else "None identified at this stage."},
+             "body": _join_clauses(model.customer_constraints) if model.customer_constraints else "None identified at this stage."},
             {"title": "WHAT SUCCESS LOOKS LIKE",
-             "body": "; ".join(model.success_criteria)},
+             "body": _join_clauses(model.success_criteria)},
         ],
     }
 
@@ -178,6 +193,10 @@ def build_creative_vision_ctx(model: ProjectModel, page_num: int, page_total: in
         "design_direction_body": model.creative_direction,
         "phases": list(model.phases),
         "hero_image": model.resolved_renderings.get(model.creative_vision_hero, model.creative_vision_hero),
+        # Pass through the creative_vision_hero_fit Brief field so AEs can opt
+        # in to contain-fit when a hero image gets cropped at the top/bottom
+        # (e.g. a 40-foot tree rendering whose top extends past the frame).
+        "hero_fit": getattr(model, "creative_vision_hero_fit", "") or "cover",
     }
 
 
@@ -283,13 +302,34 @@ def _zone_dict(model: ProjectModel, z: Zone) -> dict:
     }
 
 
+def build_palette_fullbleed_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
+    """Chrome-less full-bleed slide for a pre-designed palette / mood board image.
+    Uses the image_fullbleed layout. The board arrives already designed as a
+    full PNG, so it renders edge-to-edge with no header/footer. Contain-fit
+    letterboxes a portrait board cleanly on the dark page rather than cropping."""
+    image = model.prebuilt_palette_image
+    alt = f"{model.project_name} — Selected Palette"
+    return {
+        **_project_base(model),
+        "page_num": page_num, "page_total": page_total,
+        "page_title": alt,
+        "hero_image": model.resolved_renderings.get(image, image),
+        "alt_text": alt,
+        "fit": "contain",
+    }
+
+
 def build_scope_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
+    single = model.pricing_format == "single"
     return {
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
         "page_title": "Scope of Work",
-        "standfirst": "What your selected tier includes.",
+        "standfirst": "What your program includes." if single
+                      else "What your selected tier includes.",
         "includes": list(model.scope_includes),
+        "includes_accent": model.scope_accent,
+        "service_note": model.scope_service_note,
         "add_ons": list(model.add_ons),
     }
 
@@ -364,6 +404,22 @@ def build_investment_ctx(model: ProjectModel, page_num: int, page_total: int,
         2: "Two levels of program. Pick what fits your season.",
         3: "Three levels of program. Pick what fits your season.",
     }
+
+    # Zone breakdown: aggregate base-scope (non-enhancement) line totals by zone.
+    # Used by the zone-itemized investment layout when pricing_format == "single".
+    zone_order = []
+    zone_totals_map: dict[str, float] = {}
+    for li in model.line_items:
+        if li.is_enhancement:
+            continue
+        z = li.zone or "Other"
+        if z not in zone_totals_map:
+            zone_order.append(z)
+            zone_totals_map[z] = 0.0
+        zone_totals_map[z] += li.line_total
+    zone_breakdown = [{"name": z, "total": zone_totals_map[z]} for z in zone_order]
+    grand_total = sum(zone_totals_map.values())
+
     return {
         **_project_base(model),
         "page_num": page_num, "page_total": page_total,
@@ -371,7 +427,9 @@ def build_investment_ctx(model: ProjectModel, page_num: int, page_total: int,
         "standfirst": standfirst_by_count.get(len(tiers), "Pick the program that fits your season."),
         "tiers": tiers,
         "tier_count": len(tiers),
-        "partnership_discounts": partnership_discounts,
+        "zone_breakdown": zone_breakdown,
+        "grand_total": grand_total,
+        "partnership_discounts": [],  # disabled — partnership savings removed from all output
         "footer_note": (f"Pricing valid 30 days from proposal date. Fabrication must be locked "
                         f"by {_date_long(model.fabrication_lock)}."),
     }

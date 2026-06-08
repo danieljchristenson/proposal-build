@@ -8,7 +8,7 @@ default_pillars:
     body: "Concept through teardown. One partner, zero seams."
   - title: "Destination Scale"
     body: "Built for venues hosting millions of guests per season."
-  - title: "25 Years at It"
+  - title: "28 Years at It"
     body: "From Pier 39 to Disney Parks, we've done this before."
 
 default_phases:

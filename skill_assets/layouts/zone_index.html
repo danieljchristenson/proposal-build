@@ -35,9 +35,7 @@
   .zi-zone-list {
     flex: 1 1 0;
     min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    padding: var(--space-4) 0;
     border-top: 1pt solid #E0E0E0;
     border-bottom: 1pt solid #E0E0E0;
   }
@@ -46,10 +44,12 @@
      No padding here; space-between provides the row gaps. */
   .zi-zone-row {
     display: grid;
-    grid-template-columns: 0.7in 3.2in 1fr;  /* eyebrow col | name col | subtitle fills rest */
+    grid-template-columns: 0.75in 3.7in 1fr;  /* eyebrow col | name col | subtitle fills rest */
     align-items: center;
-    padding: var(--space-1) 0;
+    padding: 0;
+    margin-bottom: 18pt;
   }
+  .zi-zone-row:last-child { margin-bottom: 0; }
 
   /* Cell 1: ZONE 0N eyebrow */
   .zi-zone-eyebrow {
@@ -66,8 +66,8 @@
   .zi-zone-name {
     font-family: var(--font-display);
     font-weight: 900;
-    font-size: 17pt;
-    line-height: 1.1;
+    font-size: 15pt;
+    line-height: 1.05;
     letter-spacing: -0.01em;
     color: var(--color-charcoal);
     padding-right: var(--space-5);
