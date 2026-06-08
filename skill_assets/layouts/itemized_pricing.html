@@ -341,6 +341,9 @@
     <div><div class="label">PROGRAM TOTAL</div></div>
     <div style="text-align:right;"><div class="value" style="color: var(--color-red); font-size: 18pt;">${{ "{:,.0f}".format(tier_total) }}</div></div>
   </div>
+  {% if service_note is defined and service_note %}
+  <div style="margin: 6pt 0 0; padding: 7pt 12pt; background: var(--color-charcoal); color: var(--color-light); border-radius: 3pt; font-size: 9pt; line-height: 1.4;">{{ service_note }}</div>
+  {% endif %}
 
   <div class="terms-card"><h3>Payment Schedule</h3></div>
   {{ payment_schedule_md_html | safe }}

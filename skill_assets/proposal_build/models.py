@@ -217,6 +217,11 @@ class ProjectModel:
     # brand.css card-header colors: "green" (default), "red", or "navy". Lets a
     # project whose palette clashes with green retheme that band.
     scope_accent: str = "green"
+    # Optional framing line shown below the Scope "includes" card, used to state
+    # the commercial model (e.g. full-service seasonal rental: install,
+    # maintenance, removal, and storage included in the annual fee). Empty by
+    # default so purchase/ROM projects aren't forced into rental language.
+    scope_service_note: str = ""
 
 
 @dataclass(frozen=True)

@@ -171,6 +171,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         greenery_description=fm.get("greenery_description", "") or "",
         prebuilt_palette_image=fm.get("prebuilt_palette_image", "") or "",
         scope_accent=fm.get("scope_accent", "green") or "green",
+        scope_service_note=fm.get("scope_service_note", "") or "",
     )
 
     # worksheet_rows: per-line dicts keyed by item_code for diff hashing
@@ -372,8 +373,13 @@ def _fill_term_panels(brief, bp, ph):
 
 
 def _fill_after_approval_steps(brief, voice, ph):
+    # Honor a Brief-level `after_approval_steps:` frontmatter override when
+    # present; fall back to the voice preset's default otherwise. Lets a
+    # fast-track project (renderings already in hand) state its own forward
+    # milestones instead of the default renderings-final timeline.
+    source = brief.frontmatter.get("after_approval_steps") or voice.default_after_approval_steps
     return tuple(
-        substitute_placeholders(step, ph) for step in voice.default_after_approval_steps
+        substitute_placeholders(step, ph) for step in source
     )
 
 

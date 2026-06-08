@@ -26,11 +26,16 @@
     height: 100%;
   }
 
-  /* ── Top: page title + standfirst ── */
+  /* ── Top: page title + standfirst ──
+     Shrink the default 50pt page-title (mirrors scope.html) so the zone table,
+     rental band, and footer note all clear the page footer on dense
+     single-tier decks (up to ~10 zones). */
   .inv-title-area {
     flex: 0 0 auto;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
   }
+  .inv-title-area .page-title { font-size: 36pt; }
+  .inv-title-area .standfirst { font-size: 12pt; margin-top: var(--space-1); }
 
   /* ── Tier grid wrapper (includes recommended banner row) ──
      Sized to its own content (flex: 0 0 auto) so the partnership strip
@@ -290,7 +295,7 @@
   }
   .inv-zone-table thead th.amt-col { text-align: right; }
   .inv-zone-table tbody td {
-    padding: 5pt 12pt;
+    padding: 4pt 12pt;
     border-bottom: 0.5pt solid #d4d4d4;
     font-variant-numeric: tabular-nums;
   }
@@ -303,30 +308,30 @@
     font-weight: 600;
   }
   .inv-zone-table tfoot tr.inv-zone-total td {
-    padding: 8pt 12pt 5pt;
+    padding: 6pt 12pt 4pt;
     border-top: 1.5pt solid var(--color-charcoal);
     border-bottom: none;
     font-family: var(--font-display);
     font-weight: 900;
     color: var(--color-red);
-    font-size: 18pt;
+    font-size: 16pt;
     font-variant-numeric: tabular-nums;
   }
   .inv-zone-table tfoot tr.inv-zone-total td.zone-col {
     letter-spacing: 0.04em;
-    font-size: 13pt;
+    font-size: 12pt;
     color: var(--color-charcoal);
   }
   .inv-zone-table tfoot tr.inv-zone-total td.amt-col { text-align: right; }
   .inv-allin-band {
-    margin-top: var(--space-3);
-    padding: 6pt 12pt;
+    margin-top: var(--space-2);
+    padding: 5pt 12pt;
     background: var(--color-charcoal);
     color: white;
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 9pt;
-    letter-spacing: 0.14em;
+    font-size: 8.5pt;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     text-align: center;
   }
@@ -380,7 +385,7 @@
         </tr>
       </tfoot>
     </table>
-    <div class="inv-allin-band">ALL-IN &middot; TAX EXCLUDED</div>
+    <div class="inv-allin-band">FULL-SERVICE SEASONAL RENTAL &middot; TAX EXCLUDED</div>
   </div>
   {% else %}
   <!-- Tier columns (1, 2, or 3 based on active tiers) -->

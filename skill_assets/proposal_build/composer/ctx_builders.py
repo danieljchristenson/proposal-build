@@ -148,6 +148,15 @@ def _date_month(iso: str) -> str:
     return datetime.fromisoformat(iso).date().strftime("%B %Y")
 
 
+def _join_clauses(items) -> str:
+    """Join list items into one semicolon-separated line. Brief items are often
+    authored as full sentences ending in a period; strip that trailing period
+    before joining so we don't render "...season.; Replace..." (period then
+    semicolon), then close the whole line with a single period."""
+    parts = [s.strip().rstrip(".").strip() for s in items if s and s.strip()]
+    return "; ".join(parts) + "." if parts else ""
+
+
 def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict:
     return {
         **_project_base(model),
@@ -158,11 +167,11 @@ def build_understanding_ctx(model: ProjectModel, page_num: int, page_total: int)
             {"title": "VENUE & CONTEXT",
              "body": _understanding_venue(model)},
             {"title": "GOALS FOR " + str(model.project_year),
-             "body": "; ".join(model.customer_goals)},
+             "body": _join_clauses(model.customer_goals)},
             {"title": "KEY CONSTRAINTS",
-             "body": "; ".join(model.customer_constraints) if model.customer_constraints else "None identified at this stage."},
+             "body": _join_clauses(model.customer_constraints) if model.customer_constraints else "None identified at this stage."},
             {"title": "WHAT SUCCESS LOOKS LIKE",
-             "body": "; ".join(model.success_criteria)},
+             "body": _join_clauses(model.success_criteria)},
         ],
     }
 
@@ -320,6 +329,7 @@ def build_scope_ctx(model: ProjectModel, page_num: int, page_total: int) -> dict
                       else "What your selected tier includes.",
         "includes": list(model.scope_includes),
         "includes_accent": model.scope_accent,
+        "service_note": model.scope_service_note,
         "add_ons": list(model.add_ons),
     }
 
