@@ -15,6 +15,8 @@ from proposal_build.models import ProjectModel, Tier, Zone
 
 # Absolute path to the brand logo, embedded in every page header via base.html.
 _LOGO_PATH = (Path(__file__).resolve().parents[3] / "skill_assets" / "Branding" / "ST NICKS LOGO.png").as_posix()
+# White/ivory variant for use on dark surfaces (editorial theme).
+_LOGO_PATH_DARK = (Path(__file__).resolve().parents[3] / "skill_assets" / "Branding" / "ST NICKS LOGO WHITE.png").as_posix()
 
 
 def _project_base(model: ProjectModel) -> dict:
@@ -31,6 +33,7 @@ def _project_base(model: ProjectModel) -> dict:
         "presenter_org": "St. Nick's Christmas Lighting & Décor",
         "proposal_date": _date_long(model.proposal_date),
         "logo_path": _LOGO_PATH,
+        "logo_path_dark": _LOGO_PATH_DARK,
     }
 
 

@@ -13,12 +13,16 @@ LAYOUTS_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "layouts"
 
 def _enrich_ctx(ctx: dict, theme: str, layout: str) -> dict:
     """Return a copy of ctx with theme chrome variables added (non-mutating)."""
+    surface = surface_for(theme, layout)
     return {
         **ctx,
         "theme": theme,
         "layout_name": layout,
-        "body_surface": surface_for(theme, layout),
+        "body_surface": surface,
         "theme_stylesheet": stylesheet_for(theme),
+        "header_logo": (ctx.get("logo_path_dark")
+                        if theme == "editorial" and surface == "dark" and ctx.get("logo_path_dark")
+                        else ctx.get("logo_path")),
     }
 
 

@@ -130,7 +130,7 @@
   </div>
 
   {% if logo_path is defined and logo_path %}
-  <img class="ab-logo-bottom" src="{{ logo_path }}" alt="St. Nick's">
+  <img class="ab-logo-bottom" src="{{ header_logo | default(logo_path) }}" alt="St. Nick's">
   {% endif %}
 
 {% endblock %}

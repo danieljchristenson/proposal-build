@@ -120,7 +120,7 @@
   <div class="cover-left">
     <div>
       {% if logo_path is defined and logo_path %}
-      <img class="cover-logo" src="{{ logo_path }}" alt="St. Nick's Christmas Lighting & Décor">
+      <img class="cover-logo" src="{{ header_logo | default(logo_path) }}" alt="St. Nick's Christmas Lighting & Décor">
       {% endif %}
       <div class="cover-rule"></div>
       <div class="cover-season">{{ season_label }}</div>
