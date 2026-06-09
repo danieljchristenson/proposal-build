@@ -164,6 +164,7 @@ def build_project_model(project_dir: Path) -> tuple[ProjectModel, dict]:
         greenery_references=_resolve_greenery_refs(project_dir, fm.get("greenery_references", [])),
         venue_context=fm.get("venue_context", "") or "",
         greenery_description=fm.get("greenery_description", "") or "",
+        theme=fm.get("theme", "classic"),
     )
 
     # worksheet_rows: per-line dicts keyed by item_code for diff hashing
