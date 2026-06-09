@@ -1,4 +1,5 @@
 from proposal_build.renderer import pdf as pdfmod
+from tests.fixtures import riverside as rv
 
 
 def test_enrich_adds_theme_surface_and_layout_name():
@@ -18,9 +19,8 @@ def test_enrich_classic_about_is_light():
 
 
 def test_render_proposal_pdf_defaults_to_classic(tmp_path):
-    slides = [("cover", {"season_label": "X", "title": "T", "subtitle": "S",
-                          "client_short": "C", "project_year": "2026",
-                          "page_num": 1, "page_total": 1})]
+    # Use the real riverside cover ctx so WeasyPrint can render without errors.
+    slides = [("cover", rv.cover_ctx)]
     out = tmp_path / "smoke.pdf"
     # Should not raise; theme defaults to classic.
     pdfmod.render_proposal_pdf(slides, out)

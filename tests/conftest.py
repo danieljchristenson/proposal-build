@@ -13,6 +13,8 @@ import pytest
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from weasyprint import HTML
 
+from proposal_build.renderer.pdf import _enrich_ctx
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LAYOUTS_DIR = REPO_ROOT / "skill_assets" / "layouts"
 OUTPUT_DIR = REPO_ROOT / "tests" / "_output"
@@ -38,15 +40,22 @@ def render_layout(jinja_env: Environment):
         out_name: optional output filename stem. Defaults to layout_name.
             Use this when the same layout is rendered twice with different
             ctxs (e.g. zone_solo for two zones from the same fixture).
+        theme: proposal theme name (default "classic").
 
     Returns:
         Path to the rendered PDF file in tests/_output/{out_name}.pdf.
     """
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    def _render(layout_name: str, ctx: dict[str, Any], out_name: str | None = None) -> Path:
+    def _render(
+        layout_name: str,
+        ctx: dict[str, Any],
+        out_name: str | None = None,
+        theme: str = "classic",
+    ) -> Path:
         template = jinja_env.get_template(f"{layout_name}.html")
-        html_string = template.render(**ctx)
+        enriched = _enrich_ctx(ctx, theme=theme, layout=layout_name)
+        html_string = template.render(**enriched)
         out = OUTPUT_DIR / f"{out_name or layout_name}.pdf"
         HTML(string=html_string, base_url=str(LAYOUTS_DIR)).write_pdf(target=str(out))
         return out
