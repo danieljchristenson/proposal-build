@@ -2,11 +2,8 @@
  * Per-layout polish lives in a later plan. Brand-verified tokens only:
  * red #B31315, charcoal #1C1C1C, navy #12355B, light #ECEFF1.
  * No gold, no serif, no box-shadow (WeasyPrint-unsupported).
- *
- * Font note: Roboto-Black.ttf is absent from skill_assets/fonts/;
- * weight:900 falls back to Roboto-Bold (700) — acceptable for now.
  */
-@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Bold.ttf") format("truetype"); font-weight:900; }
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Black.ttf") format("truetype"); font-weight:900; }
 @font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Bold.ttf") format("truetype"); font-weight:700; }
 @font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Regular.ttf") format("truetype"); font-weight:400; }
 @font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Light.ttf") format("truetype"); font-weight:300; }
