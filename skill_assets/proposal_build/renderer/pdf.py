@@ -6,16 +6,24 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from weasyprint import HTML
 
+from proposal_build.composer.theming import surface_for, stylesheet_for
 
 LAYOUTS_DIR = Path(__file__).resolve().parents[3] / "skill_assets" / "layouts"
 
 
-def render_proposal_pdf(slides: list, out_path: Path) -> Path:
-    """slides: list of SlidePlanItem-like (layout_name, ctx) tuples.
+def _enrich_ctx(ctx: dict, theme: str, layout: str) -> dict:
+    """Return a copy of ctx with theme chrome variables added (non-mutating)."""
+    return {
+        **ctx,
+        "theme": theme,
+        "layout_name": layout,
+        "body_surface": surface_for(theme, layout),
+        "theme_stylesheet": stylesheet_for(theme),
+    }
 
-    Renders each slide as a single HTML page with @page breaks between them,
-    then writes a single PDF. Returns the output path.
-    """
+
+def render_proposal_pdf(slides: list, out_path: Path, theme: str = "classic") -> Path:
+    """slides: list of (layout_name, ctx) tuples. Renders one PDF in `theme`."""
     env = Environment(
         loader=FileSystemLoader(str(LAYOUTS_DIR)),
         autoescape=True,
@@ -23,20 +31,16 @@ def render_proposal_pdf(slides: list, out_path: Path) -> Path:
         keep_trailing_newline=True,
     )
 
-    # Render each slide individually, then concatenate via WeasyPrint's render_pages mechanism.
-    # WeasyPrint can take multiple HTML(string=...).render() outputs and combine pages.
     pages = []
     for layout, ctx in slides:
         template = env.get_template(f"{layout}.html")
-        html_str = template.render(**ctx)
+        html_str = template.render(**_enrich_ctx(ctx, theme, layout))
         doc = HTML(string=html_str, base_url=str(LAYOUTS_DIR)).render()
         pages.extend(doc.pages)
 
-    # Use the first doc's metadata; merge all pages
     if not pages:
         raise ValueError("No slides to render")
 
-    # Reuse the first doc's metadata; replace pages list
     first_doc = HTML(string="<html><body></body></html>").render()
     first_doc.pages = pages
     out_path.parent.mkdir(parents=True, exist_ok=True)
