@@ -119,3 +119,11 @@ def test_menu_project_model_has_tree_comparison_field_defaulting_to_empty_dict()
         sections=(), what_youre_approving="",
     )
     assert m.tree_comparison == {}
+
+
+def test_projectmodel_theme_defaults_to_classic():
+    from proposal_build.models import ProjectModel
+    import dataclasses
+    fields = {f.name: f for f in dataclasses.fields(ProjectModel)}
+    assert "theme" in fields, "ProjectModel must carry a theme field"
+    assert fields["theme"].default == "classic"
