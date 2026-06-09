@@ -1,0 +1,188 @@
+<!-- layout-version: 2026-05-05 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Company Profile</title>
+  <!-- layout-version: 2026-05-05 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Company Profile — light page, RFP-compliance flavor.
+     Top: large "Company Profile" title (charcoal display) + full-width hero
+     image strip beneath. Below: 2-column body with team on the left
+     (name + bold role) and company facts on the right (bulleted).
+     Bottom-right: large St. Nick's logo. No red contact strip. */
+
+  /* Hide base header logo — this layout puts a large logo bottom-right. */
+  .page-header { display: none; }
+
+  body.page-light .page-content {
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 0.45in 0.55in 0.45in;
+  }
+
+  .ab-title-area {
+    margin-bottom: 12pt;
+  }
+  .ab-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 38pt;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .ab-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    gap: 48pt;
+    align-items: start;
+    margin-top: 18pt;
+  }
+
+  /* ── Left column: team list ── */
+  .ab-team-member {
+    margin-bottom: 14pt;
+  }
+  .ab-team-name {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14pt;
+    line-height: 1.2;
+    color: var(--color-charcoal);
+  }
+  .ab-team-role {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14pt;
+    line-height: 1.2;
+    color: var(--color-charcoal);
+    margin-top: 2pt;
+  }
+
+  /* ── Right column: company facts as bullets ── */
+  .ab-facts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .ab-facts li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13pt;
+    line-height: 1.4;
+    color: var(--color-charcoal);
+    padding-left: 14pt;
+    position: relative;
+    margin-bottom: 7pt;
+  }
+  .ab-facts li::before {
+    content: "•";
+    color: var(--color-red);
+    font-weight: 700;
+    font-size: 14pt;
+    position: absolute;
+    left: 0;
+    top: 0pt;
+  }
+
+  /* ── Big bottom-right logo ── */
+  .ab-logo-bottom {
+    position: absolute;
+    right: 0.55in;
+    bottom: 0.40in;
+    width: 1.5in;
+    height: auto;
+    z-index: 5;
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="about">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+
+  <div class="ab-title-area">
+    <h1 class="ab-title">Company Profile</h1>
+  </div>
+
+  <div class="ab-body-grid">
+
+    <!-- Left: Team -->
+    <div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Nicholas Adams</div>
+        <div class="ab-team-role">Founder</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Wade Francis</div>
+        <div class="ab-team-role">Chief Financial Officer</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Brenda Sheridan</div>
+        <div class="ab-team-role">Director of Operations</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Daniel Christenson</div>
+        <div class="ab-team-role">Director of Sales</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Stephanie Escobar</div>
+        <div class="ab-team-role">Creative Director</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Carlos Vasquez &amp; Alonso Salazar</div>
+        <div class="ab-team-role">Senior Installers / Project Managers</div>
+      </div>
+      
+    </div>
+
+    <!-- Right: Company facts -->
+    <div>
+      <ul class="ab-facts">
+        
+        <li>Founded 1998 (dba St. Nick&#39;s) — T&amp;G Global, LLC</li>
+        
+        <li>14 full-time team · 30–45 seasonal staff</li>
+        
+        <li>B-General Building Contractor #990427</li>
+        
+        <li>Certified Small Business Supplier #1626660</li>
+        
+        <li>$5M Umbrella · $1M/$2M GL · $1M Auto · Full Workers&#39; Comp</li>
+        
+        <li>200+ commercial venues across North America</li>
+        
+      </ul>
+    </div>
+
+  </div>
+
+  
+
+
+  </div>
+
+  
+
+</body>
+</html>

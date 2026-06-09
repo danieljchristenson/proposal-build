@@ -4,15 +4,15 @@ from pathlib import Path
 from proposal_build.renderer.pdf import LAYOUTS_DIR, render_proposal_pdf
 
 
-def test_editorial_stylesheet_exists():
-    assert (Path(LAYOUTS_DIR) / "theme-editorial.css").exists()
+def _riverside_slides():
+    """Return the full Riverside deck as a list of (layout_name, ctx) tuples.
 
-
-def test_riverside_renders_in_editorial(tmp_path):
-    # Riverside fixture exposes individual *_ctx dicts; assemble the full deck here.
+    Shared by test_riverside_renders_in_editorial and the classic golden
+    snapshot tests so both suites exercise the identical slide assembly.
+    """
     from tests.fixtures import riverside as rv
 
-    slides = [
+    return [
         ("cover",           rv.cover_ctx),
         ("exec_summary",    rv.exec_summary_ctx),
         ("understanding",   rv.understanding_ctx),
@@ -29,6 +29,13 @@ def test_riverside_renders_in_editorial(tmp_path):
         ("about",           rv.about_ctx),
     ]
 
+
+def test_editorial_stylesheet_exists():
+    assert (Path(LAYOUTS_DIR) / "theme-editorial.css").exists()
+
+
+def test_riverside_renders_in_editorial(tmp_path):
+    slides = _riverside_slides()
     out = tmp_path / "riverside-editorial.pdf"
     render_proposal_pdf(slides, out, theme="editorial")
     assert out.exists()

@@ -1,0 +1,230 @@
+<!-- layout-version: 2026-05-02 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Terms &amp; Next Steps</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Terms — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-11.png
+
+     Top: page title (Poppins Black 50pt) + standfirst.
+     Full-width brand-red banner: 2 critical dates side-by-side.
+     2×2 card grid: Payment, Insurance, Change Orders, Validity.
+     Dark charcoal workflow strip: AFTER APPROVAL → step · step · step.
+
+     Layout note: the page-content box is position:absolute with
+     top:0.85in, bottom:0.55in (~439pt available). We use display:block
+     with explicit heights to guarantee the workflow strip is always visible.
+     WeasyPrint clipping is avoided by keeping each section strictly sized. */
+
+  /* ── Top: page title + standfirst ── */
+  .terms-title-area {
+    margin-bottom: var(--space-3);
+  }
+
+  .terms-title-area .page-title {
+    font-size: 38pt;
+    margin-bottom: var(--space-1);
+  }
+
+  .terms-title-area .standfirst {
+    font-size: 13pt;
+    margin: 0;
+  }
+
+  /* ── Red date banner ── */
+  .terms-date-banner {
+    background: var(--color-red);
+    border-radius: 3pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-3) var(--space-5);
+    margin-bottom: var(--space-3);
+  }
+
+  .terms-date-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .terms-date-item + .terms-date-item {
+    border-left: 1pt solid rgba(255, 255, 255, 0.25);
+    padding-left: var(--space-5);
+  }
+
+  .terms-date-value {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-xl);
+    line-height: 1.1;
+    color: white;
+    white-space: nowrap;
+  }
+
+  .terms-date-desc {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.9);
+    padding-top: 2pt;
+  }
+
+  /* ── 2×2 card grid ── */
+  .terms-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--space-2);
+    height: 210pt;
+    margin-bottom: var(--space-2);
+  }
+
+  .terms-card {
+    background: var(--color-panel);
+    border-radius: 4pt;
+    border-left: 3pt solid var(--color-red);
+    padding: var(--space-3) var(--space-4);
+    overflow: hidden;
+  }
+
+  .terms-card-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  .terms-card-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: var(--color-charcoal);
+  }
+
+  /* ── Dark workflow strip ── */
+  .terms-workflow {
+    background: var(--color-charcoal);
+    border-radius: 3pt;
+    padding: var(--space-3) var(--space-5);
+    display: flex;
+    align-items: center;
+  }
+
+  .terms-workflow-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: white;
+    white-space: nowrap;
+    margin-right: var(--space-3);
+  }
+
+  .terms-workflow-arrow {
+    color: var(--color-red);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    margin-right: var(--space-3);
+  }
+
+  .terms-workflow-steps {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.85);
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="terms">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+
+  <!-- Page title + standfirst -->
+  <div class="terms-title-area">
+    <h1 class="page-title">Terms &amp; Next Steps</h1>
+    
+    <p class="standfirst">The critical dates and terms for the 2026 program.</p>
+    
+  </div>
+
+  <!-- Red date banner -->
+  <div class="terms-date-banner">
+    
+    <div class="terms-date-item">
+      <div class="terms-date-value">October 30, 2026</div>
+      <div class="terms-date-desc">Execute by this date to guarantee the install schedule.</div>
+    </div>
+    
+    <div class="terms-date-item">
+      <div class="terms-date-value">August 22, 2026</div>
+      <div class="terms-date-desc">All custom fabrication must be approved by this date (90 days pre-Go Live).</div>
+    </div>
+    
+  </div>
+
+  <!-- 2×2 card grid -->
+  <div class="terms-cards">
+    
+    <div class="terms-card">
+      <div class="terms-card-title">PAYMENT SCHEDULE</div>
+      <div class="terms-card-body">30% deposit on signing — required to lock the install schedule. 40% on fabrication start. 30% on go-live. Net-15 terms on final invoice.</div>
+    </div>
+    
+    <div class="terms-card">
+      <div class="terms-card-title">INSURANCE &amp; PERMITS</div>
+      <div class="terms-card-body">$5M Umbrella over $1M/$2M Commercial General Liability and $1M Auto; full Workers&#39; Comp at statutory limits. Certificates issued to RCTC at signing. MetroLink coordination handled by RCTC; we provide full documentation support.</div>
+    </div>
+    
+    <div class="terms-card">
+      <div class="terms-card-title">CHANGE ORDERS</div>
+      <div class="terms-card-body">Includes 2 creative revision rounds before Fabrication Lock (Aug 22, 2026). Scope or timeline changes after that date follow our standard change-order workflow — written approval required, priced at materials + 35%.</div>
+    </div>
+    
+    <div class="terms-card">
+      <div class="terms-card-title">PROPOSAL VALIDITY</div>
+      <div class="terms-card-body">This proposal is valid 60 days from May 12, 2026. Materials pricing subject to market conditions thereafter. Sign by Oct 30 to lock schedule.</div>
+    </div>
+    
+  </div>
+
+  <!-- Dark workflow strip -->
+  <div class="terms-workflow">
+    <div class="terms-workflow-label">AFTER APPROVAL</div>
+    <div class="terms-workflow-arrow">→</div>
+    <div class="terms-workflow-steps">Kickoff call within 48 hrs · Creative window opens · Renderings final by Aug 1</div>
+  </div>
+
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">12 / 14</div>
+  </footer>
+  
+
+</body>
+</html>

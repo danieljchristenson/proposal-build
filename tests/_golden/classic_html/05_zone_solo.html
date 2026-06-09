@@ -1,0 +1,273 @@
+<!-- layout-version: 2026-05-03 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Zone 01: Downtown Riverside</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Zone Solo — single zone, light background, footer present.
+     Top section: red ZONE eyebrow + large zone name + italic subtitle.
+     Body: 2-column grid — left has INCLUDED ELEMENTS label + bullet list,
+     right has hero image (or dark placeholder).
+
+     Heights use % / auto only. .page-content top/bottom are owned by
+     brand.css (top: 0.85in, bottom: 0.55in). This layout does NOT
+     override .page-content. Strategy: outer flex column fills the content
+     area; title area is fixed-height auto, body grid grows to fill the rest. */
+
+  .zs-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Optional section header strip (used when this slide leads a section
+     in a multi-section deck like FIGat7th). Renders only when ctx
+     supplies section_label + section_name. Sits above the zone title. */
+  .zs-section-header {
+    flex: 0 0 auto;
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
+    border-bottom: 1pt solid var(--color-red);
+  }
+  .zs-section-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin-bottom: 2pt;
+  }
+  .zs-section-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 18pt;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+
+  /* ── Top: eyebrow + zone name + subtitle ── */
+  .zs-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-3);
+  }
+
+  .zs-title-area .eyebrow {
+    margin-bottom: var(--space-1);
+  }
+
+  .zs-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 22pt;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    margin: 0 0 var(--space-1) 0;
+  }
+
+  .zs-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: var(--color-gray);
+    margin: 0;
+  }
+
+  /* Tier coverage chip — sits below subtitle, small caps, charcoal-on-light. */
+  .zs-tier-badge {
+    display: inline-block;
+    margin-top: var(--space-2);
+    padding: 3pt 8pt;
+    background: rgba(0, 0, 0, 0.04);
+    border-left: 2pt solid var(--color-red);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8.5pt;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+  }
+  .zs-tier-badge-lead {
+    color: var(--color-gray);
+    font-weight: 400;
+    margin-right: 4pt;
+  }
+
+  /* ── Body: 2-column grid ── */
+  /* flex: 1 1 0 fills the remaining space below the title area.
+     min-height: 0 prevents flex children from overflowing. */
+  .zs-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--space-8);
+  }
+
+  /* ── Left column: included elements ── */
+  .zs-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* No overflow: hidden — let bullet lists be visible even when long.
+       Page-level @page clipping handles the worst-case. */
+  }
+
+  .zs-elements-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    margin-bottom: var(--space-4);
+  }
+
+  .zs-elements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .zs-elements-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  /* Red bullet via ::before pseudo-element */
+  .zs-elements-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 14pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* ── Right column: hero image container ──
+     position: relative + overflow: hidden contains tall portrait images.
+     The image itself is absolutely positioned to fill the container
+     with object-fit: cover (same pattern as creative_vision.html). */
+  .zs-right {
+    position: relative;
+    background: transparent;
+    border-radius: 3pt;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* min-height prevents collapse when no image supplied */
+    min-height: 1.5in;
+  }
+
+  .zs-hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .zs-hero-img--contain {
+    object-fit: contain;
+    background: transparent;
+  }
+
+  .zs-placeholder {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.4);
+    text-align: center;
+    padding: var(--space-4);
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="zone_solo">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="zs-outer">
+
+  
+
+  <!-- Eyebrow + zone name + subtitle -->
+  <div class="zs-title-area">
+    <div class="eyebrow">ZONE 01</div>
+    <div class="zs-zone-name">Downtown Riverside</div>
+    <div class="zs-subtitle">The flagship station — civic centerpiece.</div>
+    
+  </div>
+
+  <!-- 2-column body: bullets left, image right -->
+  <div class="zs-body">
+
+    <!-- Left: INCLUDED ELEMENTS label + bullet list -->
+    <div class="zs-left">
+      <div class="zs-elements-label">Included Elements</div>
+      <ul class="zs-elements-list">
+        
+        <li>Custom-fabricated wreaths at every entrance</li>
+        
+        <li>Full-canopy garland across the platform overhang</li>
+        
+        <li>Pole banner program (8 poles)</li>
+        
+        <li>Lighted walk-through arch at plaza forecourt</li>
+        
+        <li>Evening lighting program — platform + awning + curb-edge</li>
+        
+        <li>On-site QC walkthrough with RCTC Capital Projects</li>
+        
+      </ul>
+    </div>
+
+    <!-- Right: hero image or placeholder -->
+    <div class="zs-right">
+      
+      <img class="zs-hero-img "
+           src="file:///Users/Daniel-Admin/Documents/Claude/Projects/proposal-build/Projects/Downtown%20Riverside%20Metro%20Link/02%20-%20Renderings/Base%20Scope/Walk-Through%20Ornament%20-%20Warm%20White.png" alt="Downtown Riverside">
+      
+    </div>
+
+  </div>
+
+</div>
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">6 / 14</div>
+  </footer>
+  
+
+</body>
+</html>

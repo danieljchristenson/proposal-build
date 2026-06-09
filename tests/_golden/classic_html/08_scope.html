@@ -1,0 +1,200 @@
+<!-- layout-version: 2026-05-04-r3 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Scope of Work</title>
+  <!-- layout-version: 2026-05-04-r3 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Scope — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-08.png
+
+     Top: page title (Poppins Black 50pt) + standfirst.
+     Body: 2-column card grid using .card.has-header pattern from brand.css.
+       Left  — .card.has-header.green: header "YOUR PROGRAM INCLUDES", body bullet list.
+       Right — .card.has-header.red:   header "OPTIONAL ADD-ONS", body price rows.
+
+     Layout strategy: outer flex column; title-area auto; body card grid flex: 1 1 0. */
+
+  .sc-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ──
+     Local overrides shrink the title block so the YOUR PROGRAM INCLUDES card
+     sits higher on the page. The default 50pt page-title + 16pt standfirst
+     leaves the card looking awkwardly low. */
+  .sc-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-3);
+  }
+  .sc-title-area .page-title { font-size: 32pt; }
+  .sc-title-area .standfirst { font-size: 12pt; margin-top: var(--space-1); }
+
+  /* ── Body: single full-width card (Add-Ons live on the dedicated
+     À La Carte slide, no longer side-by-side here). ── */
+  .sc-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: block;
+  }
+
+  /* Cards fill their column height */
+  .sc-body .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .sc-body .card-body {
+    flex: 1 1 0;
+    min-height: 0;
+    /* No overflow:hidden — let bullets render naturally with their margins.
+       Card padding + content fits within the page if the inclusions list
+       stays under ~10 items. */
+  }
+
+  /* ── Includes bullet list (left card) ── */
+  .sc-includes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sc-includes-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-base);
+    line-height: 1.45;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-6);   /* 24pt — clear visual break between items */
+    padding-left: var(--space-4);
+    position: relative;
+  }
+  /* Drop the bottom margin on the last bullet so the card's natural bottom
+     padding takes over (avoids excessive trailing whitespace). */
+  .sc-includes-list li:last-child { margin-bottom: 0; }
+
+  /* Red bullet via ::before */
+  .sc-includes-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* ── Add-ons rows (right card) ── */
+  .sc-addon-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  /* Red bullet on add-on rows */
+  .sc-addon-row::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .sc-addon-desc {
+    flex: 1 1 auto;
+    padding-right: var(--space-3);
+  }
+
+  .sc-addon-price {
+    flex: 0 0 auto;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-red);
+    white-space: nowrap;
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="scope">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="sc-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="sc-title-area">
+    <h1 class="page-title">Scope of Work</h1>
+    
+    <p class="standfirst">What your investment includes, and what you can add on.</p>
+    
+  </div>
+
+  <!-- Single full-width card -->
+  <div class="sc-body">
+
+    <div class="card has-header green">
+      <div class="card-header">YOUR PROGRAM INCLUDES</div>
+      <div class="card-body">
+        <ul class="sc-includes-list">
+          
+          <li>Custom-fabricated wreaths (every station entrance)</li>
+          
+          <li>Decorated and undecorated garland (six stations)</li>
+          
+          <li>Pole banner program (32 poles total, two artwork variants)</li>
+          
+          <li>Evening lighting program — Downtown Riverside (4 zones)</li>
+          
+          <li>Walk-through ornament arch — flagship station</li>
+          
+          <li>Install + strike per MetroLink operational windows</li>
+          
+          <li>On-site QC walkthrough with RCTC Capital Projects</li>
+          
+          <li>Storage between deinstall and 2027 program</li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">9 / 14</div>
+  </footer>
+  
+
+</body>
+</html>

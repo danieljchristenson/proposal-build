@@ -1,0 +1,258 @@
+<!-- layout-version: 2026-05-02 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Creative Vision</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Creative Vision — dark feature page with design phrase, hero image,
+     and 3 phase cards across the bottom.
+     IMPORTANT: heights use % or auto, never hardcoded pt. The
+     .page-content top/bottom are owned by brand.css (top: 0.85in,
+     bottom: 0.55in). This layout does NOT override .page-content.
+
+     Strategy: wrap everything in a flex column that fills the content
+     area. Title and phases are fixed-size; the mid section grows.
+     WeasyPrint resolves height: 100% when the parent is position:
+     absolute with both top and bottom set. */
+
+  .cv-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: title + standfirst ── */
+  .cv-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Middle: 2-col design direction + hero image ── */
+  /* WeasyPrint resolves flex: 1 1 0 correctly only when the flex parent
+     has a known height. We also need the mid section to not overflow when
+     the left column body text is long (riverside). Capping to 65% of the
+     content area ensures the phase cards always have room at the bottom.
+     65% of 6.1in content height ≈ 264pt, well above minimum readable. */
+  .cv-mid {
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: 65%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+  }
+
+  .cv-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  .cv-design-phrase {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36pt;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-light);
+    margin: var(--space-3) 0 var(--space-4) 0;
+  }
+
+  .cv-direction-body {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: rgba(236, 239, 241, 0.85);
+    margin: 0;
+  }
+
+  /* Right column: hero image area.
+     position: relative + overflow: hidden prevents a tall portrait image
+     from inflating the grid row height — the image is contained within
+     whatever height the flex layout assigns to this row. */
+  .cv-right {
+    position: relative;
+    background: #2a2a2a;
+    border-radius: 3pt;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* min-height prevents collapse when no image */
+    min-height: 1.5in;
+  }
+
+  .cv-hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Opt-in: caller can set hero_fit='contain' to show the entire image
+     (with letterbox bars on a dark page) rather than crop-to-fill. */
+  .cv-hero-img--contain {
+    object-fit: contain;
+    background: transparent;
+  }
+
+  .hero-placeholder {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.4);
+    text-align: center;
+    padding: var(--space-4);
+  }
+
+  /* ── Greenery / material reference grid (replaces hero when refs given) ──
+     2 or 3 column grid depending on count. Each cell is contain-fit so the
+     full material/swatch shows. Transparent background — sits on the dark
+     page color. */
+  .cv-greenery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: var(--space-2);
+    width: 100%;
+    height: 100%;
+  }
+  .cv-greenery-grid--2col { grid-template-columns: repeat(2, 1fr); }
+
+  .cv-greenery-cell {
+    position: relative;
+    background: transparent;
+    border-radius: 3pt;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .cv-greenery-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cv-greenery-eyebrow {
+    grid-column: 1 / -1;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-red);
+    margin-bottom: 2pt;
+  }
+
+  /* ── Bottom: 3 phase cards ── */
+  .cv-phases {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .cv-phase-card {
+    background: #2a2a2a;
+    border-top: 2pt solid var(--color-red);
+    padding: var(--space-4);
+  }
+
+  .cv-phase-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-light);
+    margin-bottom: var(--space-2);
+  }
+
+  .cv-phase-body {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: rgba(236, 239, 241, 0.7);
+    margin: 0;
+  }
+</style>
+
+</head>
+<body class="page-dark theme-classic" data-layout="creative_vision">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="cv-outer">
+
+  <!-- Title + standfirst -->
+  <div class="cv-title-area">
+    <h1 class="page-title">Creative Vision</h1>
+    <div class="standfirst">The design direction for the 2026 MetroLink program.</div>
+  </div>
+
+  <!-- Design direction (left) + hero image (right) -->
+  <div class="cv-mid">
+    <div class="cv-left">
+      <div class="eyebrow">Design Direction</div>
+      <div class="cv-design-phrase">Holiday Express.</div>
+      <p class="cv-direction-body">A civic-scale holiday aesthetic that turns the MetroLink line itself into the holiday gesture. Wreaths and garlands frame each station entrance like a ceremonial gateway; evening lighting turns the platforms themselves into destinations after sundown. The same design vocabulary repeats at every stop so the line reads as one program from end to end.</p>
+    </div>
+
+    <div class="cv-right">
+      
+        <img class="cv-hero-img " src="file:///Users/Daniel-Admin/Documents/Claude/Projects/proposal-build/Projects/Downtown%20Riverside%20Metro%20Link/02%20-%20Renderings/Base%20Scope/Pole%20Banner%20Artwork%20-%20Holiday%20Express%2001.jpg" alt="Riverside MetroLink">
+      
+    </div>
+  </div>
+
+  <!-- 3 phase cards across the bottom -->
+  <div class="cv-phases">
+    
+    <div class="cv-phase-card">
+      <div class="cv-phase-label">WELCOME</div>
+      <p class="cv-phase-body">Wreaths and garlands at every station entrance — the holiday begins at the curb.</p>
+    </div>
+    
+    <div class="cv-phase-card">
+      <div class="cv-phase-label">JOURNEY</div>
+      <p class="cv-phase-body">Pole banners and platform lighting carry the design language down the line.</p>
+    </div>
+    
+    <div class="cv-phase-card">
+      <div class="cv-phase-label">ARRIVAL</div>
+      <p class="cv-phase-body">Walk-through ornament and lit displays at end-of-line — a destination, not a transfer.</p>
+    </div>
+    
+  </div>
+
+</div>
+
+  </div>
+
+  
+
+</body>
+</html>
