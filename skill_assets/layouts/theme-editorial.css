@@ -1,0 +1,69 @@
+/* St. Nick's Editorial theme — dark system. Self-contained core.
+ * Per-layout polish lives in a later plan. Brand-verified tokens only:
+ * red #B31315, charcoal #1C1C1C, navy #12355B, light #ECEFF1.
+ * No gold, no serif, no box-shadow (WeasyPrint-unsupported).
+ *
+ * Font note: Roboto-Black.ttf is absent from skill_assets/fonts/;
+ * weight:900 falls back to Roboto-Bold (700) — acceptable for now.
+ */
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Bold.ttf") format("truetype"); font-weight:900; }
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Bold.ttf") format("truetype"); font-weight:700; }
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Regular.ttf") format("truetype"); font-weight:400; }
+@font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Light.ttf") format("truetype"); font-weight:300; }
+@font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Regular.ttf") format("truetype"); font-weight:400; }
+@font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Medium.ttf") format("truetype"); font-weight:500; }
+
+:root {
+  --color-red:#B31315; --color-navy:#12355B; --color-light:#ECEFF1;
+  --ink:#ECEFF1; --muted:#9A9CA1;
+  --surface-0:#121214; --surface-1:#1C1C1C; --surface-2:#26262A;
+  --font-heading:"Roboto",sans-serif; --font-body:"Poppins",sans-serif;
+  --space-3:12pt; --space-4:16pt; --space-6:24pt;
+}
+
+@page { size:13.333in 7.5in; margin:0; }
+
+html, body {
+  margin:0; padding:0; width:13.333in; height:7.5in;
+  font-family:var(--font-body); font-weight:400; font-size:12pt; line-height:1.5;
+}
+body.page-dark  { background:var(--surface-1); color:var(--ink); }
+body.page-light { background:#fff; color:#1C1C1C; }
+
+/* Red top hairline rule on every dark page */
+body.page-dark::before {
+  content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:var(--color-red); z-index:50;
+}
+
+.page-header { position:absolute; top:var(--space-4); left:var(--space-6); }
+.page-header .brand-logo { height:0.45in; width:auto; display:block; }
+
+.page-content { position:absolute; top:0.9in; left:var(--space-6); right:var(--space-6); bottom:0.55in; }
+
+h1,h2,h3,h4 {
+  font-family:var(--font-heading); font-weight:900; text-transform:uppercase;
+  letter-spacing:-0.01em; line-height:0.98; margin:0 0 var(--space-3) 0;
+}
+p { margin:0 0 var(--space-3) 0; }
+
+.eyebrow, .label {
+  font-family:var(--font-heading); font-weight:700; font-size:10pt;
+  text-transform:uppercase; letter-spacing:0.18em; color:var(--color-red);
+}
+.page-title {
+  font-family:var(--font-heading); font-weight:900; text-transform:uppercase;
+  font-size:46pt; line-height:0.96; letter-spacing:-0.01em; margin:0;
+}
+body.page-dark .page-title { color:var(--ink); }
+
+.page-footer {
+  position:absolute; bottom:var(--space-4); left:var(--space-6); right:var(--space-6);
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--font-body); font-weight:500; font-size:8pt;
+  letter-spacing:0.18em; text-transform:uppercase;
+}
+body.page-dark .page-footer { color:rgba(236,239,241,0.6); }
+
+/* Tabular numerals everywhere numbers matter */
+.stat-num, .price, td { font-variant-numeric:tabular-nums lining-nums; }
