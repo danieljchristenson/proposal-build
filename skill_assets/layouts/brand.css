@@ -113,6 +113,18 @@ body.page-dark {
   color: var(--color-light);
 }
 
+/* ===== Semantic color tokens (classic) — referenced by layout inline styles ===== */
+body.page-light {
+  --ink:#1C1C1C; --ink-muted:#555555; --surface-card:#F2F2F2; --surface-card-2:#0d0d0d;
+  --surface-hero:#2A2A2A; --surface-strip:#1C1C1C; --surface-recommended:#FFF8F8;
+  --rule:#E0E0E0; --placeholder-ink:rgba(28,28,28,.4); --accent:#B31315; --accent-2:#12355B;
+}
+body.page-dark {
+  --ink:#ECEFF1; --ink-muted:rgba(236,239,241,.7); --surface-card:#2a2a2a; --surface-card-2:#0d0d0d;
+  --surface-hero:#2a2a2a; --surface-strip:#1C1C1C; --surface-recommended:#FFF8F8;
+  --rule:rgba(236,239,241,.18); --placeholder-ink:rgba(236,239,241,.4); --accent:#B31315; --accent-2:#12355B;
+}
+
 .page-header {
   position: absolute;
   top: var(--space-4);

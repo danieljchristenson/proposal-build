@@ -27,6 +27,19 @@ html, body {
 body.page-dark  { background:var(--surface-1); color:var(--ink); }
 body.page-light { background:#fff; color:#1C1C1C; }
 
+/* ===== Semantic color tokens (editorial) ===== */
+body.page-dark {
+  --surface-card:#26262A; --surface-card-2:#121214; --surface-hero:#1F1F22;
+  --surface-strip:#0E0E10; --surface-recommended:#241A1A;
+  --rule:rgba(236,239,241,.14); --placeholder-ink:rgba(236,239,241,.4); --accent-2:#3D6FB5;
+  /* --ink / --ink-muted / --accent already set by the core body.page-dark rule */
+}
+body.page-light {  /* About page under editorial */
+  --ink:#1C1C1C; --ink-muted:#555555; --surface-card:#F2F2F2; --surface-card-2:#0d0d0d;
+  --surface-hero:#2A2A2A; --surface-strip:#1C1C1C; --surface-recommended:#FFF8F8;
+  --rule:#E0E0E0; --placeholder-ink:rgba(28,28,28,.4); --accent:#B31315; --accent-2:#12355B;
+}
+
 /* Red top hairline rule on every dark page */
 body.page-dark::before {
   content:""; position:absolute; top:0; left:0; right:0; height:4px;
