@@ -18,10 +18,10 @@ def test_enrich_classic_about_is_light():
     assert out["theme"] == "classic"
 
 
-def test_render_proposal_pdf_defaults_to_classic(tmp_path):
+def test_render_proposal_pdf_defaults_to_editorial(tmp_path):
     # Use the real riverside cover ctx so WeasyPrint can render without errors.
     slides = [("cover", rv.cover_ctx)]
     out = tmp_path / "smoke.pdf"
-    # Should not raise; theme defaults to classic.
+    # Should not raise; theme defaults to editorial.
     pdfmod.render_proposal_pdf(slides, out)
     assert out.exists()

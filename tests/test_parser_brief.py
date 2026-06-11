@@ -100,9 +100,17 @@ def test_theme_from_frontmatter_flows_to_model(tmp_path):
     assert model.theme == "editorial"
 
 
-def test_theme_defaults_to_classic_when_absent(tmp_path):
-    """When front-matter omits theme, model.theme must default to 'classic'."""
+def test_theme_defaults_to_editorial_when_absent(tmp_path):
+    """When front-matter omits theme, model.theme must default to 'editorial'."""
     from proposal_build.parser import build_project_model
     project_dir = _inject_yaml(tmp_path, "")  # no theme key added
+    model, _ = build_project_model(project_dir)
+    assert model.theme == "editorial"
+
+
+def test_theme_classic_opt_out_honored(tmp_path):
+    """theme: classic in Brief front-matter must land on model.theme (classic opt-out works)."""
+    from proposal_build.parser import build_project_model
+    project_dir = _inject_yaml(tmp_path, "theme: classic")
     model, _ = build_project_model(project_dir)
     assert model.theme == "classic"

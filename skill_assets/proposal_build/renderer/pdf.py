@@ -26,7 +26,7 @@ def _enrich_ctx(ctx: dict, theme: str, layout: str) -> dict:
     }
 
 
-def render_proposal_pdf(slides: list, out_path: Path, theme: str = "classic") -> Path:
+def render_proposal_pdf(slides: list, out_path: Path, theme: str = "editorial") -> Path:
     """slides: list of (layout_name, ctx) tuples. Renders one PDF in `theme`."""
     env = Environment(
         loader=FileSystemLoader(str(LAYOUTS_DIR)),
