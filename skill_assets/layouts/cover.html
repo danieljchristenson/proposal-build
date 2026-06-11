@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: var(--color-light);
+    color: var(--ink);
   }
 
   /* Prominent cover logo — sits above the project name as the brand mark. */
@@ -37,7 +37,7 @@
   }
 
   .cover-right {
-    background: #2a2a2a;  /* Subtle lift from the left charcoal. */
+    background: var(--surface-hero);  /* Subtle lift from the left charcoal. */
     position: relative;
     overflow: hidden;
   }
@@ -48,7 +48,7 @@
     transform: translate(-50%, -50%);
     font-family: var(--font-body);
     font-style: italic;
-    color: rgba(236, 239, 241, 0.4);
+    color: var(--placeholder-ink);
     font-size: var(--text-sm);
   }
   .cover-right .cover-hero-img {
@@ -82,7 +82,7 @@
     font-size: 60pt;
     line-height: 0.9;
     letter-spacing: -0.03em;
-    color: var(--color-light);
+    color: var(--ink);
     margin: 0 0 var(--space-3) 0;
     overflow-wrap: break-word;
     max-width: 100%;
@@ -91,7 +91,7 @@
     font-family: var(--font-body);
     font-weight: 300;
     font-size: 18pt;
-    color: rgba(236, 239, 241, 0.75);
+    color: var(--ink-muted);
     margin: 0;
   }
 
@@ -111,7 +111,7 @@
   }
   .cover-prep-name {
     font-weight: 600;
-    color: var(--color-light);
+    color: var(--ink);
   }
 </style>
 {% endblock %}
