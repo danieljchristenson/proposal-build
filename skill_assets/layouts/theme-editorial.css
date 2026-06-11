@@ -124,3 +124,63 @@ body.page-dark .card .card-body  { color: var(--ink); }
 /* Bullet text in scope includes list */
 body.page-dark .sc-includes-list li { color: var(--ink); }
 body.page-dark .sc-addon-row        { color: var(--ink); }
+
+/* ===== Investment page — dark tier cards ===================================
+   brand.css/.inv-card uses white bg + #E0E0E0 border, charcoal text.
+   Under editorial dark we override with dark surfaces; specificity 0,0,2,0
+   beats the layout's 0,0,1,0 rules. Classic never loads this file → zero delta.
+*/
+
+/* Base card — dark surface, subtle border, light text */
+body.page-dark .inv-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+
+/* Recommended card — slightly warmer dark tint */
+body.page-dark .inv-card.recommended {
+  background: var(--surface-recommended);
+}
+
+/* Tier name */
+body.page-dark .inv-tier-name {
+  color: var(--ink);
+}
+
+/* Tier price stays red — already uses --color-red, no change needed */
+
+/* Tagline stays red — already uses --color-red, no change needed */
+
+/* Thin divider between tagline and highlights */
+body.page-dark .inv-tier-divider {
+  background: var(--rule);
+}
+
+/* Highlight bullets */
+body.page-dark .inv-highlights li {
+  color: var(--ink);
+}
+
+/* ALL-IN footnote */
+body.page-dark .inv-allin {
+  color: var(--ink-muted);
+}
+
+/* Partnership dark strip — already charcoal bg; ensure text stays light */
+body.page-dark .inv-partnership {
+  background: var(--surface-strip);
+}
+body.page-dark .inv-partnership-subtitle {
+  color: var(--ink-muted);
+}
+
+/* Inline partnership note in footer */
+body.page-dark .inv-partnership-inline strong {
+  color: var(--ink);
+}
+
+/* Footer note */
+body.page-dark .inv-footer-note {
+  color: var(--ink-muted);
+}
