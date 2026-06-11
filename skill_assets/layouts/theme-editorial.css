@@ -184,3 +184,247 @@ body.page-dark .inv-partnership-inline strong {
 body.page-dark .inv-footer-note {
   color: var(--ink-muted);
 }
+
+/* ===== Terms page — dark card consistency ===================================
+   terms.html uses --color-panel (light gray) for .terms-card bg and
+   --color-charcoal for .terms-card-body text and .terms-workflow bg.
+   Under editorial dark we need solid dark surfaces + legible text.
+   Classic never loads this file → zero delta.
+*/
+
+/* Terms cards: dark surface, rule border, keep red left border from layout */
+body.page-dark .terms-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  /* layout already sets border-left: 3pt solid var(--color-red) — preserved */
+}
+
+/* Card body text: was --color-charcoal → now light ink */
+body.page-dark .terms-card-body {
+  color: var(--ink);
+}
+
+/* Workflow strip: use near-black surface, ensure steps text stays light */
+body.page-dark .terms-workflow {
+  background: var(--surface-strip);
+}
+
+/* steps text already uses rgba(236,239,241,.85) — readable on dark; no change.
+   .terms-workflow-label already uses white; .terms-workflow-arrow uses --color-red.
+   .terms-date-banner already uses --color-red bg → no change needed. */
+
+/* ===== Sign-off page — dark card consistency ================================
+   sign_off.html uses --color-panel for .so-approving-card + .so-sig-block,
+   --color-charcoal for .so-sig-header bg, --color-gray for labels/note text,
+   and hardcoded #C0C0C0 for the signature line borders.
+*/
+
+/* "What You're Approving" card */
+body.page-dark .so-approving-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+}
+
+body.page-dark .so-approving-body {
+  color: var(--ink);
+}
+
+/* Signature blocks */
+body.page-dark .so-sig-block {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+}
+
+/* Sig header band: charcoal bg → slightly darker surface so it reads as a band */
+body.page-dark .so-sig-header {
+  background: var(--surface-card-2);
+  color: var(--ink);
+}
+
+/* Row label: was --color-gray → muted ink */
+body.page-dark .so-sig-row-label {
+  color: var(--ink-muted);
+}
+
+/* Signature lines: was #C0C0C0 (medium gray, invisible on dark) → rule token */
+body.page-dark .so-sig-row-line {
+  border-bottom-color: rgba(236, 239, 241, 0.35);
+  color: var(--ink);
+}
+
+/* Digital signing note */
+body.page-dark .so-signing-note {
+  color: var(--ink-muted);
+}
+
+/* ===== Zone Index — dark divider lines + text ================================
+   .zi-zone-list border is hardcoded #E0E0E0 (too light on near-black bg).
+   .zi-zone-name uses --color-charcoal, .zi-zone-subtitle uses --color-gray.
+*/
+
+body.page-dark .zi-zone-list {
+  border-top-color: var(--rule);
+  border-bottom-color: var(--rule);
+}
+
+body.page-dark .zi-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .zi-zone-subtitle {
+  color: var(--ink-muted);
+}
+
+/* ===== Zone 2-up — dark divider + text ======================================
+   .z2-zone-rule is hardcoded #D8D8D8.
+   .z2-zone-name uses --color-charcoal, .z2-zone-subtitle uses --color-gray.
+   Bullet list items use --color-charcoal.
+*/
+
+body.page-dark .z2-zone-rule {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z2-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .z2-zone-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .z2-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone 3-up — dark divider + text ======================================
+   Same fixes as zone_2up: .z3-zone-rule hardcoded #D8D8D8, names/subs/bullets
+   use --color-charcoal / --color-gray.
+*/
+
+body.page-dark .z3-zone-rule {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z3-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .z3-zone-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .z3-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone 4-up — white image cells → subtle dark panel ====================
+   .z4-cell and .z4-cell-image are hardcoded white bg.
+   On dark pages this creates a glaring white box around renderings.
+   Replace with --surface-card so renderings sit on a subtle panel.
+   Cell border #E0E0E0 and body divider #EEEEEE → var(--rule).
+   .z4-cell-name uses --color-charcoal → var(--ink).
+*/
+
+body.page-dark .z4-cell {
+  background: var(--surface-card);
+  border-color: var(--rule);
+}
+
+body.page-dark .z4-cell-image {
+  background: var(--surface-card);
+}
+
+body.page-dark .z4-cell-body {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z4-cell-name {
+  color: var(--ink);
+}
+
+/* ===== Zone Solo — dark text tokens =========================================
+   .zs-zone-name uses --color-charcoal, .zs-subtitle uses --color-gray,
+   .zs-elements-list li uses --color-charcoal, .zs-tier-badge uses --color-charcoal,
+   .zs-section-name uses --color-charcoal.
+   .zs-tier-badge bg is rgba(0,0,0,0.04) — on dark, near-invisible; bump to card.
+*/
+
+body.page-dark .zs-section-name {
+  color: var(--ink);
+}
+
+body.page-dark .zs-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .zs-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zs-tier-badge {
+  background: var(--surface-card);
+  color: var(--ink);
+}
+
+body.page-dark .zs-tier-badge-lead {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zs-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone Solo Gallery — dark text tokens =================================
+   Same pattern as zone_solo: names use --color-charcoal, subs use --color-gray,
+   tier badge uses rgba(0,0,0,.04) bg + --color-charcoal text.
+*/
+
+body.page-dark .zsg-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .zsg-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zsg-tier-badge {
+  background: var(--surface-card);
+  color: var(--ink);
+}
+
+body.page-dark .zsg-tier-badge-lead {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zsg-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone 2-up Gallery — white image cells → subtle dark panel ============
+   Same fix as zone_4up: .z2g-cell and .z2g-cell-image are hardcoded white.
+   .z2g-cell border #E0E0E0 and body divider #EEEEEE → var(--rule).
+   .z2g-cell-name uses --color-charcoal → var(--ink).
+   .z2g-section-name uses --color-charcoal → var(--ink).
+*/
+
+body.page-dark .z2g-section-name {
+  color: var(--ink);
+}
+
+body.page-dark .z2g-cell {
+  background: var(--surface-card);
+  border-color: var(--rule);
+}
+
+body.page-dark .z2g-cell-image {
+  background: var(--surface-card);
+}
+
+body.page-dark .z2g-cell-body {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z2g-cell-name {
+  color: var(--ink);
+}
