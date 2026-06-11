@@ -205,6 +205,8 @@ class ProjectModel:
     # composer emits a sample_of_work slide. Must contain exactly 6 IDs at
     # generation time; inspector enforces. Empty tuple → slide skipped.
     sample_work: Tuple[str, ...] = ()
+    # Visual theme: "editorial" (default) or "classic" (opt-out via theme: classic in Brief).
+    theme: str = "editorial"
 
 
 @dataclass(frozen=True)

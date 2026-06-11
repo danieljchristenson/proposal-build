@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 FONTS = REPO_ROOT / "skill_assets" / "fonts"
 
 REQUIRED_FONTS = [
+    "Roboto-Black.ttf",
     "Roboto-Bold.ttf",
     "Roboto-Regular.ttf",
     "Poppins-Light.ttf",

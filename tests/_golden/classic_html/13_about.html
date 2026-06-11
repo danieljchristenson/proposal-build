@@ -1,8 +1,13 @@
 <!-- layout-version: 2026-05-05 -->
-{% extends "base.html" %}
-{% block layout_version %}<!-- layout-version: 2026-05-05 -->{% endblock %}
-{% block title %}{{ project_short }} — Company Profile{% endblock %}
-{% block extra_head %}
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Company Profile</title>
+  <!-- layout-version: 2026-05-05 -->
+  <link rel="stylesheet" href="brand.css">
+  
 <style>
   /* Company Profile — light page, RFP-compliance flavor.
      Top: large "Company Profile" title (charcoal display) + full-width hero
@@ -96,11 +101,19 @@
     z-index: 5;
   }
 </style>
-{% endblock %}
 
-{% block footer %}{% endblock %}
+</head>
+<body class="page-light theme-classic" data-layout="about">
 
-{% block content %}
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
 
   <div class="ab-title-area">
     <h1 class="ab-title">Company Profile</h1>
@@ -110,27 +123,66 @@
 
     <!-- Left: Team -->
     <div>
-      {% for member in team %}
+      
       <div class="ab-team-member">
-        <div class="ab-team-name">{{ member.name }}</div>
-        <div class="ab-team-role">{{ member.role }}</div>
+        <div class="ab-team-name">Nicholas Adams</div>
+        <div class="ab-team-role">Founder</div>
       </div>
-      {% endfor %}
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Wade Francis</div>
+        <div class="ab-team-role">Chief Financial Officer</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Brenda Sheridan</div>
+        <div class="ab-team-role">Director of Operations</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Daniel Christenson</div>
+        <div class="ab-team-role">Director of Sales</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Stephanie Escobar</div>
+        <div class="ab-team-role">Creative Director</div>
+      </div>
+      
+      <div class="ab-team-member">
+        <div class="ab-team-name">Carlos Vasquez &amp; Alonso Salazar</div>
+        <div class="ab-team-role">Senior Installers / Project Managers</div>
+      </div>
+      
     </div>
 
     <!-- Right: Company facts -->
     <div>
       <ul class="ab-facts">
-        {% for fact in company_facts %}
-        <li>{{ fact }}</li>
-        {% endfor %}
+        
+        <li>Founded 1998 (dba St. Nick&#39;s) — T&amp;G Global, LLC</li>
+        
+        <li>14 full-time team · 30–45 seasonal staff</li>
+        
+        <li>B-General Building Contractor #990427</li>
+        
+        <li>Certified Small Business Supplier #1626660</li>
+        
+        <li>$5M Umbrella · $1M/$2M GL · $1M Auto · Full Workers&#39; Comp</li>
+        
+        <li>200+ commercial venues across North America</li>
+        
       </ul>
     </div>
 
   </div>
 
-  {% if logo_path is defined and logo_path %}
-  <img class="ab-logo-bottom" src="{{ header_logo | default(logo_path) }}" alt="St. Nick's">
-  {% endif %}
+  
 
-{% endblock %}
+
+  </div>
+
+  
+
+</body>
+</html>

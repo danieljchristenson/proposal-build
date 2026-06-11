@@ -1,9 +1,13 @@
 <!-- layout-version: 2026-05-02 -->
-{% extends "base.html" %}
-{% block footer %}{% endblock %}
-{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
-{% block title %}{{ project_short }} — {{ page_title }}{% endblock %}
-{% block extra_head %}
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Creative Vision</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
 <style>
   /* Creative Vision — dark feature page with design phrase, hero image,
      and 3 phase cards across the bottom.
@@ -188,42 +192,67 @@
     margin: 0;
   }
 </style>
-{% endblock %}
-{% block content %}
+
+</head>
+<body class="page-dark theme-classic" data-layout="creative_vision">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
 <div class="cv-outer">
 
   <!-- Title + standfirst -->
   <div class="cv-title-area">
-    <h1 class="page-title">{{ page_title }}</h1>
-    <div class="standfirst">{{ standfirst }}</div>
+    <h1 class="page-title">Creative Vision</h1>
+    <div class="standfirst">The design direction for the 2026 MetroLink program.</div>
   </div>
 
   <!-- Design direction (left) + hero image (right) -->
   <div class="cv-mid">
     <div class="cv-left">
       <div class="eyebrow">Design Direction</div>
-      <div class="cv-design-phrase">{{ design_phrase }}</div>
-      <p class="cv-direction-body">{{ design_direction_body }}</p>
+      <div class="cv-design-phrase">Holiday Express.</div>
+      <p class="cv-direction-body">A civic-scale holiday aesthetic that turns the MetroLink line itself into the holiday gesture. Wreaths and garlands frame each station entrance like a ceremonial gateway; evening lighting turns the platforms themselves into destinations after sundown. The same design vocabulary repeats at every stop so the line reads as one program from end to end.</p>
     </div>
 
     <div class="cv-right">
-      {% if hero_image %}
-        <img class="cv-hero-img {% if hero_fit is defined and hero_fit == 'contain' %}cv-hero-img--contain{% endif %}" src="{{ hero_image }}" alt="{{ project_name }}">
-      {% else %}
-        <div class="hero-placeholder">[ {{ project_name }} hero image — Plan 3 supplies real photo ]</div>
-      {% endif %}
+      
+        <img class="cv-hero-img " src="file:///Users/Daniel-Admin/Documents/Claude/Projects/proposal-build/Projects/Downtown%20Riverside%20Metro%20Link/02%20-%20Renderings/Base%20Scope/Pole%20Banner%20Artwork%20-%20Holiday%20Express%2001.jpg" alt="Riverside MetroLink">
+      
     </div>
   </div>
 
   <!-- 3 phase cards across the bottom -->
   <div class="cv-phases">
-    {% for phase in phases %}
+    
     <div class="cv-phase-card">
-      <div class="cv-phase-label">{{ phase.label }}</div>
-      <p class="cv-phase-body">{{ phase.body }}</p>
+      <div class="cv-phase-label">WELCOME</div>
+      <p class="cv-phase-body">Wreaths and garlands at every station entrance — the holiday begins at the curb.</p>
     </div>
-    {% endfor %}
+    
+    <div class="cv-phase-card">
+      <div class="cv-phase-label">JOURNEY</div>
+      <p class="cv-phase-body">Pole banners and platform lighting carry the design language down the line.</p>
+    </div>
+    
+    <div class="cv-phase-card">
+      <div class="cv-phase-label">ARRIVAL</div>
+      <p class="cv-phase-body">Walk-through ornament and lit displays at end-of-line — a destination, not a transfer.</p>
+    </div>
+    
   </div>
 
 </div>
-{% endblock %}
+
+  </div>
+
+  
+
+</body>
+</html>

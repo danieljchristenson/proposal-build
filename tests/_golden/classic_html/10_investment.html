@@ -1,0 +1,429 @@
+<!-- layout-version: 2026-05-03 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Investment</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Investment — light page, footer present.
+     Master ref: Master Proposal Reference/master-pages/page-10.png
+
+     Top: page title (Poppins Black 50pt) + standfirst.
+     Middle: 3 tier cards in a row (grid 3 cols).
+       - Thin top rule per tier (gray / red / navy).
+       - Recommended card gets "★ RECOMMENDED ★" red banner above it + tinted bg.
+       - Each card: tier name + tagline (red caps) + thin rule + bulleted
+         highlights + big price + "ALL-IN · TAX EXCLUDED" footnote.
+     Below cards: dark MULTI-YEAR PARTNERSHIP strip.
+     Bottom: small footer note.
+
+     WeasyPrint pitfall: flex gap on tier cards can miscalculate intrinsic
+     height and produce multi-page output. Use margin-bottom on children
+     rather than gap on the flex parent. */
+
+  .inv-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .inv-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Tier grid wrapper (includes recommended banner row) ──
+     Sized to its own content (flex: 0 0 auto) so the partnership strip
+     and footer note that follow can render BELOW it, not under it. The
+     cards used to absorb leftover vertical space (flex: 1 1 0) and spill
+     into the partnership strip's row. */
+  .inv-tiers-wrapper {
+    flex: 1 1 0;            /* expands to fill freed vertical space */
+    display: grid;
+    gap: var(--space-4);
+    align-items: stretch;   /* columns stretch to match the tallest one */
+  }
+  .inv-tiers-wrapper.tiers-1 { grid-template-columns: minmax(0, 60%); justify-content: center; }
+  .inv-tiers-wrapper.tiers-2 { grid-template-columns: 1fr 1fr; }
+  .inv-tiers-wrapper.tiers-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .inv-card { overflow: visible; }   /* don't clip the tallest card's bottom */
+
+  /* Each column is a flex column: optional banner + card */
+  .inv-tier-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Recommended banner ── */
+  .inv-recommended-banner {
+    background: var(--color-red);
+    color: white;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: var(--space-2) 0;
+    border-radius: 3pt 3pt 0 0;
+  }
+
+  /* Spacer for non-recommended columns so cards align at top */
+  .inv-banner-spacer {
+    /* same height as the banner — computed via padding */
+    height: calc(var(--text-xs) * 1.45 + var(--space-2) * 2);
+  }
+
+  /* ── Tier card ── */
+  .inv-card {
+    flex: 1 1 0;
+    background: white;
+    border: 1pt solid #E0E0E0;
+    box-sizing: border-box;
+    padding: var(--space-3);
+    overflow: hidden;
+  }
+
+  .inv-card.recommended {
+    background: #FFF8F8;
+  }
+
+  /* Recommended card has no top radius (banner above provides it) */
+  .inv-recommended-banner + .inv-card {
+    border-radius: 0 0 3pt 3pt;
+    border-top: none;
+  }
+
+  .inv-card:not(.recommended) {
+    border-radius: 3pt;
+  }
+
+  /* Top rule strip (replaces border-top on non-recommended; on recommended
+     we use a colored bottom-border of the banner) */
+  .inv-card-rule {
+    height: 4pt;
+    margin: 0 calc(-1 * var(--space-4)) var(--space-4) calc(-1 * var(--space-4));
+    /* negative margins bleed to card edge */
+  }
+  .inv-card-rule.gray  { background: #9E9E9E; }
+  .inv-card-rule.red   { background: var(--color-red); }
+  .inv-card-rule.navy  { background: var(--color-navy); }
+
+  /* Tier-name + price share the top line of each card. Price sits at the
+     right end (flex: justify-content: space-between). */
+  .inv-tier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2pt;
+    gap: var(--space-2);
+  }
+
+  .inv-tier-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-lg);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+  }
+
+  .inv-tier-price {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-lg);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--color-red);
+    white-space: nowrap;
+  }
+
+  /* Tagline */
+  .inv-tier-tagline {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-red);
+    margin-bottom: var(--space-2);
+  }
+
+  /* Thin divider between tagline and highlights */
+  .inv-tier-divider {
+    height: 1pt;
+    background: #E0E0E0;
+    margin-bottom: var(--space-2);
+  }
+
+  /* Highlights bullet list — compact so all tiers fit, even Essential's 7 items */
+  .inv-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .inv-highlights li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 9pt;
+    line-height: 1.3;
+    color: var(--color-charcoal);
+    padding-left: var(--space-3);
+    position: relative;
+    margin-bottom: 2pt;
+  }
+
+  .inv-highlights li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 10pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* All-in footnote pinned to bottom of card */
+  .inv-allin {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    margin-top: var(--space-2);
+  }
+
+  /* ── MULTI-YEAR PARTNERSHIP dark strip — single compact horizontal row ── */
+  .inv-partnership {
+    flex: 0 0 auto;
+    background: var(--color-charcoal);
+    color: var(--color-light);
+    border-radius: 3pt;
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-3);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-5);
+    align-items: center;
+  }
+
+  .inv-partnership-heading {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    line-height: 1.2;
+    margin-bottom: var(--space-1);
+  }
+
+  .inv-partnership-subtitle {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    color: rgba(236, 239, 241, 0.75);
+  }
+
+  /* Discount items row */
+  .inv-discounts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .inv-discount-item {
+    text-align: center;
+  }
+
+  .inv-discount-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: rgba(236, 239, 241, 0.6);
+    margin-bottom: var(--space-1);
+  }
+
+  .inv-discount-value {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-xl);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: white;
+  }
+
+  /* ── Footer note ── */
+  .inv-footer-note {
+    flex: 0 0 auto;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    color: var(--color-gray);
+    margin-top: var(--space-3);
+    line-height: 1.5;
+  }
+  .inv-partnership-inline strong {
+    color: var(--color-charcoal);
+    font-weight: 700;
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="investment">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="inv-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="inv-title-area">
+    <h1 class="page-title">Investment</h1>
+    
+    <p class="standfirst">Three levels of program. Pick what fits your season.</p>
+    
+  </div>
+
+  <!-- Tier columns (1, 2, or 3 based on active tiers) -->
+  <div class="inv-tiers-wrapper tiers-3">
+    
+    <div class="inv-tier-col">
+
+      
+      <div class="inv-banner-spacer"></div>
+      
+
+      <div class="inv-card ">
+        <div class="inv-card-rule gray"></div>
+        <div class="inv-tier-header">
+          <div class="inv-tier-name">ESSENTIAL</div>
+          <div class="inv-tier-price">$184,500</div>
+        </div>
+        <div class="inv-tier-tagline">FLAGSHIP-ONLY PRESENCE</div>
+        <div class="inv-tier-divider"></div>
+        <ul class="inv-highlights">
+          
+          <li>Downtown Riverside only</li>
+          
+          <li>Core wreaths + garland</li>
+          
+          <li>Pole banner program (8 poles)</li>
+          
+          <li>Standard install + strike</li>
+          
+        </ul>
+        <div class="inv-allin">ALL-IN &middot; TAX EXCLUDED</div>
+      </div>
+
+    </div>
+    
+    <div class="inv-tier-col">
+
+      
+      <div class="inv-recommended-banner">&#9733; RECOMMENDED &#9733;</div>
+      
+
+      <div class="inv-card recommended">
+        <div class="inv-card-rule red"></div>
+        <div class="inv-tier-header">
+          <div class="inv-tier-name">ENHANCED</div>
+          <div class="inv-tier-price">$284,500</div>
+        </div>
+        <div class="inv-tier-tagline">FULL LINE PROGRAM</div>
+        <div class="inv-tier-divider"></div>
+        <ul class="inv-highlights">
+          
+          <li>Everything in Essential, plus:</li>
+          
+          <li>All six stations covered</li>
+          
+          <li>Evening lighting program at flagship</li>
+          
+          <li>Walk-through ornament — flagship plaza</li>
+          
+          <li>MetroLink ops-window install</li>
+          
+        </ul>
+        <div class="inv-allin">ALL-IN &middot; TAX EXCLUDED</div>
+      </div>
+
+    </div>
+    
+    <div class="inv-tier-col">
+
+      
+      <div class="inv-banner-spacer"></div>
+      
+
+      <div class="inv-card ">
+        <div class="inv-card-rule navy"></div>
+        <div class="inv-tier-header">
+          <div class="inv-tier-name">SIGNATURE</div>
+          <div class="inv-tier-price">$384,500</div>
+        </div>
+        <div class="inv-tier-tagline">REGIONAL DESTINATION</div>
+        <div class="inv-tier-divider"></div>
+        <ul class="inv-highlights">
+          
+          <li>Everything in Enhanced, plus:</li>
+          
+          <li>Spiral LED tree — flagship forecourt</li>
+          
+          <li>Lighted bell + gift-box towers</li>
+          
+          <li>Programmatic snowflake railing (all stations)</li>
+          
+          <li>On-site staffing during install + strike</li>
+          
+        </ul>
+        <div class="inv-allin">ALL-IN &middot; TAX EXCLUDED</div>
+      </div>
+
+    </div>
+    
+  </div>
+
+  <!-- Footer note (multi-year partnership savings folded in here as a single line) -->
+  
+  <div class="inv-footer-note">
+    Pricing valid 30 days from proposal date. Fabrication must be locked by Aug 22, 2026.
+    
+    <span class="inv-partnership-inline">
+      &nbsp;·&nbsp; <strong>Multi-year partnership savings:</strong>
+      2-YEAR (4% OFF) · 3-YEAR (6% OFF) · 5-YEAR (9% OFF)
+    </span>
+    
+  </div>
+  
+
+</div>
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">11 / 14</div>
+  </footer>
+  
+
+</body>
+</html>

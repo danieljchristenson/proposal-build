@@ -53,7 +53,7 @@ def render(
     # Render proposal PDF
     proposal_filename = f"{model.project_name} - {model.project_year} {model.proposal_type}.pdf"
     proposal_run = run_dir / proposal_filename
-    render_proposal_pdf([(s.layout_name, s.context) for s in slides], proposal_run)
+    render_proposal_pdf([(s.layout_name, s.context) for s in slides], proposal_run, theme=model.theme)
 
     # Render pricing PDFs
     pricing_runs = []

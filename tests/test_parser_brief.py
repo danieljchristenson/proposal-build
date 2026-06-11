@@ -72,3 +72,45 @@ def test_brief_sample_work_present_is_parsed_as_tuple(tmp_path, monkeypatch):
 
     model, _ = build_project_model(dst)
     assert model.sample_work == ("fixture_a", "fixture_b", "fixture_c")
+
+
+def _inject_yaml(tmp_path, extra_yaml: str) -> Path:
+    """Copy the Riverside fixture to tmp_path and inject extra_yaml into the front-matter."""
+    import shutil
+    src = (
+        __import__("pathlib").Path(__file__).resolve().parent.parent
+        / "Projects" / "Downtown Riverside Metro Link"
+    )
+    dst = tmp_path / "fake_project"
+    shutil.copytree(src, dst)
+    brief = dst / "04 - Process & Notes" / "Project Brief.md"
+    txt = brief.read_text()
+    parts = txt.split("---", 2)
+    assert len(parts) >= 3, "Expected YAML frontmatter delimited by ---"
+    parts[1] = parts[1].rstrip() + "\n" + extra_yaml + "\n"
+    brief.write_text("---".join(parts))
+    return dst
+
+
+def test_theme_from_frontmatter_flows_to_model(tmp_path):
+    """theme: editorial in Brief front-matter must land on model.theme."""
+    from proposal_build.parser import build_project_model
+    project_dir = _inject_yaml(tmp_path, "theme: editorial")
+    model, _ = build_project_model(project_dir)
+    assert model.theme == "editorial"
+
+
+def test_theme_defaults_to_editorial_when_absent(tmp_path):
+    """When front-matter omits theme, model.theme must default to 'editorial'."""
+    from proposal_build.parser import build_project_model
+    project_dir = _inject_yaml(tmp_path, "")  # no theme key added
+    model, _ = build_project_model(project_dir)
+    assert model.theme == "editorial"
+
+
+def test_theme_classic_opt_out_honored(tmp_path):
+    """theme: classic in Brief front-matter must land on model.theme (classic opt-out works)."""
+    from proposal_build.parser import build_project_model
+    project_dir = _inject_yaml(tmp_path, "theme: classic")
+    model, _ = build_project_model(project_dir)
+    assert model.theme == "classic"

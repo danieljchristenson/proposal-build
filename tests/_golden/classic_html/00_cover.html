@@ -1,9 +1,13 @@
 <!-- layout-version: 2026-05-02 -->
-{% extends "base.html" %}
-{% block footer %}{% endblock %}
-{% block layout_version %}<!-- layout-version: 2026-05-03 -->{% endblock %}
-{% block title %}{{ project_name }} — Cover{% endblock %}
-{% block extra_head %}
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Riverside MetroLink — Cover</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
 <style>
   /* Cover-only chrome adjustments. The master cover splits the page into
      a left text panel and a right hero-image panel, both on charcoal but
@@ -114,43 +118,49 @@
     color: var(--ink);
   }
 </style>
-{% endblock %}
-{% block content %}
+
+</head>
+<body class="page-dark theme-classic" data-layout="cover">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
 <div class="cover-grid">
   <div class="cover-left">
     <div>
-      {% if logo_path is defined and logo_path %}
-      <img class="cover-logo" src="{{ header_logo | default(logo_path) }}" alt="St. Nick's Christmas Lighting & Décor">
-      {% endif %}
+      
       <div class="cover-rule"></div>
-      <div class="cover-season">{{ season_label }}</div>
-      <h1 class="cover-project">{{ project_name }}</h1>
-      <div class="cover-subtitle">{{ project_subtitle }}</div>
+      <div class="cover-season">2026 HOLIDAY SEASON</div>
+      <h1 class="cover-project">Riverside MetroLink</h1>
+      <div class="cover-subtitle">Six-Station Civic Holiday Program</div>
     </div>
 
-    {% if client_contact_name is defined and client_contact_name %}
-    <div class="cover-prep-block">
-      <div class="cover-prep-label">PREPARED FOR</div>
-      <div class="cover-prep-name">{{ client_contact_name }}{% if client_contact_title %}, {{ client_contact_title }}{% endif %}</div>
-      <div>{{ client_company }}</div>
-      {% if client_contact_email %}<div>{{ client_contact_email }}{% if client_contact_phone %} &nbsp;·&nbsp; {{ client_contact_phone }}{% endif %}</div>{% endif %}
-    </div>
-    {% endif %}
+    
 
     <div class="cover-prep-block">
       <div class="cover-prep-label">PREPARED BY</div>
-      <div class="cover-prep-name">{{ prepared_by_org }}</div>
-      <div>{{ presenter_name }}{% if presenter_title %}, {{ presenter_title }}{% endif %}</div>
-      <div>Proposal Date: {{ proposal_date }}</div>
+      <div class="cover-prep-name">St. Nick&#39;s Christmas Lighting &amp; Décor</div>
+      <div>Jonathan Yang, Account Executive</div>
+      <div>Proposal Date: May 12, 2026</div>
     </div>
   </div>
 
   <div class="cover-right">
-    {% if hero_image %}
-    <img class="cover-hero-img" src="{{ hero_image }}" alt="{{ project_name }}">
-    {% else %}
-    <div class="hero-placeholder">[ {{ project_name }} hero image — Plan 3 supplies real photo ]</div>
-    {% endif %}
+    
+    <img class="cover-hero-img" src="file:///Users/Daniel-Admin/Documents/Claude/Projects/proposal-build/Projects/Downtown%20Riverside%20Metro%20Link/02%20-%20Renderings/Base%20Scope/Wreath%20-%20Brick%20Column%20Night.jpg" alt="Riverside MetroLink">
+    
   </div>
 </div>
-{% endblock %}
+
+  </div>
+
+  
+
+</body>
+</html>

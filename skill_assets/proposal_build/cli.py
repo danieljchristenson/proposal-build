@@ -346,6 +346,7 @@ def _placeholder_model():
         pillars=(), phases=(), scope_includes=(), add_ons=(), term_panels={},
         after_approval_steps=(), company_facts=(), team=(), contact_strip="",
         partnership_discounts=(),
+        theme="editorial",
     )
 
 

@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <title>{% block title %}St. Nick's Proposal{% endblock %}</title>
   {% block layout_version %}{% endblock %}
-  <link rel="stylesheet" href="brand.css">
+  <link rel="stylesheet" href="{{ theme_stylesheet | default('brand.css') }}">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="{% block body_class %}page-light{% endblock %}">
+<body class="page-{{ body_surface | default('light') }} theme-{{ theme | default('classic') }}" data-layout="{{ layout_name | default('') }}">
 
   <header class="page-header">
     {% if logo_path is defined and logo_path %}
-    <img class="brand-logo" src="{{ logo_path }}" alt="St. Nick's Christmas Lighting & Décor">
+    <img class="brand-logo" src="{{ header_logo | default(logo_path) }}" alt="St. Nick's Christmas Lighting & Décor">
     {% else %}
     <div class="brand-name">ST. NICK'S</div>
     <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>

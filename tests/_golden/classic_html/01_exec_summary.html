@@ -1,0 +1,226 @@
+<!-- layout-version: 2026-05-02 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Executive Summary</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /*
+   * Layout: outer flex column fills .page-content (top:0.85in / bottom:0.55in).
+   * Two-column inner row: title+body left, AT A GLANCE right; full-width
+   * pillar row sits at the bottom of the column.
+   */
+  .es-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .es-top {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-7);
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .es-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    /* Block flow (not inner flex): WeasyPrint mis-computes a flex item's height
+       when the standfirst wraps to 2 lines, overlapping the body. Normal flow
+       stacks title-area then body-area reliably regardless of standfirst length. */
+    overflow: hidden;
+  }
+
+  .es-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);   /* clear gap between title/standfirst and body */
+  }
+  .es-title-area .standfirst {
+    font-size: 20pt;                  /* up from 16pt — extends across the column */
+    margin-top: var(--space-3);
+  }
+
+  .es-body-area {
+    overflow: hidden;
+  }
+
+  .es-body-area p {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-3);
+  }
+
+  .es-glance {
+    flex: 0 0 4.5in;
+    width: 4.5in;
+    background: var(--color-panel);
+    border-radius: 4pt;
+    padding: var(--space-4);
+  }
+  .es-glance-header {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-red);
+    margin-bottom: var(--space-3);
+    letter-spacing: 0.06em;
+  }
+  .es-glance-row {
+    margin-bottom: 5pt;
+  }
+  .es-glance-label {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.10em;
+    color: var(--color-gray);
+    margin-bottom: 2pt;
+  }
+  .es-glance-label.deadline { color: var(--color-red); }
+  .es-glance-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    color: var(--color-charcoal);
+  }
+
+  .es-pillars {
+    flex: 0 0 auto;
+    padding-top: var(--space-5);
+  }
+
+  .es-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+  .es-pillar {
+    background: var(--color-panel);
+    border-radius: 4pt;
+    padding: var(--space-4);
+  }
+  .es-pillar-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+  }
+  .es-pillar-body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-charcoal);
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="exec_summary">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="es-outer">
+
+  <div class="es-top">
+    <div class="es-left">
+      <div class="es-title-area">
+        <h1 class="page-title">Executive Summary</h1>
+        <div class="standfirst">A six-station holiday program for the Riverside MetroLink line, at a glance.</div>
+      </div>
+      <div class="es-body-area">
+        <p>St. Nick&#39;s is proposing a coordinated holiday décor program across all six stations of the Riverside MetroLink line — a single visual identity that scales from flagship Downtown Riverside through to Perris-Downtown.</p><p>Our approach builds civic pride at every stop while keeping operational discipline tight: install and removal coordinate with revenue service hours, all materials clear MetroLink overhead catenary safety envelope, and the design language repeats so every station reads as part of one program.</p>
+      </div>
+    </div>
+
+    <aside class="es-glance">
+      <div class="es-glance-header">AT A GLANCE</div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label">PROJECT</div>
+        <div class="es-glance-value">2026 Civic Holiday Program</div>
+      </div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label">STATIONS</div>
+        <div class="es-glance-value">Six (Downtown Riverside → Perris-Downtown)</div>
+      </div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label">RECOMMENDED TIER</div>
+        <div class="es-glance-value">Enhanced</div>
+      </div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label">INVESTMENT RANGE</div>
+        <div class="es-glance-value">$184K — $384K</div>
+      </div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label">GO LIVE</div>
+        <div class="es-glance-value">Fri, Nov 20, 2026</div>
+      </div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label deadline">FABRICATION LOCK</div>
+        <div class="es-glance-value">Aug 22, 2026</div>
+      </div>
+      
+      <div class="es-glance-row">
+        <div class="es-glance-label deadline">SIGNING DEADLINE</div>
+        <div class="es-glance-value">Oct 30, 2026</div>
+      </div>
+      
+    </aside>
+  </div>
+
+  <div class="es-pillars">
+    <div class="es-pillars-grid">
+      
+      <div class="es-pillar">
+        <div class="es-pillar-title">Civic Pride</div>
+        <div class="es-pillar-body">A holiday program that elevates Riverside as a destination, not just a transit stop.</div>
+      </div>
+      
+      <div class="es-pillar">
+        <div class="es-pillar-title">Operational Discipline</div>
+        <div class="es-pillar-body">Materials engineered for transit weather; install coordinated with MetroLink service hours.</div>
+      </div>
+      
+      <div class="es-pillar">
+        <div class="es-pillar-title">Repeatable Investment</div>
+        <div class="es-pillar-body">Decor designed for multi-season reuse; 2026 builds the base for 2027 and 2028.</div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">2 / 14</div>
+  </footer>
+  
+
+</body>
+</html>

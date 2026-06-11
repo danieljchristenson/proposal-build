@@ -1,0 +1,167 @@
+<!-- layout-version: 2026-05-03 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — The Program at a Glance</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Zone Index — overview of all zones on a light page, footer present.
+     Top: page title + standfirst.
+     Body: vertical list of all zones — each row is a 3-cell compact grid:
+       • ZONE 0N (red eyebrow, fixed-width ~0.7in)
+       • Zone name (Poppins Black 16-18pt charcoal)
+       • Zone subtitle (gray italic)
+     Designed for 5–8 rows on a single 13.333 × 7.5in slide.
+
+     Layout strategy: outer flex column; title-area auto height; zone list
+     grows into the remaining space (flex: 1 1 0). */
+
+  .zi-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .zi-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-4);
+  }
+
+  .zi-title-area .page-title {
+    font-size: 36pt;    /* smaller so list gets more room */
+  }
+
+  /* ── Zone list — distribute rows evenly in available height ── */
+  .zi-zone-list {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-top: 1pt solid #E0E0E0;
+    border-bottom: 1pt solid #E0E0E0;
+  }
+
+  /* One row per zone — 3 columns via CSS grid.
+     No padding here; space-between provides the row gaps. */
+  .zi-zone-row {
+    display: grid;
+    grid-template-columns: 0.7in 3.2in 1fr;  /* eyebrow col | name col | subtitle fills rest */
+    align-items: center;
+    padding: var(--space-1) 0;
+  }
+
+  /* Cell 1: ZONE 0N eyebrow */
+  .zi-zone-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--color-red);
+    white-space: nowrap;
+  }
+
+  /* Cell 2: Zone name */
+  .zi-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 17pt;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--color-charcoal);
+    padding-right: var(--space-5);
+  }
+
+  /* Cell 3: Zone subtitle */
+  .zi-zone-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: var(--text-sm);
+    line-height: 1.35;
+    color: var(--color-gray);
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="zone_index">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="zi-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="zi-title-area">
+    <h1 class="page-title">The Program at a Glance</h1>
+    
+    <p class="standfirst">Six stations, one design language. Here&#39;s how the program reads from end to end.</p>
+    
+  </div>
+
+  <!-- Zone list — one compact row per zone -->
+  <div class="zi-zone-list">
+    
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE 01</div>
+      <div class="zi-zone-name">Downtown Riverside</div>
+      <div class="zi-zone-subtitle">The flagship station — civic centerpiece.</div>
+    </div>
+    
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE 02</div>
+      <div class="zi-zone-name">La Sierra</div>
+      <div class="zi-zone-subtitle">First park-and-ride stop — community gateway.</div>
+    </div>
+    
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE 03</div>
+      <div class="zi-zone-name">Pedley</div>
+      <div class="zi-zone-subtitle">Mid-line residential stop — restrained festive treatment.</div>
+    </div>
+    
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE 04</div>
+      <div class="zi-zone-name">Riverside-Hunter Park</div>
+      <div class="zi-zone-subtitle">University-adjacent — student-traffic focus.</div>
+    </div>
+    
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE 05</div>
+      <div class="zi-zone-name">Moreno Valley/March Field</div>
+      <div class="zi-zone-subtitle">Outer line — visible from the freeway.</div>
+    </div>
+    
+    <div class="zi-zone-row">
+      <div class="zi-zone-eyebrow">ZONE 06</div>
+      <div class="zi-zone-name">Perris-Downtown</div>
+      <div class="zi-zone-subtitle">End of line — community arrival moment.</div>
+    </div>
+    
+  </div>
+
+</div>
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">5 / 14</div>
+  </footer>
+  
+
+</body>
+</html>

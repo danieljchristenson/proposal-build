@@ -1,0 +1,430 @@
+/* St. Nick's Editorial theme — dark system. Self-contained core.
+ * Per-layout polish lives in a later plan. Brand-verified tokens only:
+ * red #B31315, charcoal #1C1C1C, navy #12355B, light #ECEFF1.
+ * No gold, no serif, no box-shadow (WeasyPrint-unsupported).
+ */
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Black.ttf") format("truetype"); font-weight:900; }
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Bold.ttf") format("truetype"); font-weight:700; }
+@font-face { font-family:"Roboto"; src:url("../fonts/Roboto-Regular.ttf") format("truetype"); font-weight:400; }
+@font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Light.ttf") format("truetype"); font-weight:300; }
+@font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Regular.ttf") format("truetype"); font-weight:400; }
+@font-face { font-family:"Poppins"; src:url("../fonts/Poppins-Medium.ttf") format("truetype"); font-weight:500; }
+
+:root {
+  --color-red:#B31315; --color-navy:#12355B; --color-light:#ECEFF1;
+  --ink:#ECEFF1; --muted:#9A9CA1;
+  --surface-0:#0E0E0E; --surface-1:#0A0A0A; --surface-2:#1A1A1A;
+  --font-heading:"Roboto",sans-serif; --font-body:"Poppins",sans-serif;
+  --space-3:12pt; --space-4:16pt; --space-6:24pt;
+}
+
+@page { size:13.333in 7.5in; margin:0; }
+
+html, body {
+  margin:0; padding:0; width:13.333in; height:7.5in;
+  font-family:var(--font-body); font-weight:400; font-size:12pt; line-height:1.5;
+}
+body.page-dark  { background:var(--surface-1); color:var(--ink); }
+body.page-light { background:#fff; color:#1C1C1C; }
+
+/* ===== Semantic color tokens (editorial) ===== */
+body.page-dark {
+  --surface-card:#1A1A1A; --surface-card-2:#0E0E0E; --surface-hero:#141414;
+  --surface-strip:#050505; --surface-recommended:#241616;
+  --rule:rgba(236,239,241,.14); --placeholder-ink:rgba(236,239,241,.4); --accent-2:#3D6FB5;
+  --ink:#ECEFF1; --ink-muted:#9A9CA1; --accent:#B31315;
+}
+body.page-light {  /* About page under editorial */
+  --ink:#1C1C1C; --ink-muted:#555555; --surface-card:#F2F2F2; --surface-card-2:#0d0d0d;
+  --surface-hero:#2A2A2A; --surface-strip:#1C1C1C; --surface-recommended:#FFF8F8;
+  --rule:#E0E0E0; --placeholder-ink:rgba(28,28,28,.4); --accent:#B31315; --accent-2:#12355B;
+}
+
+/* Red top hairline rule on every dark page */
+body.page-dark::before {
+  content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:var(--color-red); z-index:50;
+}
+
+.page-header { position:absolute; top:var(--space-4); left:var(--space-6); }
+.page-header .brand-logo { height:0.45in; width:auto; display:block; }
+
+.page-content { position:absolute; top:0.9in; left:var(--space-6); right:var(--space-6); bottom:0.55in; }
+
+h1,h2,h3,h4 {
+  font-family:var(--font-heading); font-weight:900; text-transform:uppercase;
+  letter-spacing:-0.01em; line-height:0.98; margin:0 0 var(--space-3) 0;
+}
+p { margin:0 0 var(--space-3) 0; }
+
+.eyebrow, .label {
+  font-family:var(--font-heading); font-weight:700; font-size:10pt;
+  text-transform:uppercase; letter-spacing:0.18em; color:var(--color-red);
+}
+.page-title {
+  font-family:var(--font-heading); font-weight:900; text-transform:uppercase;
+  font-size:46pt; line-height:0.96; letter-spacing:-0.01em; margin:0;
+}
+body.page-dark .page-title { color:var(--ink); }
+
+.page-footer {
+  position:absolute; bottom:var(--space-4); left:var(--space-6); right:var(--space-6);
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--font-body); font-weight:500; font-size:8pt;
+  letter-spacing:0.18em; text-transform:uppercase;
+}
+body.page-dark .page-footer { color:rgba(236,239,241,0.6); }
+
+/* Tabular numerals everywhere numbers matter */
+.stat-num, .price, td { font-variant-numeric:tabular-nums lining-nums; }
+
+/* ===== Plan 13 Task 7: dark-mode surfaces for exec-summary, understanding, scope ===== */
+/* All three layouts reference --color-panel (only in brand.css :root) and
+   --color-charcoal / --color-gray (brand.css :root only). Under editorial those
+   tokens are undefined → transparent/inherited backgrounds, wrong text colors.
+   Strategy: Case A — add dark rules here; brand.css and layout templates untouched.
+*/
+
+/* -- exec_summary: AT A GLANCE panel + pillar cards ----------------------- */
+body.page-dark .es-glance {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: 4pt;
+}
+body.page-dark .es-glance-label  { color: var(--ink-muted); }
+body.page-dark .es-glance-value  { color: var(--ink); }
+/* .es-glance-header already uses --color-red which maps fine in both themes */
+
+body.page-dark .es-pillar {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: 4pt;
+}
+body.page-dark .es-pillar-title  { color: var(--ink); }
+body.page-dark .es-pillar-body   { color: var(--ink-muted); }
+body.page-dark .es-body-area p   { color: var(--ink); }
+
+/* -- understanding: 4 panel cards ---------------------------------------- */
+body.page-dark .un-card {
+  background: var(--surface-card);
+  border-left: 3pt solid var(--color-red);
+  border-radius: 0 4pt 4pt 0;
+}
+body.page-dark .un-card-body { color: var(--ink); }
+
+/* -- scope: .card / .card-header / .card-body (shared card pattern) ------- */
+/* brand.css defines .card background from --color-panel (light gray).
+   Under editorial dark: give the card a dark surface and light text.
+   Keep the colored header bands (.has-header.green/.red) — they stay semantic. */
+body.page-dark .card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+}
+body.page-dark .card .card-body  { color: var(--ink); }
+/* Bullet text in scope includes list */
+body.page-dark .sc-includes-list li { color: var(--ink); }
+body.page-dark .sc-addon-row        { color: var(--ink); }
+
+/* ===== Investment page — dark tier cards ===================================
+   brand.css/.inv-card uses white bg + #E0E0E0 border, charcoal text.
+   Under editorial dark we override with dark surfaces; specificity 0,0,2,0
+   beats the layout's 0,0,1,0 rules. Classic never loads this file → zero delta.
+*/
+
+/* Base card — dark surface, subtle border, light text */
+body.page-dark .inv-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+
+/* Recommended card — slightly warmer dark tint */
+body.page-dark .inv-card.recommended {
+  background: var(--surface-recommended);
+}
+
+/* Tier name */
+body.page-dark .inv-tier-name {
+  color: var(--ink);
+}
+
+/* Tier price stays red — already uses --color-red, no change needed */
+
+/* Tagline stays red — already uses --color-red, no change needed */
+
+/* Thin divider between tagline and highlights */
+body.page-dark .inv-tier-divider {
+  background: var(--rule);
+}
+
+/* Highlight bullets */
+body.page-dark .inv-highlights li {
+  color: var(--ink);
+}
+
+/* ALL-IN footnote */
+body.page-dark .inv-allin {
+  color: var(--ink-muted);
+}
+
+/* Partnership dark strip — already charcoal bg; ensure text stays light */
+body.page-dark .inv-partnership {
+  background: var(--surface-strip);
+}
+body.page-dark .inv-partnership-subtitle {
+  color: var(--ink-muted);
+}
+
+/* Inline partnership note in footer */
+body.page-dark .inv-partnership-inline strong {
+  color: var(--ink);
+}
+
+/* Footer note */
+body.page-dark .inv-footer-note {
+  color: var(--ink-muted);
+}
+
+/* ===== Terms page — dark card consistency ===================================
+   terms.html uses --color-panel (light gray) for .terms-card bg and
+   --color-charcoal for .terms-card-body text and .terms-workflow bg.
+   Under editorial dark we need solid dark surfaces + legible text.
+   Classic never loads this file → zero delta.
+*/
+
+/* Terms cards: dark surface, rule border, keep red left border from layout */
+body.page-dark .terms-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  /* layout already sets border-left: 3pt solid var(--color-red) — preserved */
+}
+
+/* Card body text: was --color-charcoal → now light ink */
+body.page-dark .terms-card-body {
+  color: var(--ink);
+}
+
+/* Workflow strip: use near-black surface, ensure steps text stays light */
+body.page-dark .terms-workflow {
+  background: var(--surface-strip);
+}
+
+/* steps text already uses rgba(236,239,241,.85) — readable on dark; no change.
+   .terms-workflow-label already uses white; .terms-workflow-arrow uses --color-red.
+   .terms-date-banner already uses --color-red bg → no change needed. */
+
+/* ===== Sign-off page — dark card consistency ================================
+   sign_off.html uses --color-panel for .so-approving-card + .so-sig-block,
+   --color-charcoal for .so-sig-header bg, --color-gray for labels/note text,
+   and hardcoded #C0C0C0 for the signature line borders.
+*/
+
+/* "What You're Approving" card */
+body.page-dark .so-approving-card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+}
+
+body.page-dark .so-approving-body {
+  color: var(--ink);
+}
+
+/* Signature blocks */
+body.page-dark .so-sig-block {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+}
+
+/* Sig header band: charcoal bg → slightly darker surface so it reads as a band */
+body.page-dark .so-sig-header {
+  background: var(--surface-card-2);
+  color: var(--ink);
+}
+
+/* Row label: was --color-gray → muted ink */
+body.page-dark .so-sig-row-label {
+  color: var(--ink-muted);
+}
+
+/* Signature lines: was #C0C0C0 (medium gray, invisible on dark) → rule token */
+body.page-dark .so-sig-row-line {
+  border-bottom-color: rgba(236, 239, 241, 0.35);
+  color: var(--ink);
+}
+
+/* Digital signing note */
+body.page-dark .so-signing-note {
+  color: var(--ink-muted);
+}
+
+/* ===== Zone Index — dark divider lines + text ================================
+   .zi-zone-list border is hardcoded #E0E0E0 (too light on near-black bg).
+   .zi-zone-name uses --color-charcoal, .zi-zone-subtitle uses --color-gray.
+*/
+
+body.page-dark .zi-zone-list {
+  border-top-color: var(--rule);
+  border-bottom-color: var(--rule);
+}
+
+body.page-dark .zi-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .zi-zone-subtitle {
+  color: var(--ink-muted);
+}
+
+/* ===== Zone 2-up — dark divider + text ======================================
+   .z2-zone-rule is hardcoded #D8D8D8.
+   .z2-zone-name uses --color-charcoal, .z2-zone-subtitle uses --color-gray.
+   Bullet list items use --color-charcoal.
+*/
+
+body.page-dark .z2-zone-rule {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z2-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .z2-zone-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .z2-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone 3-up — dark divider + text ======================================
+   Same fixes as zone_2up: .z3-zone-rule hardcoded #D8D8D8, names/subs/bullets
+   use --color-charcoal / --color-gray.
+*/
+
+body.page-dark .z3-zone-rule {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z3-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .z3-zone-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .z3-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone 4-up — white image cells → subtle dark panel ====================
+   .z4-cell and .z4-cell-image are hardcoded white bg.
+   On dark pages this creates a glaring white box around renderings.
+   Replace with --surface-card so renderings sit on a subtle panel.
+   Cell border #E0E0E0 and body divider #EEEEEE → var(--rule).
+   .z4-cell-name uses --color-charcoal → var(--ink).
+*/
+
+body.page-dark .z4-cell {
+  background: var(--surface-card);
+  border-color: var(--rule);
+}
+
+body.page-dark .z4-cell-image {
+  background: var(--surface-card);
+}
+
+body.page-dark .z4-cell-body {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z4-cell-name {
+  color: var(--ink);
+}
+
+/* ===== Zone Solo — dark text tokens =========================================
+   .zs-zone-name uses --color-charcoal, .zs-subtitle uses --color-gray,
+   .zs-elements-list li uses --color-charcoal, .zs-tier-badge uses --color-charcoal,
+   .zs-section-name uses --color-charcoal.
+   .zs-tier-badge bg is rgba(0,0,0,0.04) — on dark, near-invisible; bump to card.
+*/
+
+body.page-dark .zs-section-name {
+  color: var(--ink);
+}
+
+body.page-dark .zs-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .zs-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zs-tier-badge {
+  background: var(--surface-card);
+  color: var(--ink);
+}
+
+body.page-dark .zs-tier-badge-lead {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zs-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone Solo Gallery — dark text tokens =================================
+   Same pattern as zone_solo: names use --color-charcoal, subs use --color-gray,
+   tier badge uses rgba(0,0,0,.04) bg + --color-charcoal text.
+*/
+
+body.page-dark .zsg-zone-name {
+  color: var(--ink);
+}
+
+body.page-dark .zsg-subtitle {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zsg-tier-badge {
+  background: var(--surface-card);
+  color: var(--ink);
+}
+
+body.page-dark .zsg-tier-badge-lead {
+  color: var(--ink-muted);
+}
+
+body.page-dark .zsg-elements-list li {
+  color: var(--ink);
+}
+
+/* ===== Zone 2-up Gallery — white image cells → subtle dark panel ============
+   Same fix as zone_4up: .z2g-cell and .z2g-cell-image are hardcoded white.
+   .z2g-cell border #E0E0E0 and body divider #EEEEEE → var(--rule).
+   .z2g-cell-name uses --color-charcoal → var(--ink).
+   .z2g-section-name uses --color-charcoal → var(--ink).
+*/
+
+body.page-dark .z2g-section-name {
+  color: var(--ink);
+}
+
+body.page-dark .z2g-cell {
+  background: var(--surface-card);
+  border-color: var(--rule);
+}
+
+body.page-dark .z2g-cell-image {
+  background: var(--surface-card);
+}
+
+body.page-dark .z2g-cell-body {
+  border-top-color: var(--rule);
+}
+
+body.page-dark .z2g-cell-name {
+  color: var(--ink);
+}

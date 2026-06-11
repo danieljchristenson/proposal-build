@@ -28,8 +28,9 @@
   .es-left {
     flex: 1 1 auto;
     min-width: 0;
-    display: flex;
-    flex-direction: column;
+    /* Block flow (not inner flex): WeasyPrint mis-computes a flex item's height
+       when the standfirst wraps to 2 lines, overlapping the body. Normal flow
+       stacks title-area then body-area reliably regardless of standfirst length. */
     overflow: hidden;
   }
 
@@ -43,8 +44,6 @@
   }
 
   .es-body-area {
-    flex: 1 1 auto;
-    padding-top: var(--space-4);
     overflow: hidden;
   }
 

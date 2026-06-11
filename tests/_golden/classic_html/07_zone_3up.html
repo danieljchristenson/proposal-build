@@ -1,0 +1,195 @@
+<!-- layout-version: 2026-05-03 -->
+<!-- layout-version: 2026-05-02 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetroLink — Program Zones</title>
+  <!-- layout-version: 2026-05-03 -->
+  <link rel="stylesheet" href="brand.css">
+  
+<style>
+  /* Zone 3-up — three zones side by side on a light page, footer present.
+     Same structure as zone_2up but with a 3-column grid.
+
+     Tighter typography to fit three columns: zone names at --text-xl (19pt),
+     subtitles at 10pt. Bullet font stays at --text-sm (11pt) for readability.
+
+     Layout strategy: outer flex column; title-area is auto height; body
+     grid grows to fill the rest (flex: 1 1 0). */
+
+  .z3-outer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ── Top: page title + standfirst ── */
+  .z3-title-area {
+    flex: 0 0 auto;
+    margin-bottom: var(--space-5);
+  }
+
+  .z3-title-area .page-title {
+    font-size: 36pt;
+  }
+
+  /* ── Body: 3-column grid ── */
+  .z3-body {
+    flex: 1 1 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* ── Per-zone column ── */
+  .z3-zone {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .z3-zone-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--text-xl);   /* 19pt — tighter than zone_2up's 24pt */
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-charcoal);
+    margin: var(--space-2) 0 var(--space-2) 0;
+  }
+
+  .z3-zone-subtitle {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 10pt;             /* slightly tighter than zone_2up's 11pt */
+    line-height: 1.35;
+    color: var(--color-gray);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  /* Divider line between subtitle and bullet list */
+  .z3-zone-rule {
+    border: none;
+    border-top: 1pt solid #D8D8D8;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .z3-elements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .z3-elements-list li {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: var(--text-sm);   /* 11pt — tighter than zone_2up's 12pt */
+    line-height: 1.5;
+    color: var(--color-charcoal);
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  .z3-elements-list li::before {
+    content: "•";
+    color: var(--color-red);
+    font-size: 13pt;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+</style>
+
+</head>
+<body class="page-light theme-classic" data-layout="zone_3up">
+
+  <header class="page-header">
+    
+    <div class="brand-name">ST. NICK'S</div>
+    <div class="brand-tag">CHRISTMAS LIGHTING &amp; DÉCOR</div>
+    
+  </header>
+
+  <div class="page-content">
+    
+<div class="z3-outer">
+
+  <!-- Page title + standfirst -->
+  <div class="z3-title-area">
+    <h1 class="page-title">Program Zones</h1>
+    
+    <p class="standfirst">Stations 04, 05, and 06 — the outer line.</p>
+    
+  </div>
+
+  <!-- 3-column zone grid -->
+  <div class="z3-body">
+    
+    <div class="z3-zone">
+      <div class="eyebrow">ZONE 04</div>
+      <div class="z3-zone-name">Riverside-Hunter Park</div>
+      <div class="z3-zone-subtitle">University-adjacent — student-traffic focus.</div>
+      <hr class="z3-zone-rule">
+      <ul class="z3-elements-list">
+        
+        <li>Pole banner program (6 poles)</li>
+        
+        <li>Lighted gateway display at the bus interchange</li>
+        
+        <li>Wreaths at the eastbound entry</li>
+        
+      </ul>
+    </div>
+    
+    <div class="z3-zone">
+      <div class="eyebrow">ZONE 05</div>
+      <div class="z3-zone-name">Moreno Valley/March Field</div>
+      <div class="z3-zone-subtitle">Outer line — visible from the freeway.</div>
+      <hr class="z3-zone-rule">
+      <ul class="z3-elements-list">
+        
+        <li>Large-format pole banner program (10 poles, freeway-side)</li>
+        
+        <li>Lighted snowflake constellation along the platform</li>
+        
+      </ul>
+    </div>
+    
+    <div class="z3-zone">
+      <div class="eyebrow">ZONE 06</div>
+      <div class="z3-zone-name">Perris-Downtown</div>
+      <div class="z3-zone-subtitle">End of line — community arrival moment.</div>
+      <hr class="z3-zone-rule">
+      <ul class="z3-elements-list">
+        
+        <li>Walk-through ornament arch at the plaza</li>
+        
+        <li>Wreaths and garland at all entrances</li>
+        
+        <li>Pole banner program (4 poles)</li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+</div>
+
+  </div>
+
+  
+  <footer class="page-footer">
+    <div class="footer-crumb">ST. NICK'S &nbsp;·&nbsp; 2026 HOLIDAY PROPOSAL &nbsp;·&nbsp; RCTC METROLINK</div>
+    <div class="footer-page-num">8 / 14</div>
+  </footer>
+  
+
+</body>
+</html>
