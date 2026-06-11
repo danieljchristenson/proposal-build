@@ -77,3 +77,50 @@ body.page-dark .page-footer { color:rgba(236,239,241,0.6); }
 
 /* Tabular numerals everywhere numbers matter */
 .stat-num, .price, td { font-variant-numeric:tabular-nums lining-nums; }
+
+/* ===== Plan 13 Task 7: dark-mode surfaces for exec-summary, understanding, scope ===== */
+/* All three layouts reference --color-panel (only in brand.css :root) and
+   --color-charcoal / --color-gray (brand.css :root only). Under editorial those
+   tokens are undefined → transparent/inherited backgrounds, wrong text colors.
+   Strategy: Case A — add dark rules here; brand.css and layout templates untouched.
+*/
+
+/* -- exec_summary: AT A GLANCE panel + pillar cards ----------------------- */
+body.page-dark .es-glance {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: 4pt;
+}
+body.page-dark .es-glance-label  { color: var(--ink-muted); }
+body.page-dark .es-glance-value  { color: var(--ink); }
+/* .es-glance-header already uses --color-red which maps fine in both themes */
+
+body.page-dark .es-pillar {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+  border-radius: 4pt;
+}
+body.page-dark .es-pillar-title  { color: var(--ink); }
+body.page-dark .es-pillar-body   { color: var(--ink-muted); }
+body.page-dark .es-body-area p   { color: var(--ink); }
+
+/* -- understanding: 4 panel cards ---------------------------------------- */
+body.page-dark .un-card {
+  background: var(--surface-card);
+  border-left: 3pt solid var(--color-red);
+  border-radius: 0 4pt 4pt 0;
+}
+body.page-dark .un-card-body { color: var(--ink); }
+
+/* -- scope: .card / .card-header / .card-body (shared card pattern) ------- */
+/* brand.css defines .card background from --color-panel (light gray).
+   Under editorial dark: give the card a dark surface and light text.
+   Keep the colored header bands (.has-header.green/.red) — they stay semantic. */
+body.page-dark .card {
+  background: var(--surface-card);
+  border: 1px solid var(--rule);
+}
+body.page-dark .card .card-body  { color: var(--ink); }
+/* Bullet text in scope includes list */
+body.page-dark .sc-includes-list li { color: var(--ink); }
+body.page-dark .sc-addon-row        { color: var(--ink); }
