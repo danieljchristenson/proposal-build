@@ -428,3 +428,160 @@ body.page-dark .z2g-cell-body {
 body.page-dark .z2g-cell-name {
   color: var(--ink);
 }
+
+/* ===== Tree Comparison — dark card surfaces ================================
+   tree_comparison.html cards use white/FFF8F8 bg + hardcoded #E0E0E0 borders
+   and --color-charcoal / --color-gray text tokens (undefined in editorial).
+   Strategy: give each card a dark surface, keep the colored rule strip,
+   make recommended card use --surface-recommended (warm dark tint).
+*/
+
+/* Base card: dark surface, rule border */
+body.page-dark .tc-card {
+  background: var(--surface-card);
+  border-color: var(--rule);
+  color: var(--ink);
+}
+
+/* Recommended card: warm dark tint instead of pinkish white */
+body.page-dark .tc-card.recommended {
+  background: var(--surface-recommended);
+}
+
+/* Tree photo container: light gray → dark hero surface */
+body.page-dark .tc-photo {
+  background: var(--surface-hero);
+}
+
+/* Tree name: was --color-charcoal → light ink */
+body.page-dark .tc-name {
+  color: var(--ink);
+}
+
+/* Height eyebrow: was --color-gray (undefined) → muted ink */
+body.page-dark .tc-height-eyebrow {
+  color: var(--ink-muted);
+}
+
+/* Divider line: light gray → rule token */
+body.page-dark .tc-divider {
+  background: var(--rule);
+}
+
+/* Bullet items: was --color-charcoal → light ink */
+body.page-dark .tc-bullets li {
+  color: var(--ink);
+}
+
+/* Price sublabel: was --color-gray (undefined) → muted ink */
+body.page-dark .tc-price-sublabel {
+  color: var(--ink-muted);
+}
+
+/* ===== ROM Investment — dark table surfaces ================================
+   rom_investment.html table uses --color-charcoal (undefined in editorial)
+   for section row text + item cell text, #F5F5F5 for section row bg,
+   #FAFAFA for alt item rows, and #E0E0E0 for row separators.
+   thead already uses --color-charcoal bg (which maps to near-black in editorial
+   via body.page-dark inheritance) with explicit white text — that's fine.
+   Strategy: section rows → --surface-card bg with --ink text; item rows →
+   --ink text; alt rows → subtle surface-card-2; footnote border → --rule.
+*/
+
+/* Section divider rows: light gray bg → dark card surface, light text */
+body.page-dark table.rom-table tr.rom-section-row td {
+  background: var(--surface-card);
+  color: var(--ink);
+  border-top-color: var(--rule);
+  border-bottom-color: var(--rule);
+}
+
+/* Item row text: was --color-charcoal → light ink */
+body.page-dark table.rom-table td.cell-item {
+  color: var(--ink);
+}
+
+/* Item row borders: light gray → rule token */
+body.page-dark table.rom-table tr.rom-item-row td {
+  border-bottom-color: var(--rule);
+}
+
+/* Alt item row: was #FAFAFA (near-white) → subtle dark surface */
+body.page-dark table.rom-table tr.rom-item-row.alt td {
+  background: var(--surface-card-2);
+}
+
+/* Rental cell text: was --color-charcoal → light ink */
+body.page-dark table.rom-table td.cell-rental {
+  color: var(--ink);
+}
+
+/* Purchase one-time price: was --color-charcoal → light ink */
+body.page-dark table.rom-table td.cell-purchase .rom-purchase-ot {
+  color: var(--ink);
+}
+
+/* Purchase service sublabel: was --color-gray → muted ink */
+body.page-dark table.rom-table td.cell-purchase .rom-purchase-svc {
+  color: var(--ink-muted);
+}
+
+/* Mode label (small text under price): was --color-gray → muted ink */
+body.page-dark .rom-mode-label {
+  color: var(--ink-muted);
+}
+
+/* Footnote: border and text — light tokens → dark equivalents */
+body.page-dark .rom-footnote {
+  color: var(--ink-muted);
+  border-top-color: var(--rule);
+}
+
+body.page-dark .rom-footnote strong {
+  color: var(--ink);
+}
+
+/* ===== À-La-Carte — dark row separators ====================================
+   a_la_carte.html body rows use rgba(0,0,0,0.08) borders — invisible on dark.
+   Replace with --rule. Header is red-on-dark (fine). Prices already red (fine).
+   Body text currently inherits body.page-dark color (--ink) which works, but
+   we add an explicit rule for resilience.
+*/
+
+/* Body row text: explicit light ink (resilience over inheritance) */
+body.page-dark .alc-table tbody td {
+  color: var(--ink);
+  border-bottom-color: var(--rule);
+}
+
+/* Header bottom border: red is fine on dark; keep it */
+
+/* ===== Material Palette — dark copy text ====================================
+   material_palette.html .mp-copy uses --color-charcoal (undefined in editorial).
+   The title and standfirst inherit from body.page-dark and read white, but
+   .mp-copy has an explicit color that would fall back to transparent/unknown.
+   Add explicit --ink rules. Gallery cells are transparent bg (fine — images fill).
+*/
+
+body.page-dark .mp-copy {
+  color: var(--ink);
+}
+
+/* Standfirst text (used in title area) — ensure light on dark */
+body.page-dark .tc-title-area .standfirst,
+body.page-dark .mp-title-area .standfirst,
+body.page-dark .alc-title-area .standfirst,
+body.page-dark .rom-title-area .standfirst {
+  color: var(--ink);
+}
+
+/* ===== Sample of Work — placeholder tile surface ============================
+   sample_of_work.html .sw-tile uses hardcoded #2A2A2A placeholder bg.
+   This is close to --surface-hero (#141414) but lighter; align to the token
+   so it reads consistently with other image placeholder cells on dark pages.
+   Captions (white text + dark gradient scrim) already work fine — no change.
+*/
+
+body.page-dark .sw-tile {
+  background: var(--surface-hero);
+}
