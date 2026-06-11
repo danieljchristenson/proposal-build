@@ -28,6 +28,9 @@ def main(argv: list[str] | None = None) -> int:
                      help="Skip writing last_run.json and revisions/ archive.")
     gen.add_argument("--diff-only", action="store_true",
                      help="Run differ + write change_summary.md, skip render and snapshot.")
+    gen.add_argument("--theme", choices=("classic", "editorial"), default=None,
+                     help="Override the proposal theme for this run. If omitted, uses the "
+                          "Brief's `theme:` front-matter, else the engine default.")
 
     insp = sub.add_parser("inspect", help="Report project readiness as JSON.")
     insp.add_argument("project_dir", help="Path to the project folder")
@@ -46,12 +49,26 @@ def main(argv: list[str] | None = None) -> int:
             args.compress,
             no_snapshot=args.no_snapshot,
             diff_only=args.diff_only,
+            theme=args.theme,
         )
     if args.command == "inspect":
         return _do_inspect(Path(args.project_dir), args.format)
     if args.command == "scaffold":
         return _do_scaffold(args.project_name)
     return 1
+
+
+def _apply_theme_override(model, theme: str | None):
+    """Return the model with its theme overridden by an explicit CLI choice.
+
+    Resolution priority: CLI --theme (this override) > Brief `theme:` front-matter
+    (already on model.theme) > engine default. Returns the model unchanged when no
+    CLI theme is given.
+    """
+    if theme is None:
+        return model
+    import dataclasses
+    return dataclasses.replace(model, theme=theme)
 
 
 def _do_generate(
@@ -61,6 +78,7 @@ def _do_generate(
     *,
     no_snapshot: bool = False,
     diff_only: bool = False,
+    theme: str | None = None,
 ) -> int:
     from datetime import datetime, timezone
     from proposal_build.diff import (
@@ -72,6 +90,7 @@ def _do_generate(
 
     try:
         model, artifacts = build_project_model(project_dir)
+        model = _apply_theme_override(model, theme)
     except ProjectLoadError as e:
         # Convert to a ValidationResult so the report still gets written
         result = ValidationResult(blockers=[("project_load", str(e))], warnings=[])

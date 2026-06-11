@@ -191,10 +191,29 @@ Step 3 with the new report. Do not loop more than 5 times — if the
 same finding persists after 2 attempted fixes, hit the safety rail
 (see "Beta safety rail" below).
 
+## Step 4.5 — Ask which theme
+
+Before generating, ask the user which visual theme to use, unless the
+project's Brief already pins one in its `theme:` front-matter (in that case,
+skip the question and respect the Brief):
+
+> *"Which theme for this proposal — **Editorial** (dark, modern) or
+> **Classic** (light)?"*
+
+Pass the answer to generate via `--theme`. If the Brief pins a theme, omit
+`--theme` and let it apply. (`--theme` overrides the Brief; the Brief overrides
+the engine default.)
+
 ## Step 5 — Generate
 
-Run this exact command. Do not substitute any other approach (see
-the CRITICAL section above):
+Run this exact command (substituting the chosen theme). Do not substitute any
+other approach (see the CRITICAL section above):
+
+```bash
+python -m proposal_build generate "Projects/<name>" --theme <editorial|classic> --use-latest-layouts --compress
+```
+
+If the Brief pins a `theme:`, drop the `--theme` flag:
 
 ```bash
 python -m proposal_build generate "Projects/<name>" --use-latest-layouts --compress
