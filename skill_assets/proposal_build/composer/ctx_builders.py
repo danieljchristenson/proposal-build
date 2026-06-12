@@ -15,8 +15,10 @@ from proposal_build.models import ProjectModel, Tier, Zone
 
 # Absolute path to the brand logo, embedded in every page header via base.html.
 _LOGO_PATH = (Path(__file__).resolve().parents[3] / "skill_assets" / "Branding" / "ST NICKS LOGO.png").as_posix()
-# White/ivory variant for use on dark surfaces (editorial theme).
-_LOGO_PATH_DARK = (Path(__file__).resolve().parents[3] / "skill_assets" / "Branding" / "ST NICKS LOGO WHITE.png").as_posix()
+# Hi-res full-color logo for dark surfaces (editorial), shown on a light chip
+# (CSS in theme-editorial.css) — the artwork has a white background and a white
+# beard, so it can't be cleanly knocked out; the chip keeps it crisp and intact.
+_LOGO_PATH_DARK = (Path(__file__).resolve().parents[3] / "skill_assets" / "Branding" / "ST NICKS LOGO ON-DARK.png").as_posix()
 
 
 def _project_base(model: ProjectModel) -> dict:
