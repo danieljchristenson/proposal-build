@@ -49,6 +49,16 @@ body.page-dark::before {
 .page-header { position:absolute; top:var(--space-4); left:var(--space-6); }
 .page-header .brand-logo { height:0.45in; width:auto; display:block; }
 
+/* On dark pages the full-color logo sits on a small light chip (the source
+   artwork has a white background + white beard, so it can't be cleanly knocked
+   out; round + pad it into a clean card so the real logo stays crisp). */
+body.page-dark .page-header .brand-logo {
+  background:#ffffff; border-radius:4pt; padding:2pt 6pt; box-sizing:border-box;
+}
+body.page-dark .cover-logo {
+  background:#ffffff; border-radius:5pt; padding:5pt 11pt; box-sizing:border-box;
+}
+
 .page-content { position:absolute; top:0.9in; left:var(--space-6); right:var(--space-6); bottom:0.55in; }
 
 h1,h2,h3,h4 {
